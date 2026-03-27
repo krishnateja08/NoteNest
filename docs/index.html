@@ -3686,17 +3686,18 @@ body.theme-neon .fin-vtbtn.active{color:#080c14}
   </div>
   <div id="enc-key-section" style="display:none">
     <div class="frow">
-      <label>Encryption Key (base64)</label>
+      <label>Encryption Key (base64) — paste or edit directly</label>
       <div style="display:flex;gap:6px">
-        <input id="cfg-enc-key" type="password" readonly placeholder="No key yet" style="flex:1;font-family:monospace;font-size:12px">
+        <input id="cfg-enc-key" type="password" placeholder="Paste your key here or generate one..." style="flex:1;font-family:monospace;font-size:12px">
         <button class="btn-ghost" onclick="toggleKeyVisibility()" title="Show/Hide" style="padding:7px 10px;font-size:14px">👁</button>
         <button class="btn-ghost" onclick="copyEncKey()" title="Copy" style="padding:7px 10px;font-size:14px">📋</button>
+        <button class="btn" onclick="saveEncKeyFromInput()" title="Save Key" style="padding:7px 12px;font-size:12px">💾 Save</button>
       </div>
     </div>
     <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
       <button class="btn-ghost" onclick="generateNewEncKey()" style="font-size:12px">🔑 Generate New Key</button>
-      <button class="btn-ghost" onclick="document.getElementById('enc-key-import').click()" style="font-size:12px">📥 Import Key</button>
-      <button class="btn-ghost" onclick="exportEncKey()" style="font-size:12px">📤 Export Key</button>
+      <button class="btn-ghost" onclick="document.getElementById('enc-key-import').click()" style="font-size:12px">📥 Import File</button>
+      <button class="btn-ghost" onclick="exportEncKey()" style="font-size:12px">📤 Export File</button>
       <input type="file" id="enc-key-import" accept=".key,.txt" style="display:none" onchange="importEncKey(event)">
     </div>
     <p style="font-size:11px;color:var(--red);line-height:1.5;margin-bottom:4px">
@@ -3911,6 +3912,24 @@ function importEncKey(e){
   };
   reader.readAsText(file);
   e.target.value=''; // reset
+}
+
+function saveEncKeyFromInput(){
+  const inp = document.getElementById('cfg-enc-key');
+  if(!inp) return;
+  const k = inp.value.trim();
+  if(!k){ toast('Key field is empty','error'); return; }
+  // Validate base64
+  try{ atob(k); }catch(_){ toast('Invalid key — must be valid base64','error'); return; }
+  if(getEncKeyB64() && k !== getEncKeyB64()){
+    if(!confirm('Replace existing key? Make sure this is correct — wrong key = unreadable data.')) return;
+  }
+  localStorage.setItem('enc_key', k);
+  localStorage.setItem('enc_enabled','true');
+  refreshEncUI();
+  toast('Key saved ✓','success');
+  // Re-encrypt data if loaded
+  if(dataLoaded && getConfig().token) saveToGitHub();
 }
 
 /* -- GITHUB API ---------------------------------- */
