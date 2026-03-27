@@ -1,0 +1,700 @@
+{
+  "notes": [
+    {
+      "id": "uah4pnmz",
+      "type": "note",
+      "title": "PCR Values",
+      "body": "Bullish Values\n**# **PCR** > 1.2Bullish***text***\n**PCR > 1.5Strongly Bullish**\nPCR > 1.8Panic Zone (special case)\n\n**Bearish Values**\n# PCR < 0.8Bearish\nPCR < 0.7Bearish (scoring trigger)\nPCR < 0.5Strongly Bearish\n\n\n\ud83d\udfe1 Neutral Zone\nPCR 0.8 \u2013 1.2********",
+      "folder_id": "fngjgvu2b",
+      "category": "fngjgvu2b",
+      "color": "default",
+      "pinned": false,
+      "tags": [],
+      "created": "2026-03-24 19:11",
+      "updated": "2026-03-25 17:24",
+      "attachments": []
+    },
+    {
+      "id": "61nbzyks",
+      "type": "note",
+      "title": "web links",
+      "body": "",
+      "folder_id": "fngjgvu2b",
+      "category": "fngjgvu2b",
+      "color": "default",
+      "pinned": false,
+      "tags": [],
+      "created": "2026-03-25 18:31",
+      "updated": "2026-03-25 18:32",
+      "attachments": []
+    },
+    {
+      "id": "tf5ukg2i",
+      "type": "note",
+      "title": "AI prompts",
+      "body": "",
+      "folder_id": "personal",
+      "category": "personal",
+      "color": "default",
+      "pinned": false,
+      "tags": [],
+      "created": "2026-03-25 18:35",
+      "updated": "2026-03-25 18:35",
+      "attachments": []
+    },
+    {
+      "id": "65fsbehq",
+      "type": "note",
+      "title": "AI Prompts",
+      "body": "New topic: ignore everything we just talked about.\"\t\t\t\t\n\"Reset context. I have a completely unrelated question.\n\t\nNew topic. This question is completely unrelated to any previous discussion.\t\t\t\t\nDo NOT reference trading, programming, finance, or past messages.\t\t\t\t\nAnswer only based on what I ask below.\t\t\t\t",
+      "folder_id": "official",
+      "category": "official",
+      "color": "default",
+      "pinned": false,
+      "tags": [],
+      "created": "2026-03-25 18:37",
+      "updated": "2026-03-25 18:38",
+      "attachments": []
+    }
+  ],
+  "reminders": [
+    {
+      "id": "o8noxtr7",
+      "type": "reminder",
+      "category": "personal",
+      "title": "Swimming class sturday 11:00",
+      "body": "",
+      "tags": [],
+      "due": "2026-03-28 10:00",
+      "repeat": "none",
+      "priority": "high",
+      "sent": false,
+      "created": "2026-03-24 16:00",
+      "updated": "2026-03-25 01:33",
+      "attachments": []
+    },
+    {
+      "id": "ssh7h9h0",
+      "type": "reminder",
+      "category": "personal",
+      "title": "Baby School Tour on 31st March",
+      "body": "",
+      "tags": [],
+      "due": "2026-03-31 09:00",
+      "repeat": "none",
+      "priority": "high",
+      "sent": false,
+      "created": "2026-03-25 18:43",
+      "updated": "2026-03-25 18:43",
+      "attachments": []
+    },
+    {
+      "id": "9fnev5sv",
+      "type": "reminder",
+      "list_id": "personal",
+      "category": "personal",
+      "title": "Venkat suresh intrest amt at 30th March",
+      "body": "",
+      "tags": [],
+      "color": "default",
+      "due": "2026-03-30 09:00",
+      "repeat": "none",
+      "sent": false,
+      "pinned": false,
+      "created": "2026-03-25 21:48",
+      "updated": "2026-03-25 21:48",
+      "attachments": []
+    }
+  ],
+  "stickies": [
+    {
+      "id": "ufwl2xzy",
+      "text": "Bullish Values\n\n\nPCR > 1.2Bullish\nPCR > 1.5Strongly Bullish\nPCR > 1.8Panic Zone (special case)\n\n\n Bearish Values\nPCR < 0.8Bearish\nPCR < 0.7Bearish (scoring trigger)\nPCR < 0.5Strongly Bearish\n\n\n\ud83d\udfe1 Neutral Zone\nPCR 0.8 \u2013 1.2",
+      "bg": "#fde68a",
+      "colorId": "yellow",
+      "created": "2026-03-23 21:45",
+      "updated": "2026-03-24 19:12",
+      "pinned": false,
+      "tags": [],
+      "width": "221px",
+      "height": "493px"
+    }
+  ],
+  "archived": [],
+  "trades": [
+    {
+      "id": "Tmmz2szszr41",
+      "symbol": "NIFTY",
+      "date": "2026-03-20",
+      "type": "BUY",
+      "qty": "65",
+      "entry": "228.90",
+      "exit": "237.35",
+      "sl": "",
+      "target": "",
+      "status": "win",
+      "notes": "i have taken this trade market at bullish and at strong resitance i though it will go for sell off for some and also as per my application its showing weak bullish strength."
+    }
+  ],
+  "routines": [
+    {
+      "id": "rt001",
+      "name": "Morning Routine",
+      "icon": "\ud83d\udd01",
+      "color": "blue",
+      "tasks": [
+        {
+          "id": "tk001",
+          "name": "Wake up & drink water",
+          "frequency": "daily",
+          "time": "06:00"
+        },
+        {
+          "id": "tk002",
+          "name": "Workout / Exercise",
+          "frequency": "daily",
+          "time": "06:30"
+        },
+        {
+          "id": "tk003",
+          "name": "Morning Vitamins After Breakfast",
+          "time": "09:30",
+          "frequency": "daily",
+          "days": []
+        },
+        {
+          "id": "tk004",
+          "name": "Magnesium Iron Tablets",
+          "time": "10:30",
+          "frequency": "daily",
+          "days": []
+        },
+        {
+          "id": "tkmmzct8pj",
+          "name": "Omega 3-6-9 After lunch",
+          "time": "13:00",
+          "frequency": "daily",
+          "days": []
+        }
+      ]
+    },
+    {
+      "id": "rt002",
+      "name": "Trading Routine",
+      "icon": "\ud83d\udd01",
+      "color": "green",
+      "tasks": [
+        {
+          "id": "tk005",
+          "name": "Check pre-market news",
+          "frequency": "daily",
+          "time": "09:00"
+        },
+        {
+          "id": "tk006",
+          "name": "Review watchlist",
+          "frequency": "daily",
+          "time": "09:10"
+        },
+        {
+          "id": "tk007",
+          "name": "Mark support & resistance",
+          "frequency": "daily",
+          "time": "09:15"
+        },
+        {
+          "id": "tk008",
+          "name": "Log trades in journal",
+          "frequency": "daily",
+          "time": "15:30"
+        },
+        {
+          "id": "tk009",
+          "name": "Weekly trade review",
+          "frequency": "weekly",
+          "days": [
+            "Sat"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rt003",
+      "name": "Night Routine",
+      "icon": "\ud83d\udd01",
+      "color": "purple",
+      "tasks": [
+        {
+          "id": "tk010",
+          "name": "Review today's tasks",
+          "frequency": "daily",
+          "time": "21:00"
+        },
+        {
+          "id": "tk011",
+          "name": "Plan tomorrow",
+          "frequency": "daily",
+          "time": "21:15"
+        },
+        {
+          "id": "tk012",
+          "name": "Read / Learn",
+          "frequency": "daily",
+          "time": "21:30"
+        },
+        {
+          "id": "tk013",
+          "name": "Sleep by 11pm",
+          "frequency": "daily",
+          "time": "23:00"
+        }
+      ]
+    }
+  ],
+  "routine_logs": [
+    {
+      "date": "2026-03-20",
+      "task_id": "tk001",
+      "done": true
+    },
+    {
+      "date": "2026-03-20",
+      "task_id": "tk002",
+      "done": true
+    },
+    {
+      "date": "2026-03-20",
+      "task_id": "tk003",
+      "done": true
+    },
+    {
+      "date": "2026-03-20",
+      "task_id": "tk004",
+      "done": true
+    },
+    {
+      "date": "2026-03-20",
+      "task_id": "tkmmzct8pj",
+      "done": true
+    },
+    {
+      "date": "2026-03-21",
+      "task_id": "tk001",
+      "done": true
+    },
+    {
+      "date": "2026-03-21",
+      "task_id": "tk002",
+      "done": true
+    },
+    {
+      "date": "2026-03-21",
+      "task_id": "tk003",
+      "done": true
+    },
+    {
+      "date": "2026-03-21",
+      "task_id": "tk004",
+      "done": true
+    },
+    {
+      "date": "2026-03-21",
+      "task_id": "tkmmzct8pj",
+      "done": true
+    },
+    {
+      "date": "2026-03-21",
+      "task_id": "tk005",
+      "done": true
+    },
+    {
+      "date": "2026-03-21",
+      "task_id": "tk006",
+      "done": true
+    },
+    {
+      "date": "2026-03-21",
+      "task_id": "tk007",
+      "done": true
+    },
+    {
+      "date": "2026-03-21",
+      "task_id": "tk008",
+      "done": true
+    },
+    {
+      "date": "2026-03-21",
+      "task_id": "tk010",
+      "done": true
+    },
+    {
+      "date": "2026-03-21",
+      "task_id": "tk011",
+      "done": true
+    },
+    {
+      "date": "2026-03-21",
+      "task_id": "tk012",
+      "done": true
+    },
+    {
+      "date": "2026-03-21",
+      "task_id": "tk013",
+      "done": true
+    },
+    {
+      "date": "2026-03-22",
+      "task_id": "tk001",
+      "done": true
+    },
+    {
+      "date": "2026-03-22",
+      "task_id": "tk002",
+      "done": false
+    },
+    {
+      "date": "2026-03-22",
+      "task_id": "tk003",
+      "done": true
+    },
+    {
+      "date": "2026-03-22",
+      "task_id": "tk004",
+      "done": true
+    },
+    {
+      "date": "2026-03-22",
+      "task_id": "tkmmzct8pj",
+      "done": true
+    },
+    {
+      "date": "2026-03-22",
+      "task_id": "tk005",
+      "done": true
+    },
+    {
+      "date": "2026-03-22",
+      "task_id": "tk006",
+      "done": true
+    },
+    {
+      "date": "2026-03-22",
+      "task_id": "tk007",
+      "done": true
+    },
+    {
+      "date": "2026-03-22",
+      "task_id": "tk008",
+      "done": true
+    },
+    {
+      "date": "2026-03-23",
+      "task_id": "tk001",
+      "done": true
+    },
+    {
+      "date": "2026-03-23",
+      "task_id": "tk002",
+      "done": false
+    },
+    {
+      "date": "2026-03-23",
+      "task_id": "tk003",
+      "done": true
+    },
+    {
+      "date": "2026-03-23",
+      "task_id": "tk004",
+      "done": true
+    },
+    {
+      "date": "2026-03-23",
+      "task_id": "tkmmzct8pj",
+      "done": true
+    },
+    {
+      "date": "2026-03-23",
+      "task_id": "tk005",
+      "done": false
+    },
+    {
+      "date": "2026-03-24",
+      "task_id": "tk001",
+      "done": true
+    },
+    {
+      "date": "2026-03-24",
+      "task_id": "tk002",
+      "done": true
+    },
+    {
+      "date": "2026-03-24",
+      "task_id": "tk003",
+      "done": true
+    },
+    {
+      "date": "2026-03-24",
+      "task_id": "tk004",
+      "done": true
+    },
+    {
+      "date": "2026-03-24",
+      "task_id": "tkmmzct8pj",
+      "done": true
+    },
+    {
+      "date": "2026-03-25",
+      "task_id": "tk001",
+      "done": true
+    },
+    {
+      "date": "2026-03-25",
+      "task_id": "tk003",
+      "done": true
+    },
+    {
+      "date": "2026-03-25",
+      "task_id": "tk004",
+      "done": true
+    },
+    {
+      "date": "2026-03-25",
+      "task_id": "tkmmzct8pj",
+      "done": true
+    },
+    {
+      "date": "2026-03-26",
+      "task_id": "tk001",
+      "done": true
+    },
+    {
+      "date": "2026-03-26",
+      "task_id": "tk002",
+      "done": true
+    },
+    {
+      "date": "2026-03-26",
+      "task_id": "tk003",
+      "done": true
+    },
+    {
+      "date": "2026-03-26",
+      "task_id": "tk004",
+      "done": false
+    },
+    {
+      "date": "2026-03-26",
+      "task_id": "tkmmzct8pj",
+      "done": true
+    },
+    {
+      "date": "2026-03-26",
+      "task_id": "tk005",
+      "done": false
+    },
+    {
+      "date": "2026-03-26",
+      "task_id": "tk006",
+      "done": false
+    },
+    {
+      "date": "2026-03-26",
+      "task_id": "tk007",
+      "done": false
+    },
+    {
+      "date": "2026-03-26",
+      "task_id": "tk008",
+      "done": false
+    },
+    {
+      "date": "2026-03-26",
+      "task_id": "tk010",
+      "done": false
+    },
+    {
+      "date": "2026-03-26",
+      "task_id": "tk011",
+      "done": false
+    },
+    {
+      "date": "2026-03-26",
+      "task_id": "tk012",
+      "done": false
+    },
+    {
+      "date": "2026-03-26",
+      "task_id": "tk013",
+      "done": false
+    }
+  ],
+  "tasknotes": [
+    {
+      "id": "TNmmzkbhy4578",
+      "text": "Oracle mesa db to stop on monday at 10:00AM",
+      "category": "official",
+      "priority": "high",
+      "tags": "",
+      "done": true,
+      "date": "2026-03-21",
+      "created": "2026-03-21T00:01:06.460Z"
+    },
+    {
+      "id": "TNmmz920g0igb",
+      "text": "RPP Ora Password change",
+      "priority": "medium",
+      "tags": "",
+      "done": true,
+      "date": "2026-03-20",
+      "created": "2026-03-20T18:45:48.096Z"
+    }
+  ],
+  "finance": [
+    {
+      "id": "FNmmzbt6kq6m2",
+      "type": "gave",
+      "person": "Ramjee",
+      "amount": 138000,
+      "paymethod": "cash",
+      "interestRate": 0,
+      "date": "2026-04-01",
+      "duedate": "",
+      "notes": "Usa Cash given in dollars 1500",
+      "repayments": [],
+      "created": "2026-03-20T20:02:54.986Z"
+    },
+    {
+      "id": "FNmmzbp9c7379",
+      "type": "gave",
+      "person": "Venkat",
+      "amount": 75000,
+      "paymethod": "cash",
+      "interestRate": 0,
+      "date": "2026-03-22",
+      "duedate": "",
+      "notes": "Told indu amt.",
+      "repayments": [],
+      "created": "2026-03-20T19:59:51.943Z"
+    },
+    {
+      "id": "FNmmzboc1xx5a",
+      "type": "gave",
+      "person": "Venkat",
+      "amount": 194222,
+      "paymethod": "credit_card",
+      "interestRate": 0,
+      "date": "2026-03-15",
+      "duedate": "2026-04-15",
+      "notes": "AMex 3rd card payment",
+      "repayments": [],
+      "created": "2026-03-20T19:59:08.805Z"
+    },
+    {
+      "id": "FNmmzbenbevdp",
+      "type": "gave",
+      "person": "Venkat",
+      "amount": 185000,
+      "paymethod": "credit_card",
+      "interestRate": 0,
+      "date": "2026-03-10",
+      "duedate": "2026-04-15",
+      "notes": "amex 2nd card",
+      "repayments": [],
+      "created": "2026-03-20T19:51:36.842Z"
+    },
+    {
+      "id": "FNmmzaw0j5ffk",
+      "type": "gave",
+      "person": "Venkat",
+      "amount": 401517,
+      "paymethod": "credit_card",
+      "interestRate": 0,
+      "date": "2026-04-13",
+      "duedate": "2026-04-13",
+      "notes": "Amex Card 1",
+      "repayments": [],
+      "created": "2026-03-20T19:37:07.505Z"
+    },
+    {
+      "id": "FNmmzaqwh5bjf",
+      "type": "gave",
+      "person": "Venkat",
+      "amount": 300000,
+      "paymethod": "cash",
+      "interestRate": 30,
+      "date": "2026-03-21",
+      "duedate": "2026-03-21",
+      "notes": "Phani 3L 2.5%",
+      "repayments": [],
+      "created": "2026-03-20T19:33:08.969Z"
+    },
+    {
+      "id": "FNmmzaoxwovk1",
+      "type": "gave",
+      "person": "Venkat",
+      "amount": 400000,
+      "paymethod": "cash",
+      "interestRate": 24,
+      "date": "2026-03-21",
+      "duedate": "2026-03-21",
+      "notes": "Phani 2% intrest",
+      "repayments": [],
+      "created": "2026-03-20T19:31:37.512Z"
+    },
+    {
+      "id": "FNmmzaki1v11p",
+      "type": "gave",
+      "person": "Venkat",
+      "amount": 137359,
+      "paymethod": "cash",
+      "interestRate": 0,
+      "date": "2026-04-01",
+      "duedate": "",
+      "notes": "My cash",
+      "repayments": [],
+      "created": "2026-03-20T19:28:10.339Z"
+    },
+    {
+      "id": "FNmmzaivdlpct",
+      "type": "gave",
+      "person": "Jagadish",
+      "amount": 150000,
+      "paymethod": "cash",
+      "interestRate": 36,
+      "date": "2026-03-10",
+      "duedate": "",
+      "notes": "Phani Amt",
+      "repayments": [],
+      "created": "2026-03-20T19:26:54.297Z"
+    }
+  ],
+  "note_folders": [
+    {
+      "id": "personal",
+      "name": "Personal",
+      "icon": "\ud83d\udcc1"
+    },
+    {
+      "id": "official",
+      "name": "Official",
+      "icon": "\ud83d\udcc1"
+    },
+    {
+      "id": "fngjgvu2b",
+      "name": "Trades",
+      "icon": "\ud83d\udcc1"
+    }
+  ],
+  "rem_lists": [
+    {
+      "id": "personal",
+      "name": "Personal",
+      "icon": "\ud83d\udd35"
+    },
+    {
+      "id": "official",
+      "name": "Official",
+      "icon": "\ud83d\udd35"
+    }
+  ]
+}
