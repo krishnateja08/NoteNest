@@ -3671,40 +3671,6 @@ body.theme-neon .fin-vtbtn.active{color:#080c14}
   </div>
   <div class="frow"><label>Personal Access Token</label><input id="cfg-token" type="password" placeholder="ghp_..."></div>
 
-  <!-- ENCRYPTION -->
-  <div class="settings-section-title" style="margin-top:24px">🔒 Encryption</div>
-  <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6">
-    Encrypt your <code style="background:var(--s2);padding:1px 5px;border-radius:4px">notes.json</code> on GitHub with AES-256-GCM.
-    The key is stored <strong>only in this browser</strong>. Export it to back up!
-  </p>
-  <div id="enc-status" style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
-    <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--text)">
-      <input type="checkbox" id="cfg-enc-toggle" onchange="toggleEncryption(this.checked)" style="accent-color:var(--accent);width:16px;height:16px">
-      Enable encryption
-    </label>
-    <span id="enc-badge" style="font-size:11px;padding:2px 10px;border-radius:20px;font-weight:600;display:none"></span>
-  </div>
-  <div id="enc-key-section" style="display:none">
-    <div class="frow">
-      <label>Encryption Key (base64) — paste or edit directly</label>
-      <div style="display:flex;gap:6px">
-        <input id="cfg-enc-key" type="password" placeholder="Paste your key here or generate one..." style="flex:1;font-family:monospace;font-size:12px">
-        <button class="btn-ghost" onclick="toggleKeyVisibility()" title="Show/Hide" style="padding:7px 10px;font-size:14px">👁</button>
-        <button class="btn-ghost" onclick="copyEncKey()" title="Copy" style="padding:7px 10px;font-size:14px">📋</button>
-        <button class="btn" onclick="saveEncKeyFromInput()" title="Save Key" style="padding:7px 12px;font-size:12px">💾 Save</button>
-      </div>
-    </div>
-    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
-      <button class="btn-ghost" onclick="generateNewEncKey()" style="font-size:12px">🔑 Generate New Key</button>
-      <button class="btn-ghost" onclick="document.getElementById('enc-key-import').click()" style="font-size:12px">📥 Import File</button>
-      <button class="btn-ghost" onclick="exportEncKey()" style="font-size:12px">📤 Export File</button>
-      <input type="file" id="enc-key-import" accept=".key,.txt" style="display:none" onchange="importEncKey(event)">
-    </div>
-    <p style="font-size:11px;color:var(--red);line-height:1.5;margin-bottom:4px">
-      ⚠️ If you lose this key, your encrypted notes <strong>cannot</strong> be recovered. Always keep a backup!
-    </p>
-  </div>
-
   <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:18px;padding-top:14px;border-top:1px solid var(--border)">
     <button class="btn-ghost" onclick="closeSettings()">Close</button>
     <button class="btn" onclick="saveConfig()">Save & Connect</button>
@@ -3718,7 +3684,6 @@ body.theme-neon .fin-vtbtn.active{color:#080c14}
 let DATA={notes:[],reminders:[],stickies:[],archived:[],trades:[],routines:[],routine_logs:[],tasknotes:[],finance:[],note_folders:[],rem_lists:[]};
 let fileSHA=null;
 let dataLoaded=false; // guard: prevents any save before GitHub data is fully loaded
-let loadFailed=false; // guard: prevents saving empty DATA after a failed load
 let currentType='note';
 
 /* -- THEME --------------------------------------- */
@@ -3745,7 +3710,6 @@ function openSettings(){
   document.getElementById('cfg-user').value=c.user;
   document.getElementById('cfg-repo').value=c.repo;
   document.getElementById('cfg-token').value=c.token;
-  refreshEncUI();
   document.getElementById('settings-panel').classList.add('open');
 }
 function closeSettings(){document.getElementById('settings-panel').classList.remove('open')}
@@ -3762,177 +3726,6 @@ function saveConfig(){
   loadFromGitHub();
 }
 
-/* -- ENCRYPTION (AES-256-GCM) -------------------- */
-function getEncEnabled(){ return localStorage.getItem('enc_enabled')==='true'; }
-function getEncKeyB64(){ return localStorage.getItem('enc_key')||''; }
-
-async function importCryptoKey(b64){
-  const raw = Uint8Array.from(atob(b64), c=>c.charCodeAt(0));
-  return crypto.subtle.importKey('raw', raw, 'AES-GCM', true, ['encrypt','decrypt']);
-}
-
-async function encryptData(plaintext){
-  const b64 = getEncKeyB64();
-  if(!b64) throw new Error('No encryption key');
-  const key = await importCryptoKey(b64);
-  const iv = crypto.getRandomValues(new Uint8Array(12));
-  const encoded = new TextEncoder().encode(plaintext);
-  const cipherBuf = await crypto.subtle.encrypt({name:'AES-GCM',iv}, key, encoded);
-  const cipher = new Uint8Array(cipherBuf);
-  // Prepend IV to ciphertext
-  const combined = new Uint8Array(iv.length + cipher.length);
-  combined.set(iv);
-  combined.set(cipher, iv.length);
-  return btoa(String.fromCharCode(...combined));
-}
-
-async function decryptData(b64Combined){
-  const b64Key = getEncKeyB64();
-  if(!b64Key) throw new Error('No encryption key — cannot decrypt');
-  const key = await importCryptoKey(b64Key);
-  const combined = Uint8Array.from(atob(b64Combined), c=>c.charCodeAt(0));
-  const iv = combined.slice(0, 12);
-  const ciphertext = combined.slice(12);
-  const plainBuf = await crypto.subtle.decrypt({name:'AES-GCM',iv}, key, ciphertext);
-  return new TextDecoder().decode(plainBuf);
-}
-
-function isEncryptedPayload(obj){
-  return obj && typeof obj==='object' && obj.__encrypted===true && typeof obj.__data==='string';
-}
-
-async function generateNewEncKey(){
-  if(getEncKeyB64()){
-    if(!confirm('This will generate a NEW key. Your existing encrypted data will need to be re-encrypted. Continue?')) return;
-  }
-  const key = await crypto.subtle.generateKey({name:'AES-GCM',length:256}, true, ['encrypt','decrypt']);
-  const raw = await crypto.subtle.exportKey('raw', key);
-  const b64 = btoa(String.fromCharCode(...new Uint8Array(raw)));
-  localStorage.setItem('enc_key', b64);
-  localStorage.setItem('enc_enabled','true');
-  refreshEncUI();
-  toast('New encryption key generated ✓','success');
-  // If data is loaded, re-save with new encryption
-  if(dataLoaded && getConfig().token){
-    await saveToGitHub();
-    toast('Data re-encrypted & saved ✓','success');
-  }
-}
-
-function toggleEncryption(checked){
-  if(checked){
-    if(!getEncKeyB64()){
-      generateNewEncKey();
-    } else {
-      localStorage.setItem('enc_enabled','true');
-      refreshEncUI();
-      toast('Encryption enabled','success');
-      if(dataLoaded && getConfig().token) saveToGitHub();
-    }
-  } else {
-    if(confirm('Disable encryption? Your notes.json on GitHub will be saved as plain text.')){
-      localStorage.setItem('enc_enabled','false');
-      refreshEncUI();
-      toast('Encryption disabled','success');
-      if(dataLoaded && getConfig().token) saveToGitHub();
-    } else {
-      document.getElementById('cfg-enc-toggle').checked = true;
-    }
-  }
-}
-
-function refreshEncUI(){
-  const enabled = getEncEnabled();
-  const hasKey = !!getEncKeyB64();
-  const toggle = document.getElementById('cfg-enc-toggle');
-  const badge = document.getElementById('enc-badge');
-  const keySection = document.getElementById('enc-key-section');
-  const keyInput = document.getElementById('cfg-enc-key');
-  if(toggle) toggle.checked = enabled;
-  if(badge){
-    if(enabled && hasKey){
-      badge.style.display='inline';
-      badge.textContent='Active';
-      badge.style.background='rgba(42,122,64,.15)';
-      badge.style.color='var(--green)';
-    } else if(hasKey && !enabled){
-      badge.style.display='inline';
-      badge.textContent='Paused';
-      badge.style.background='rgba(200,160,80,.15)';
-      badge.style.color='var(--accent)';
-    } else {
-      badge.style.display='none';
-    }
-  }
-  if(keySection) keySection.style.display = (enabled||hasKey) ? 'block' : 'none';
-  if(keyInput) keyInput.value = hasKey ? getEncKeyB64() : '';
-}
-
-function toggleKeyVisibility(){
-  const inp = document.getElementById('cfg-enc-key');
-  if(!inp) return;
-  inp.type = inp.type==='password' ? 'text' : 'password';
-}
-
-function copyEncKey(){
-  const k = getEncKeyB64();
-  if(!k){toast('No key to copy','error');return;}
-  navigator.clipboard.writeText(k).then(()=>toast('Key copied ✓','success')).catch(()=>{
-    // Fallback
-    const ta=document.createElement('textarea');ta.value=k;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();
-    toast('Key copied ✓','success');
-  });
-}
-
-function exportEncKey(){
-  const k = getEncKeyB64();
-  if(!k){toast('No key to export','error');return;}
-  const blob = new Blob([k],{type:'text/plain'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'mynotes-encryption.key';
-  a.click();
-  URL.revokeObjectURL(a.href);
-  toast('Key exported ✓','success');
-}
-
-function importEncKey(e){
-  const file = e.target.files[0];
-  if(!file) return;
-  const reader = new FileReader();
-  reader.onload = function(){
-    const k = reader.result.trim();
-    // Validate: should be base64, 44 chars for 256-bit key
-    try{ atob(k); } catch(_){ toast('Invalid key file','error'); return; }
-    if(confirm('Import this key? If you have existing encrypted data, make sure this is the correct key.')){
-      localStorage.setItem('enc_key', k);
-      localStorage.setItem('enc_enabled','true');
-      refreshEncUI();
-      toast('Key imported ✓','success');
-    }
-  };
-  reader.readAsText(file);
-  e.target.value=''; // reset
-}
-
-function saveEncKeyFromInput(){
-  const inp = document.getElementById('cfg-enc-key');
-  if(!inp) return;
-  const k = inp.value.trim();
-  if(!k){ toast('Key field is empty','error'); return; }
-  // Validate base64
-  try{ atob(k); }catch(_){ toast('Invalid key — must be valid base64','error'); return; }
-  if(getEncKeyB64() && k !== getEncKeyB64()){
-    if(!confirm('Replace existing key? Make sure this is correct — wrong key = unreadable data.')) return;
-  }
-  localStorage.setItem('enc_key', k);
-  localStorage.setItem('enc_enabled','true');
-  refreshEncUI();
-  toast('Key saved ✓','success');
-  // Re-encrypt data if loaded
-  if(dataLoaded && getConfig().token) saveToGitHub();
-}
-
 /* -- GITHUB API ---------------------------------- */
 const apiUrl=()=>{const c=getConfig();return`https://api.github.com/repos/${c.user}/${c.repo}/contents/notes.json`};
 
@@ -3945,28 +3738,7 @@ async function loadFromGitHub(){
     if(!res.ok)throw new Error(`${res.status} ${res.statusText}`);
     const j=await res.json();
     fileSHA=j.sha;
-    let rawContent = JSON.parse(decodeURIComponent(escape(atob(j.content.replace(/\n/g,'')))));
-    // Handle encrypted payload
-    if(isEncryptedPayload(rawContent)){
-      if(!getEncKeyB64()){
-        toast('Data is encrypted but no key found — import your key in Settings','error');
-        dataLoaded=true; initSticky(); renderAll();
-        setSyncing(false,'Encrypted');
-        openSettings();
-        return;
-      }
-      try{
-        const decrypted = await decryptData(rawContent.__data);
-        rawContent = JSON.parse(decrypted);
-      }catch(e){
-        toast('Decryption failed — wrong key?','error');
-        dataLoaded=true; initSticky(); renderAll();
-        setSyncing(false,'Decrypt Error');
-        openSettings();
-        return;
-      }
-    }
-    DATA=rawContent;
+    DATA=JSON.parse(decodeURIComponent(escape(atob(j.content.replace(/\n/g,'')))));
     dataLoaded=true; // data is now safely loaded — saves are now allowed
     let needsRepair = false;
 
@@ -4080,13 +3852,9 @@ async function loadFromGitHub(){
     renderAll();
     if(e.message&&e.message.includes('404')){
       toast('No saved data yet — start adding notes!','success');
-      setSyncing(false,'Synced');
     } else {
-      loadFailed=true; // CRITICAL: block saves so empty DATA doesn't overwrite real data on GitHub
-      toast('Load failed: '+e.message+' — saves disabled until reload','error');
-      setSyncing(false,'Load Error');
+      toast('Load failed: '+e.message,'error');
     }
-    return; // skip the final setSyncing below
   }
   setSyncing(false,'Synced');
 }
@@ -4094,30 +3862,10 @@ async function loadFromGitHub(){
 async function saveToGitHub(){
   // SAFETY GUARD: never save before GitHub data has been loaded — prevents wiping real data with empty DATA
   if(!dataLoaded){ console.warn('saveToGitHub blocked: data not loaded yet'); return false; }
-  if(loadFailed){ console.warn('saveToGitHub blocked: last load failed — reload page first'); toast('Save blocked — load failed earlier. Refresh the page first.','error'); return false; }
-  // SAFETY: refuse to save if ALL data arrays are empty — almost certainly a data-wipe scenario
-  const _totalItems = (DATA.notes||[]).length + (DATA.reminders||[]).length + (DATA.stickies||[]).length +
-    (DATA.trades||[]).length + (DATA.routines||[]).length + (DATA.tasknotes||[]).length + (DATA.finance||[]).length;
-  if(_totalItems===0 && fileSHA){
-    console.warn('saveToGitHub blocked: DATA is completely empty but file exists on GitHub — refusing to overwrite');
-    return false;
-  }
   const c=getConfig();
   if(!c.token){toast('Set up GitHub first','error');openSettings();return false;}
   setSyncing(true,'Saving...');
   try{
-    // Prepare payload — encrypt if enabled
-    let payload;
-    if(getEncEnabled() && getEncKeyB64()){
-      setSyncing(true,'Encrypting...');
-      const plainJson = JSON.stringify(DATA,null,2);
-      const encB64 = await encryptData(plainJson);
-      payload = JSON.stringify({__encrypted:true, __data:encB64});
-    } else {
-      payload = JSON.stringify(DATA,null,2);
-    }
-    const contentB64 = btoa(unescape(encodeURIComponent(payload)));
-
     // Always refresh SHA before saving to avoid stale conflicts
     await refreshSHA();
     const res = await fetch(apiUrl(),{
@@ -4125,7 +3873,7 @@ async function saveToGitHub(){
       headers:{Authorization:`token ${c.token}`,Accept:'application/vnd.github.v3+json','Content-Type':'application/json'},
       body:JSON.stringify({
         message:`notes: update ${new Date().toISOString().slice(0,16)}`,
-        content: contentB64,
+        content: btoa(unescape(encodeURIComponent(JSON.stringify(DATA,null,2)))),
         sha: fileSHA
       })
     });
@@ -4140,7 +3888,7 @@ async function saveToGitHub(){
           headers:{Authorization:`token ${c.token}`,Accept:'application/vnd.github.v3+json','Content-Type':'application/json'},
           body:JSON.stringify({
             message:`notes: update ${new Date().toISOString().slice(0,16)}`,
-            content: contentB64,
+            content: btoa(unescape(encodeURIComponent(JSON.stringify(DATA,null,2)))),
             sha: fileSHA
           })
         });
@@ -4150,7 +3898,7 @@ async function saveToGitHub(){
         }
         const j2=await res2.json();
         fileSHA=j2.content.sha;
-        toast(getEncEnabled()?'Encrypted & saved ✓':'Saved ✓','success');
+        toast('Saved ✓','success');
         setSyncing(false,'Synced');
         return true;
       }
@@ -4158,7 +3906,7 @@ async function saveToGitHub(){
     }
     const j=await res.json();
     fileSHA=j.content.sha;
-    toast(getEncEnabled()?'Encrypted & saved ✓':'Saved ✓','success');
+    toast('Saved ✓','success');
     setSyncing(false,'Synced');
     return true;
   }catch(e){
@@ -4179,14 +3927,7 @@ async function refreshSHA(){
       fileSHA=j.sha;
       // Merge remote data — only fall back to remote if our local copy is genuinely empty
       // Use .length check (not ||) because [] is truthy but still means "no data"
-      let remote=JSON.parse(decodeURIComponent(escape(atob(j.content.replace(/\n/g,'')))));
-      // Decrypt if needed
-      if(isEncryptedPayload(remote)){
-        try{
-          const dec = await decryptData(remote.__data);
-          remote = JSON.parse(dec);
-        }catch(e){ console.warn('refreshSHA decrypt failed',e); return; }
-      }
+      const remote=JSON.parse(decodeURIComponent(escape(atob(j.content.replace(/\n/g,'')))));
       if(!DATA.notes.length)        DATA.notes        = remote.notes        || [];
       if(!DATA.reminders.length)    DATA.reminders    = remote.reminders    || [];
       if(!DATA.trades.length)       DATA.trades       = remote.trades       || [];
@@ -4204,8 +3945,7 @@ async function refreshSHA(){
 
 function setSyncing(on,label){
   document.getElementById('sdot').className='sdot'+(on?' syncing':'');
-  const encIcon = (getEncEnabled() && getEncKeyB64()) ? '🔒 ' : '';
-  document.getElementById('stext').textContent=encIcon+(label||'Synced');
+  document.getElementById('stext').textContent=label||'Synced';
 }
 
 /* -- VIEW TOGGLE --------------------------------- */
