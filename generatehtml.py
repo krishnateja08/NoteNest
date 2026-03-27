@@ -3722,6 +3722,7 @@ body.theme-neon .fin-vtbtn.active{color:#080c14}
 let DATA={notes:[],reminders:[],stickies:[],archived:[],trades:[],routines:[],routine_logs:[],tasknotes:[],finance:[],note_folders:[],rem_lists:[]};
 let fileSHA=null;
 let dataLoaded=false; // guard: prevents any save before GitHub data is fully loaded
+let loadFailed=false; // guard: prevents saving empty DATA after a failed load
 let currentType='note';
 
 /* -- THEME --------------------------------------- */
@@ -4083,9 +4084,13 @@ async function loadFromGitHub(){
     renderAll();
     if(e.message&&e.message.includes('404')){
       toast('No saved data yet — start adding notes!','success');
+      setSyncing(false,'Synced');
     } else {
-      toast('Load failed: '+e.message,'error');
+      loadFailed=true; // CRITICAL: block saves so empty DATA doesn't overwrite real data on GitHub
+      toast('Load failed: '+e.message+' — saves disabled until reload','error');
+      setSyncing(false,'Load Error');
     }
+    return; // skip the final setSyncing below
   }
   setSyncing(false,'Synced');
 }
@@ -4093,6 +4098,14 @@ async function loadFromGitHub(){
 async function saveToGitHub(){
   // SAFETY GUARD: never save before GitHub data has been loaded — prevents wiping real data with empty DATA
   if(!dataLoaded){ console.warn('saveToGitHub blocked: data not loaded yet'); return false; }
+  if(loadFailed){ console.warn('saveToGitHub blocked: last load failed — reload page first'); toast('Save blocked — load failed earlier. Refresh the page first.','error'); return false; }
+  // SAFETY: refuse to save if ALL data arrays are empty — almost certainly a data-wipe scenario
+  const _totalItems = (DATA.notes||[]).length + (DATA.reminders||[]).length + (DATA.stickies||[]).length +
+    (DATA.trades||[]).length + (DATA.routines||[]).length + (DATA.tasknotes||[]).length + (DATA.finance||[]).length;
+  if(_totalItems===0 && fileSHA){
+    console.warn('saveToGitHub blocked: DATA is completely empty but file exists on GitHub — refusing to overwrite');
+    return false;
+  }
   const c=getConfig();
   if(!c.token){toast('Set up GitHub first','error');openSettings();return false;}
   setSyncing(true,'Saving...');
