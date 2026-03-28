@@ -1135,7 +1135,7 @@ body.theme-neon   .vtbtn.active{color:#080c14}
   display:none;position:fixed;inset:0;
   background:var(--over-bg);
   z-index:200;align-items:flex-start;justify-content:center;
-  padding:40px 20px;overflow-y:auto
+  padding:40px 20px;overflow-y:scroll;-webkit-overflow-scrolling:touch
 }
 .overlay.open{display:flex}
 .modal{
@@ -2361,6 +2361,16 @@ body.theme-neon .fin-vtbtn.active{color:#080c14}
   .prio-badge{font-size:9px;padding:1px 6px}
   .lrow-due{font-size:10px;padding:2px 6px}
   .modal{padding:20px}
+  /* Finance modal: single column on mobile so Save button is always reachable */
+  .fin-modal-grid{grid-template-columns:1fr !important}
+  /* Overlay: tighter padding on mobile */
+  .overlay{padding:16px 10px}
+  /* Dashboard calendar widget: stack on mobile so reminders panel gets full width */
+  .dash-cal-widget{grid-template-columns:1fr;gap:10px}
+  .dash-cal-left{min-width:unset}
+  .upc-title{white-space:normal;overflow:visible;text-overflow:clip;font-size:12px}
+  .upc-item{flex-wrap:wrap;gap:6px}
+  .upc-due{font-size:11px}
   /* Notes page: stack list on top of editor (hide editor by default) */
   .notes-page-wrap{flex-direction:column}
   .notes-folders-panel{display:none}
@@ -3204,7 +3214,7 @@ body.theme-neon .fin-vtbtn.active{color:#080c14}
     <button class="mclose" onclick="closeFinModal()">✕</button>
   </div>
   <input type="hidden" id="fin-edit-id">
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+  <div class="fin-modal-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
     <div class="frow" style="grid-column:1/-1"><label>Type *</label>
       <select id="fin-type">
         <option value="gave">💚 I Gave (they owe me)</option>
@@ -5241,8 +5251,13 @@ function remMobileShow(){
 
 function remMobileBack(){
   if(!isMobile()) return;
+  // Reset list selection so the user can pick a different list
+  _remListId = null;
+  _remPageFilter = 'all';
   const cols = document.querySelector('.rem-columns');
   if(cols) cols.classList.remove('show-checklist');
+  _renderRemListPanel();
+  _renderRemChecklist();
 }
 
 // When createNewNote is called on mobile, go straight to editor
@@ -5311,7 +5326,12 @@ function showPage(page, btn){
     document.querySelectorAll('.stat-card').forEach(c=>c.classList.remove('active'));
   }
   if(page==='notes')      renderNotesPage();
-  if(page==='reminders')  renderRemindersPage();
+  if(page==='reminders'){
+    // Always reset to 'all' view when navigating to reminders, so mobile users aren't locked to one list
+    _remListId = null;
+    _remPageFilter = 'all';
+    renderRemindersPage();
+  }
   if(page==='journal')    renderJournal();
   if(page==='routine')  showRoutineView('today');
   if(page==='finance')  renderFinance();
@@ -6504,7 +6524,7 @@ function openFinModal(id){
 }
 function closeFinModal(){document.getElementById('fin-modal-overlay').classList.remove('open');}
 
-function saveFinEntry(){
+async function saveFinEntry(){
   const person=document.getElementById('fin-person').value.trim();
   if(!person){toast('Person name is required','error');return;}
   const amount=parseFloat(document.getElementById('fin-amount').value);
@@ -6527,9 +6547,9 @@ function saveFinEntry(){
   if(id){FINANCE=FINANCE.map(e=>e.id===id?entry:e);}
   else  {FINANCE.unshift(entry);}
   closeFinModal();
-  saveFinance();
   renderFinance();
-  toast('Entry saved \u2713','success');
+  const ok = await saveFinance();
+  toast(ok!==false?'Entry saved \u2713':'Entry saved locally (sync pending)','success');
 }
 
 function deleteFinEntry(id){
@@ -6944,7 +6964,9 @@ let ROUTINE_LOGS = [];
 const RT_COLORS = {blue:'#3b5bdb',green:'#059669',purple:'#7c3aed',yellow:'#d97706',red:'#dc2626'};
 
 function todayStr(){
-  return new Date().toISOString().slice(0,10);
+  // Use LOCAL date (not UTC) so midnight IST correctly resets the day
+  const d = new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 }
 function todayDayName(){
   return new Date().toLocaleDateString('en-US',{weekday:'short'}); // Mon,Tue...
