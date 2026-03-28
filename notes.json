@@ -4,7 +4,7 @@
       "id": "uah4pnmz",
       "type": "note",
       "title": "PCR Values",
-      "body": "Bullish Values\n**# **PCR** > 1.2Bullish***text***\n**PCR > 1.5Strongly Bullish**\nPCR > 1.8Panic Zone (special case)\n\n**Bearish Values**\n# PCR < 0.8Bearish\nPCR < 0.7Bearish (scoring trigger)\nPCR < 0.5Strongly Bearish\n\n\n🟡 Neutral Zone\nPCR 0.8 – 1.2********",
+      "body": "Bullish Values\n**# **PCR** > 1.2Bullish***text***\n**PCR > 1.5Strongly Bullish**\nPCR > 1.8Panic Zone (special case)\n\n**Bearish Values**\n# PCR < 0.8Bearish\nPCR < 0.7Bearish (scoring trigger)\nPCR < 0.5Strongly Bearish\n\n\n\ud83d\udfe1 Neutral Zone\nPCR 0.8 \u2013 1.2********",
       "folder_id": "fngjgvu2b",
       "category": "fngjgvu2b",
       "color": "default",
@@ -141,7 +141,7 @@
   "stickies": [
     {
       "id": "ufwl2xzy",
-      "text": "Bullish Values\n\n\nPCR > 1.2Bullish\nPCR > 1.5Strongly Bullish\nPCR > 1.8Panic Zone (special case)\n\n\n Bearish Values\nPCR < 0.8Bearish\nPCR < 0.7Bearish (scoring trigger)\nPCR < 0.5Strongly Bearish\n\n\n🟡 Neutral Zone\nPCR 0.8 – 1.2",
+      "text": "Bullish Values\n\n\nPCR > 1.2Bullish\nPCR > 1.5Strongly Bullish\nPCR > 1.8Panic Zone (special case)\n\n\n Bearish Values\nPCR < 0.8Bearish\nPCR < 0.7Bearish (scoring trigger)\nPCR < 0.5Strongly Bearish\n\n\n\ud83d\udfe1 Neutral Zone\nPCR 0.8 \u2013 1.2",
       "bg": "#fde68a",
       "colorId": "yellow",
       "created": "2026-03-23 21:45",
@@ -172,7 +172,7 @@
     {
       "id": "rt001",
       "name": "Morning Routine",
-      "icon": "🔁",
+      "icon": "\ud83d\udd01",
       "color": "blue",
       "tasks": [
         {
@@ -213,7 +213,7 @@
     {
       "id": "rt002",
       "name": "Trading Routine",
-      "icon": "🔁",
+      "icon": "\ud83d\udd01",
       "color": "green",
       "tasks": [
         {
@@ -253,7 +253,7 @@
     {
       "id": "rt003",
       "name": "Night Routine",
-      "icon": "🔁",
+      "icon": "\ud83d\udd01",
       "color": "purple",
       "tasks": [
         {
@@ -782,29 +782,29 @@
     {
       "id": "personal",
       "name": "Personal",
-      "icon": "📁"
+      "icon": "\ud83d\udcc1"
     },
     {
       "id": "official",
       "name": "Official",
-      "icon": "📁"
+      "icon": "\ud83d\udcc1"
     },
     {
       "id": "fngjgvu2b",
       "name": "Trades",
-      "icon": "📁"
+      "icon": "\ud83d\udcc1"
     }
   ],
   "rem_lists": [
     {
       "id": "personal",
       "name": "Personal",
-      "icon": "🔵"
+      "icon": "\ud83d\udd35"
     },
     {
       "id": "official",
       "name": "Official",
-      "icon": "🔵"
+      "icon": "\ud83d\udd35"
     }
   ]
 }
