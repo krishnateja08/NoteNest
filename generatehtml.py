@@ -2425,11 +2425,6 @@ body.theme-neon .fin-vtbtn.active{color:#080c14}
 @media(min-width:641px){
   .notes-mobile-back,.rem-mobile-back{display:none !important}
 }
-  .stats-row{grid-template-columns:repeat(2,1fr)}
-  .topbar-right .search-wrap{display:none}
-  .lrow-tags{display:none}
-  .rem-summary-row{grid-template-columns:repeat(2,1fr)}
-}
 .hamburger{display:none}
 
 /* == RESPONSIVE: NEW PAGES == */
