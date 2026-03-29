@@ -125,7 +125,7 @@ body.theme-neon   .nav-item.active{background:rgba(0,229,255,.1);color:var(--acc
 .page-entering{animation:page-fadein 0.18s ease both}
 
 /* -- MAIN ------------------------------------------ */
-.main{margin-left:232px;flex:1;display:flex;flex-direction:column;min-width:0;min-height:0;overflow:hidden}
+.main{margin-left:232px;flex:1;display:flex;flex-direction:column;min-width:0;min-height:0;overflow:hidden;height:100vh}
 
 .topbar{
   background:var(--sidebar);
@@ -261,6 +261,12 @@ body.theme-neon .fab-option{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 body.theme-neon .fab-main{box-shadow:0 4px 24px rgba(0,229,255,.4)}
 .fab-main:hover{background:var(--accent2);transform:scale(1.07)}
 .fab-main.open{transform:rotate(45deg);background:var(--accent2)}
+
+/* -- PAGE SCROLL AREA ----------------------------- */
+#page-scroll-area{
+  flex:1;min-height:0;overflow-y:auto;
+  display:flex;flex-direction:column;
+}
 
 /* -- RICH DASHBOARD -------------------------------- */
 .dash-wrap{padding:20px 28px;display:flex;flex-direction:column;gap:16px}
@@ -2320,7 +2326,8 @@ body.theme-neon .fin-vtbtn.active{color:#080c14}
 @media(max-width:640px){
   body{height:auto;overflow:auto}
   .layout{height:auto;overflow:visible;flex-direction:column}
-  .main{margin-left:0;overflow-y:auto;-webkit-overflow-scrolling:touch;height:auto;min-height:100vh}
+  .main{margin-left:0;overflow:visible;height:auto;min-height:100vh}
+  #page-scroll-area{overflow:visible;flex:none}
   aside{
     transform:translateX(-100%);
     transition:transform 0.25s ease;
@@ -2678,6 +2685,9 @@ body.theme-neon .fin-vtbtn.active{color:#080c14}
       </div>
     </div>
   </div>
+
+  <!-- == PAGE SCROLL AREA (mobile scrolls here) == -->
+  <div id="page-scroll-area">
 
   <!-- == DASHBOARD PAGE == -->
   <div id="page-dashboard">
@@ -3218,6 +3228,8 @@ body.theme-neon .fin-vtbtn.active{color:#080c14}
   </div>
 
 </div>
+
+  </div><!-- end #page-scroll-area -->
 
 <!-- ── FINANCE ENTRY MODAL ─────────────────────────── -->
 <div class="overlay" id="fin-modal-overlay">
@@ -5349,6 +5361,10 @@ function showPage(page, btn){
       }
     }
   });
+  // Reset scroll on page switch (desktop: scroll area, mobile: window)
+  const sa = document.getElementById('page-scroll-area');
+  if(sa) sa.scrollTop = 0;
+  window.scrollTo(0,0);
 
   // 6. Icons in title
   const titles = {
