@@ -2377,7 +2377,7 @@ body.theme-neon .fin-vtbtn.active{color:#080c14}
   /* Reminders page: summary tiles only — slide panel layout is handled in the second @media block below */
   .rem-summary-row{grid-template-columns:repeat(2,1fr);padding:10px 12px;gap:8px}
   .rem-tile-count{font-size:22px}
-  /* Finance list: switch to simple flex on mobile */
+  /* ── Finance list ── */
   .fin-list-thead{display:none}
   .fin-lrow{display:flex;flex-wrap:wrap;gap:6px;align-items:flex-start;padding:12px 14px}
   .fin-lrow-accent{display:none}
@@ -2389,8 +2389,15 @@ body.theme-neon .fin-vtbtn.active{color:#080c14}
   .fin-lrow-right{order:5;width:100%;justify-content:flex-start}
   /* Finance summary */
   .fin-summary{grid-template-columns:1fr 1fr}
+
+  /* Show back bar on mobile, hide on desktop */
+  .notes-mobile-back{display:flex}
+  .rem-mobile-back{display:flex}
 }
-@media(max-width:400px){
+/* Hide back bars on desktop */
+@media(min-width:641px){
+  .notes-mobile-back,.rem-mobile-back{display:none !important}
+}
   .stats-row{grid-template-columns:repeat(2,1fr)}
   .topbar-right .search-wrap{display:none}
   .lrow-tags{display:none}
@@ -2513,9 +2520,8 @@ body.theme-neon .fin-vtbtn.active{color:#080c14}
   .fin-lrow-right{grid-column:2/4;grid-row:2;flex-wrap:wrap}
   .fin-header{padding:12px 14px}
 
-  /* Show back bar on mobile, hide on desktop */
-  .notes-mobile-back{display:flex}
-  .rem-mobile-back{display:flex}
+  /* Show back bars on mobile */
+  .notes-mobile-back,.rem-mobile-back{display:flex}
 }
 /* Hide back bars on desktop */
 @media(min-width:641px){
