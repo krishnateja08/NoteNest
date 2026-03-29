@@ -694,7 +694,7 @@ body.theme-neon  .notes-folder-item.active{background:rgba(0,229,255,.08);color:
   user-select:none;background:transparent
 }
 
-.notes-list-items{flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;background:#ede6d6}
+.notes-list-items{flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;background:#f5efe4}
 .notes-list-items::-webkit-scrollbar{display:none}
 .notes-list-item{
   padding:11px 14px 11px 17px;border-bottom:1px solid var(--border);
