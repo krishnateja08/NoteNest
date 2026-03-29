@@ -583,15 +583,25 @@ body.theme-neon .dash-tasks-count.open{background:rgba(0,229,255,.1);color:#00e5
 .empty-state p{font-size:13px}
 
 /* == APPLE-NOTES 3-COLUMN PAGE == */
-.notes-page-wrap{display:flex;flex-direction:row;height:calc(100vh - 58px);overflow:hidden;align-items:stretch}
-#page-notes{flex-direction:row !important;align-items:stretch !important}
+#page-notes{
+  flex-direction:row !important;
+  align-items:stretch !important;
+  height:calc(100vh - 58px) !important;
+  width:100%;
+  overflow:hidden
+}
+.notes-page-wrap{
+  display:flex;flex-direction:row;
+  width:100%;height:100%;
+  overflow:hidden;align-items:stretch
+}
 
 /* Column 1 — Folders */
 .notes-folders-panel{
   width:190px;flex-shrink:0;background:var(--s2);
   border-right:1px solid var(--border);
   display:flex;flex-direction:column;
-  flex:0 0 190px;align-self:stretch;
+  flex:0 0 190px;
   height:100%;min-height:0;overflow:hidden
 }
 .notes-folders-hdr{
@@ -646,7 +656,7 @@ body.theme-neon  .notes-folder-item.active{background:rgba(0,229,255,.08);color:
   width:260px;flex-shrink:0;
   background:var(--sidebar);border-right:1px solid var(--border2);
   display:flex;flex-direction:column;
-  flex:0 0 260px;align-self:stretch;
+  flex:0 0 260px;
   height:100%;min-height:0;overflow:hidden
 }
 .notes-list-hdr{
@@ -663,8 +673,7 @@ body.theme-neon  .notes-folder-item.active{background:rgba(0,229,255,.08);color:
 .notes-new-btn{
   background:var(--accent);color:#fff;border:none;border-radius:6px;
   padding:4px 10px;font-size:12px;font-weight:700;cursor:pointer;
-  font-family:'Inter',sans-serif;transition:background 0.15s;white-space:nowrap;
-  flex-shrink:0
+  font-family:'Inter',sans-serif;transition:background 0.15s;white-space:nowrap;flex-shrink:0
 }
 .notes-new-btn:hover{background:var(--accent2)}
 .notes-list-search{
@@ -683,11 +692,12 @@ body.theme-neon  .notes-folder-item.active{background:rgba(0,229,255,.08);color:
   user-select:none;background:transparent
 }
 
-.notes-list-items{flex:1;min-height:0;overflow-y:auto;scrollbar-width:none}
+.notes-list-items{flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;background:var(--s2)}
 .notes-list-items::-webkit-scrollbar{display:none}
 .notes-list-item{
   padding:11px 14px 11px 17px;border-bottom:1px solid var(--border);
-  cursor:pointer;transition:background 0.12s;position:relative
+  cursor:pointer;transition:background 0.12s;position:relative;
+  background:var(--sidebar)
 }
 .notes-list-item:hover{background:var(--s2)}
 .notes-list-item.active{background:rgba(139,94,42,.13)}
@@ -717,7 +727,8 @@ body.theme-neon  .notes-list-item.active{background:rgba(0,229,255,.08)}
 
 /* Column 3 — Inline Editor */
 .notes-editor-panel{
-  flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg)
+  flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg);
+  height:100%;min-height:0
 }
 .notes-editor-empty{
   flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -2774,7 +2785,7 @@ body.theme-neon .fin-vtbtn.active{color:#080c14}
   </div>
 
   <!-- == NOTES PAGE (3-column Apple Notes style) == -->
-  <div id="page-notes" style="display:none;height:calc(100vh - 58px)">
+  <div id="page-notes" style="display:none">
     <div class="notes-page-wrap" style="width:100%;height:100%">
 
       <!-- Column 1: Folders -->
