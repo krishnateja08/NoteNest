@@ -12,24 +12,24 @@
     {
       "id": "personal",
       "name": "Personal",
-      "icon": "👤"
+      "icon": "\ud83d\udc64"
     },
     {
       "id": "official",
       "name": "Official",
-      "icon": "💼"
+      "icon": "\ud83d\udcbc"
     }
   ],
   "rem_lists": [
     {
       "id": "personal",
       "name": "Personal",
-      "icon": "🔵"
+      "icon": "\ud83d\udd35"
     },
     {
       "id": "official",
       "name": "Official",
-      "icon": "🔴"
+      "icon": "\ud83d\udd34"
     }
   ]
 }
