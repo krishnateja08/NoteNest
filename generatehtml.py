@@ -655,7 +655,7 @@ body.theme-neon  .notes-folder-item.active{background:rgba(0,229,255,.08);color:
 /* Column 2 — Notes list */
 .notes-list-panel{
   width:260px;flex-shrink:0;
-  background:#f5efe4;border-right:1px solid var(--border2);
+  background:#e8dfd0;border-right:1px solid var(--border2);
   display:flex;flex-direction:column;
   flex:0 0 260px;align-self:stretch;
   min-height:0;overflow:hidden
@@ -663,7 +663,7 @@ body.theme-neon  .notes-folder-item.active{background:rgba(0,229,255,.08);color:
 .notes-list-hdr{
   padding:12px 14px 10px;border-bottom:1px solid var(--border);
   display:flex;flex-direction:column;gap:6px;flex-shrink:0;
-  background:#f5efe4
+  background:#e8dfd0
 }
 .notes-list-hdr-top{display:flex;align-items:center;gap:8px;min-width:0}
 .notes-list-hdr-title{
@@ -694,14 +694,14 @@ body.theme-neon  .notes-folder-item.active{background:rgba(0,229,255,.08);color:
   user-select:none;background:transparent
 }
 
-.notes-list-items{flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;background:#f5efe4}
+.notes-list-items{flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;background:#e8dfd0}
 .notes-list-items::-webkit-scrollbar{display:none}
 .notes-list-item{
   padding:11px 14px 11px 17px;border-bottom:1px solid var(--border);
   cursor:pointer;transition:background 0.12s;position:relative;
-  background:#f5efe4
+  background:#e8dfd0
 }
-.notes-list-item:hover{background:#ede5d5}
+.notes-list-item:hover{background:#ddd4c0}
 .notes-list-item.active{background:rgba(139,94,42,.13)}
 body.theme-beige .notes-list-item.active{background:rgba(124,92,191,.1)}
 body.theme-neon  .notes-list-item.active{background:rgba(0,229,255,.08)}
@@ -729,7 +729,7 @@ body.theme-neon  .notes-list-item.active{background:rgba(0,229,255,.08)}
 
 /* Column 3 — Inline Editor */
 .notes-editor-panel{
-  flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg);
+  flex:1;display:flex;flex-direction:column;overflow:hidden;background:#fffdf9;
   align-self:stretch;min-height:0
 }
 .notes-editor-empty{
