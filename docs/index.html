@@ -62,7 +62,7 @@ body.theme-neon {
 body{
   font-family:'Inter',sans-serif;
   background:var(--bg);color:var(--text);
-  min-height:100vh;transition:background 0.3s,color 0.3s
+  height:100vh;overflow:hidden;transition:background 0.3s,color 0.3s
 }
 
 /* -- LAYOUT ---------------------------------------- */
@@ -581,15 +581,15 @@ body.theme-neon .dash-tasks-count.open{background:rgba(0,229,255,.1);color:#00e5
 /* == APPLE-NOTES 3-COLUMN PAGE == */
 #page-notes{
   flex:1;
-  flex-direction:row !important;
-  align-items:stretch !important;
+  display:flex;
+  flex-direction:column !important;
   min-height:0;
   width:100%;
   overflow:hidden
 }
 .notes-page-wrap{
   display:flex;flex-direction:row;
-  width:100%;flex:1;min-height:0;
+  flex:1;width:100%;min-height:0;
   overflow:hidden;align-items:stretch
 }
 
@@ -2783,7 +2783,7 @@ body.theme-neon .fin-vtbtn.active{color:#080c14}
 
   <!-- == NOTES PAGE (3-column Apple Notes style) == -->
   <div id="page-notes" style="display:none">
-    <div class="notes-page-wrap" style="width:100%;height:100%">
+    <div class="notes-page-wrap" style="width:100%;flex:1;min-height:0">
 
       <!-- Column 1: Folders -->
       <div class="notes-folders-panel">
