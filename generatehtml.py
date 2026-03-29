@@ -2381,7 +2381,7 @@ body.theme-neon .fin-vtbtn.active{color:#080c14}
   /* Reminders page: summary tiles only — slide panel layout is handled in the second @media block below */
   .rem-summary-row{grid-template-columns:repeat(2,1fr);padding:10px 12px;gap:8px}
   .rem-tile-count{font-size:22px}
-  /* Finance list: switch to simple flex on mobile */
+  /* ── Finance list ── */
   .fin-list-thead{display:none}
   .fin-lrow{display:flex;flex-wrap:wrap;gap:6px;align-items:flex-start;padding:12px 14px}
   .fin-lrow-accent{display:none}
@@ -2393,8 +2393,15 @@ body.theme-neon .fin-vtbtn.active{color:#080c14}
   .fin-lrow-right{order:5;width:100%;justify-content:flex-start}
   /* Finance summary */
   .fin-summary{grid-template-columns:1fr 1fr}
+
+  /* Show back bar on mobile, hide on desktop */
+  .notes-mobile-back{display:flex}
+  .rem-mobile-back{display:flex}
 }
-@media(max-width:400px){
+/* Hide back bars on desktop */
+@media(min-width:641px){
+  .notes-mobile-back,.rem-mobile-back{display:none !important}
+}
   .stats-row{grid-template-columns:repeat(2,1fr)}
   .topbar-right .search-wrap{display:none}
   .lrow-tags{display:none}
@@ -2517,10 +2524,10 @@ body.theme-neon .fin-vtbtn.active{color:#080c14}
   .fin-lrow-right{grid-column:2/4;grid-row:2;flex-wrap:wrap}
   .fin-header{padding:12px 14px}
 
-  /* Hide desktop-only mobile back on desktop */
-  .notes-mobile-back,.rem-mobile-back{display:none}
+  /* Show back bars on mobile */
+  .notes-mobile-back,.rem-mobile-back{display:flex}
 }
-/* Show back bars only on mobile */
+/* Hide back bars on desktop */
 @media(min-width:641px){
   .notes-mobile-back,.rem-mobile-back{display:none !important}
 }
@@ -4990,17 +4997,15 @@ function getRemLists(){
 }
 
 function renderRemindersPage(resetPanel){
-  // On mobile: reset to the lists panel ONLY when explicitly requested (e.g. when
-  // navigating TO the reminders page). For re-renders triggered by add/toggle/delete
-  // we preserve whichever panel the user is currently viewing.
-  if(resetPanel && isMobile()){
+  // Reset to the lists panel when explicitly requested (navigating TO reminders page)
+  // For re-renders triggered by add/toggle/delete we preserve the current panel
+  if(resetPanel){
     const cols = document.querySelector('.rem-columns');
     if(cols) cols.classList.remove('show-checklist');
   }
   _updateRemTiles();
   _renderRemListPanel();
   _renderRemChecklist();
-  // Refresh full calendar if it's currently showing
   if(_remViewMode==='cal') renderFullCal();
 }
 
@@ -5284,13 +5289,11 @@ function notesMobileBack(to){
 }
 
 function remMobileShow(){
-  if(!isMobile()) return;
   const cols = document.querySelector('.rem-columns');
   if(cols) cols.classList.add('show-checklist');
 }
 
 function remMobileBack(){
-  if(!isMobile()) return;
   // Reset list selection so the user can pick a different list
   _remListId = null;
   _remPageFilter = 'all';
