@@ -2008,18 +2008,6 @@ body.theme-beige .nav-item.active{color:#7c5cbf}
 .fin-card.settled{border-left-color:#9ca3af}
 .fin-card.overdue-card{border-left-color:#dc2626;border-color:rgba(220,38,38,.3);animation:fin-shake 3s ease 0.5s}
 @keyframes fin-shake{0%,100%{transform:translateX(0)}10%{transform:translateX(-3px)}20%{transform:translateX(3px)}30%{transform:translateX(-2px)}40%{transform:translateX(2px)}50%,90%{transform:translateX(0)}}
-/* 3. Floating Add Button */
-.fin-fab{
-  position:fixed;bottom:28px;right:28px;z-index:100;
-  width:52px;height:52px;border-radius:50%;
-  background:var(--accent);color:#fff;border:none;
-  font-size:24px;cursor:pointer;
-  box-shadow:0 4px 16px rgba(139,94,42,.45);
-  transition:transform 0.15s,box-shadow 0.15s;
-  display:none;align-items:center;justify-content:center;font-weight:300
-}
-.fin-fab:hover{transform:scale(1.1);box-shadow:0 6px 20px rgba(139,94,42,.55)}
-.fin-fab.visible{display:flex}
 /* 5. Sort select */
 .fin-sort-sel{
   background:var(--sidebar);border:1px solid var(--border);border-radius:7px;
@@ -2083,10 +2071,10 @@ body.theme-beige .nav-item.active{color:#7c5cbf}
 .fin-card-tags{display:flex;gap:5px;flex-wrap:wrap}
 .fin-card-meta{
   display:flex;align-items:center;justify-content:space-between;
-  padding-top:8px;border-top:1px solid var(--border)
+  padding-top:8px;border-top:1px solid var(--border);flex-wrap:wrap;gap:6px
 }
 .fin-card-date{font-size:10px;color:var(--muted);font-weight:500}
-.fin-card-btns{display:flex;gap:5px}
+.fin-card-btns{display:flex;gap:5px;flex-wrap:wrap}
 /* Finance list-row */
 .fin-view-toggle{
   display:flex;background:var(--s2);border:1.5px solid var(--border);
@@ -2264,6 +2252,12 @@ body.theme-neon .fin-vtbtn.active{color:#080c14}
 @media(max-width:640px){
   .fin-header,.fin-summary,.fin-people,.fin-filters,.fin-list{padding-left:12px;padding-right:12px}
   .fin-summary{grid-template-columns:1fr 1fr}
+  /* Finance cards: make buttons wrap so Delete is never cut off */
+  .fin-card-btns{flex-wrap:wrap;gap:4px;justify-content:flex-start}
+  .fin-card-btns .cbtn{font-size:11px;padding:4px 10px;flex-shrink:0}
+  .fin-card-meta{flex-direction:column;align-items:flex-start;gap:6px}
+  /* Finance grid: single column on mobile for more card width */
+  .fin-grid{grid-template-columns:1fr !important}
 }
 
 /* -- TOAST ----------------------------------------- */
@@ -3206,9 +3200,6 @@ body.theme-neon .fin-vtbtn.active{color:#080c14}
     <div class="fin-grid" id="fin-card-grid"></div>
     <div class="fin-listbox" id="fin-listbox"></div>
   </div>
-
-  <!-- 3. Floating Add Button -->
-  <button class="fin-fab" id="fin-fab" onclick="openFinModal()" title="New Entry">+</button>
 
 </div>
 
@@ -5395,7 +5386,6 @@ function showPage(page, btn){
   if(page==='journal')    renderJournal();
   if(page==='routine')  showRoutineView('today');
   if(page==='finance')  renderFinance();
-  else { const fab=document.getElementById('fin-fab'); if(fab) fab.classList.remove('visible'); }
 }
 
 /* -- STICKY NOTES PAGE --------------------------- */
@@ -6820,10 +6810,6 @@ function renderFinance(){
     const ord={overdue:0,pending:1,partial:2,settled:3};
     items.sort((a,b)=>(ord[finStatus(a)]||1)-(ord[finStatus(b)]||1));
   }
-
-  // show FAB when on finance page
-  const fab=document.getElementById('fin-fab');
-  if(fab) fab.classList.add('visible');
 
   updateFinanceCount();
 
