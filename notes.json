@@ -3,5 +3,33 @@
   "reminders": [],
   "trades": [],
   "routines": [],
-  "routine_logs": []
+  "routine_logs": [],
+  "tasknotes": [],
+  "finance": [],
+  "stickies": [],
+  "archived": [],
+  "note_folders": [
+    {
+      "id": "personal",
+      "name": "Personal",
+      "icon": "👤"
+    },
+    {
+      "id": "official",
+      "name": "Official",
+      "icon": "💼"
+    }
+  ],
+  "rem_lists": [
+    {
+      "id": "personal",
+      "name": "Personal",
+      "icon": "🔵"
+    },
+    {
+      "id": "official",
+      "name": "Official",
+      "icon": "🔴"
+    }
+  ]
 }
