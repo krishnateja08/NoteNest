@@ -66,7 +66,7 @@ body{
 }
 
 /* -- LAYOUT ---------------------------------------- */
-.layout{display:flex;min-height:100vh}
+.layout{display:flex;height:100vh;overflow:hidden}
 
 aside{
   width:232px;flex-shrink:0;background:var(--sidebar);
@@ -125,7 +125,7 @@ body.theme-neon   .nav-item.active{background:rgba(0,229,255,.1);color:var(--acc
 .page-entering{animation:page-fadein 0.18s ease both}
 
 /* -- MAIN ------------------------------------------ */
-.main{margin-left:232px;flex:1;display:flex;flex-direction:column;min-width:0}
+.main{margin-left:232px;flex:1;display:flex;flex-direction:column;min-width:0;min-height:0;overflow:hidden}
 
 .topbar{
   background:var(--sidebar);
@@ -580,15 +580,16 @@ body.theme-neon .dash-tasks-count.open{background:rgba(0,229,255,.1);color:#00e5
 
 /* == APPLE-NOTES 3-COLUMN PAGE == */
 #page-notes{
+  flex:1;
   flex-direction:row !important;
   align-items:stretch !important;
-  height:calc(100vh - 58px) !important;
+  min-height:0;
   width:100%;
   overflow:hidden
 }
 .notes-page-wrap{
   display:flex;flex-direction:row;
-  width:100%;height:100%;
+  width:100%;flex:1;min-height:0;
   overflow:hidden;align-items:stretch
 }
 
@@ -597,8 +598,8 @@ body.theme-neon .dash-tasks-count.open{background:rgba(0,229,255,.1);color:#00e5
   width:190px;flex-shrink:0;background:var(--s2);
   border-right:1px solid var(--border);
   display:flex;flex-direction:column;
-  flex:0 0 190px;
-  height:100%;min-height:0;overflow:hidden
+  flex:0 0 190px;align-self:stretch;
+  min-height:0;overflow:hidden
 }
 .notes-folders-hdr{
   padding:14px 14px 10px;border-bottom:1px solid var(--border);
@@ -652,8 +653,8 @@ body.theme-neon  .notes-folder-item.active{background:rgba(0,229,255,.08);color:
   width:260px;flex-shrink:0;
   background:var(--sidebar);border-right:1px solid var(--border2);
   display:flex;flex-direction:column;
-  flex:0 0 260px;
-  height:100%;min-height:0;overflow:hidden
+  flex:0 0 260px;align-self:stretch;
+  min-height:0;overflow:hidden
 }
 .notes-list-hdr{
   padding:12px 14px 10px;border-bottom:1px solid var(--border);
@@ -724,7 +725,7 @@ body.theme-neon  .notes-list-item.active{background:rgba(0,229,255,.08)}
 /* Column 3 — Inline Editor */
 .notes-editor-panel{
   flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg);
-  height:100%;min-height:0
+  align-self:stretch;min-height:0
 }
 .notes-editor-empty{
   flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
