@@ -713,7 +713,8 @@ body.theme-neon  .notes-list-item.active{background:rgba(0,229,255,.08)}
 
 /* Column 3 — Inline Editor */
 .notes-editor-panel{
-  flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg)
+  flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--sidebar);
+  align-self:stretch
 }
 .notes-editor-empty{
   flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
