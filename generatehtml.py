@@ -599,7 +599,7 @@ body.theme-neon .dash-tasks-count.open{background:rgba(0,229,255,.1);color:#00e5
 
 /* Column 1 — Folders */
 .notes-folders-panel{
-  width:190px;flex-shrink:0;background:var(--s2);
+  width:190px;flex-shrink:0;background:#d4c4a8;
   border-right:1px solid var(--border);
   display:flex;flex-direction:column;
   flex:0 0 190px;align-self:stretch;
@@ -655,15 +655,15 @@ body.theme-neon  .notes-folder-item.active{background:rgba(0,229,255,.08);color:
 /* Column 2 — Notes list */
 .notes-list-panel{
   width:260px;flex-shrink:0;
-  background:#d4c4a8;border-right:1px solid var(--border2);
+  background:var(--sidebar);border-right:1px solid var(--border2);
   display:flex;flex-direction:column;
   flex:0 0 260px;align-self:stretch;
   min-height:0;overflow:hidden
 }
 .notes-list-hdr{
-  padding:12px 14px 10px;border-bottom:1px solid rgba(0,0,0,.1);
+  padding:12px 14px 10px;border-bottom:1px solid var(--border);
   display:flex;flex-direction:column;gap:6px;flex-shrink:0;
-  background:#d4c4a8
+  background:var(--sidebar)
 }
 .notes-list-hdr-top{display:flex;align-items:center;gap:8px;min-width:0}
 .notes-list-hdr-title{
@@ -694,15 +694,15 @@ body.theme-neon  .notes-folder-item.active{background:rgba(0,229,255,.08);color:
   user-select:none;background:transparent
 }
 
-.notes-list-items{flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;background:#c8b898}
+.notes-list-items{flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;background:var(--s2)}
 .notes-list-items::-webkit-scrollbar{display:none}
 .notes-list-item{
-  padding:11px 14px 11px 17px;border-bottom:1px solid rgba(0,0,0,.08);
+  padding:11px 14px 11px 17px;border-bottom:1px solid var(--border);
   cursor:pointer;transition:background 0.12s;position:relative;
-  background:#d4c4a8
+  background:var(--sidebar)
 }
-.notes-list-item:hover{background:#cbb99a}
-.notes-list-item.active{background:#b8a070}
+.notes-list-item:hover{background:var(--s2)}
+.notes-list-item.active{background:rgba(139,94,42,.13)}
 body.theme-beige .notes-list-item.active{background:rgba(124,92,191,.1)}
 body.theme-neon  .notes-list-item.active{background:rgba(0,229,255,.08)}
 .notes-list-item-pin{font-size:9px;color:var(--accent);font-weight:700;margin-bottom:2px}
