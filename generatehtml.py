@@ -3880,8 +3880,35 @@ async function saveToGitHub(){
   if(!c.token){toast('Set up GitHub first','error');openSettings();return false;}
   setSyncing(true,'Saving...');
   try{
+    // Snapshot the current DATA before refreshSHA so refreshSHA cannot overwrite
+    // in-memory changes (e.g. a new Finance entry on mobile) with stale remote data.
+    const _snap = {
+      notes:        DATA.notes        ? [...DATA.notes]        : [],
+      reminders:    DATA.reminders    ? [...DATA.reminders]    : [],
+      finance:      DATA.finance      ? [...DATA.finance]      : [],
+      trades:       DATA.trades       ? [...DATA.trades]       : [],
+      tasknotes:    DATA.tasknotes    ? [...DATA.tasknotes]    : [],
+      routines:     DATA.routines     ? [...DATA.routines]     : [],
+      routine_logs: DATA.routine_logs ? [...DATA.routine_logs] : [],
+      stickies:     DATA.stickies     ? [...DATA.stickies]     : [],
+      archived:     DATA.archived     ? [...DATA.archived]     : [],
+      note_folders: DATA.note_folders ? [...DATA.note_folders] : [],
+      rem_lists:    DATA.rem_lists    ? [...DATA.rem_lists]    : [],
+    };
     // Always refresh SHA before saving to avoid stale conflicts
     await refreshSHA();
+    // Restore snapshot so refreshSHA's remote-fallback doesn't clobber unsaved local data
+    if(_snap.notes.length)        DATA.notes        = _snap.notes;
+    if(_snap.reminders.length)    DATA.reminders    = _snap.reminders;
+    if(_snap.finance.length)      DATA.finance      = _snap.finance;
+    if(_snap.trades.length)       DATA.trades       = _snap.trades;
+    if(_snap.tasknotes.length)    DATA.tasknotes    = _snap.tasknotes;
+    if(_snap.routines.length)     DATA.routines     = _snap.routines;
+    if(_snap.routine_logs.length) DATA.routine_logs = _snap.routine_logs;
+    if(_snap.stickies.length)     DATA.stickies     = _snap.stickies;
+    if(_snap.archived.length)     DATA.archived     = _snap.archived;
+    if(_snap.note_folders.length) DATA.note_folders = _snap.note_folders;
+    if(_snap.rem_lists.length)    DATA.rem_lists    = _snap.rem_lists;
     const res = await fetch(apiUrl(),{
       method:'PUT',
       headers:{Authorization:`token ${c.token}`,Accept:'application/vnd.github.v3+json','Content-Type':'application/json'},
@@ -4959,7 +4986,14 @@ function getRemLists(){
   return DATA.rem_lists;
 }
 
-function renderRemindersPage(){
+function renderRemindersPage(resetPanel){
+  // On mobile: reset to the lists panel ONLY when explicitly requested (e.g. when
+  // navigating TO the reminders page). For re-renders triggered by add/toggle/delete
+  // we preserve whichever panel the user is currently viewing.
+  if(resetPanel && isMobile()){
+    const cols = document.querySelector('.rem-columns');
+    if(cols) cols.classList.remove('show-checklist');
+  }
   _updateRemTiles();
   _renderRemListPanel();
   _renderRemChecklist();
@@ -5007,7 +5041,10 @@ function selectRemFilter(filter){
   _updateRemTiles();
   _renderRemListPanel();
   _renderRemChecklist();
-  remMobileShow();
+  // On mobile: smart-filter tiles (All / Today / Scheduled / Completed) show content
+  // inside the checklist panel but we do NOT slide away from the lists panel —
+  // the user should still be able to see and switch lists. Only tapping a specific
+  // list item (selectRemList) slides to the checklist panel.
 }
 
 function selectRemList(id){
@@ -5330,7 +5367,7 @@ function showPage(page, btn){
     // Always reset to 'all' view when navigating to reminders, so mobile users aren't locked to one list
     _remListId = null;
     _remPageFilter = 'all';
-    renderRemindersPage();
+    renderRemindersPage(true); // true = reset mobile panel to lists view
   }
   if(page==='journal')    renderJournal();
   if(page==='routine')  showRoutineView('today');
@@ -7004,12 +7041,13 @@ function isTaskDoneToday(taskId){
 
 function getWeekCount(taskId){
   // how many days in the last 7 days was this task done
+  // Use LOCAL date (not UTC) so IST midnight doesn't bleed into previous day
   const now = new Date();
   let count = 0;
   for(let i=0;i<7;i++){
     const d = new Date(now);
     d.setDate(d.getDate()-i);
-    const ds = d.toISOString().slice(0,10);
+    const ds = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
     if(ROUTINE_LOGS.some(l=>l.date===ds && l.task_id===taskId && l.done)) count++;
   }
   return count;
