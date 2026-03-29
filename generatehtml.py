@@ -1135,7 +1135,8 @@ body.theme-neon   .vtbtn.active{color:#080c14}
   display:none;position:fixed;inset:0;
   background:var(--over-bg);
   z-index:200;align-items:flex-start;justify-content:center;
-  padding:40px 20px;overflow-y:scroll;-webkit-overflow-scrolling:touch
+  padding:40px 20px;overflow-y:scroll;-webkit-overflow-scrolling:touch;
+  touch-action:pan-y
 }
 .overlay.open{display:flex}
 .modal{
@@ -1214,7 +1215,8 @@ body.theme-neon  .tt.active{color:#080c14;border-bottom-color:var(--accent)}
 .frow input:focus,.frow textarea:focus,.frow select:focus{border-color:var(--accent)}
 .frow textarea{resize:vertical;min-height:120px}
 .frow select option{background:var(--sidebar)}
-.mfoot{display:flex;gap:8px;justify-content:flex-end;margin-top:18px;padding-top:14px;border-top:1px solid var(--border);align-items:center}
+.mfoot{display:flex;gap:8px;justify-content:flex-end;margin-top:18px;padding-top:14px;border-top:1px solid var(--border);align-items:center;flex-wrap:wrap}
+.mfoot .btn,.mfoot .btn-ghost{min-height:44px;padding:10px 20px;font-size:14px;touch-action:manipulation}
 .autosave-lbl{font-size:11px;color:var(--green);margin-right:auto;opacity:0;transition:opacity 0.4s;font-weight:600}
 .autosave-lbl.show{opacity:1}
 /* Tag chip input */
@@ -2376,17 +2378,9 @@ body.theme-neon .fin-vtbtn.active{color:#080c14}
   .notes-folders-panel{display:none}
   .notes-list-panel{width:100%;height:50vh;flex-shrink:0;border-right:none;border-bottom:1px solid var(--border2)}
   .notes-editor-panel{height:50vh}
-  /* Reminders page: stack vertically */
+  /* Reminders page: summary tiles only — slide panel layout is handled in the second @media block below */
   .rem-summary-row{grid-template-columns:repeat(2,1fr);padding:10px 12px;gap:8px}
   .rem-tile-count{font-size:22px}
-  .rem-columns{flex-direction:column}
-  .rem-lists-panel{width:100%;flex-direction:row;flex-shrink:0;border-right:none;border-bottom:1px solid var(--border)}
-  .rem-list-items{display:flex;flex-direction:row;overflow-x:auto;padding:4px 8px;gap:0}
-  .rem-list-item{white-space:nowrap;border-bottom:none;padding:7px 12px;border-radius:20px;flex-shrink:0}
-  .rem-list-item.active{border:1.5px solid var(--accent)}
-  .rem-lists-hdr{display:none}
-  .rem-checklist-hdr{padding:10px 14px 8px}
-  .rem-checklist-body{padding:6px 14px 16px}
   /* Finance list: switch to simple flex on mobile */
   .fin-list-thead{display:none}
   .fin-lrow{display:flex;flex-wrap:wrap;gap:6px;align-items:flex-start;padding:12px 14px}
@@ -3839,6 +3833,15 @@ async function loadFromGitHub(){
     ROUTINE_LOGS  = DATA.routine_logs;
     TASKNOTES     = DATA.tasknotes;
     FINANCE       = DATA.finance;
+    // Recover from localStorage backup if GitHub returned fewer entries
+    // (protects against mobile save race conditions)
+    try{
+      const finBackup = JSON.parse(localStorage.getItem('fin_backup')||'[]');
+      if(finBackup.length > FINANCE.length){
+        FINANCE = finBackup;
+        DATA.finance = FINANCE;
+      }
+    }catch(e){}
     renderAll();
     updateJournalCount();
     updateRoutineCount();
@@ -6461,9 +6464,13 @@ function finTotalInterestPaid(e){
 }
 
 async function saveFinance(){
-  DATA.finance=FINANCE;
+  DATA.finance = FINANCE;
   updateFinanceCount();
-  await saveToGitHub();
+  // Always persist to localStorage immediately as a safety net for mobile
+  // In case GitHub sync fails or is slow, data is never lost
+  try{ localStorage.setItem('fin_backup', JSON.stringify(FINANCE)); }catch(e){}
+  const ok = await saveToGitHub();
+  return ok;
 }
 
 let _finView = 'card';
