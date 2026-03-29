@@ -2322,6 +2322,9 @@ body.theme-neon .fin-vtbtn.active{color:#080c14}
   .full-cal-day-num{font-size:11px}
 }
 @media(max-width:640px){
+  body{height:auto;overflow:auto}
+  .layout{height:auto;overflow:visible;flex-direction:column}
+  .main{margin-left:0;overflow-y:auto;-webkit-overflow-scrolling:touch;height:auto;min-height:100vh}
   aside{
     transform:translateX(-100%);
     transition:transform 0.25s ease;
@@ -2335,7 +2338,6 @@ body.theme-neon .fin-vtbtn.active{color:#080c14}
     background:rgba(0,0,0,.5);z-index:199
   }
   .sidebar-overlay.open{display:block}
-  .main{margin-left:0}
   .topbar{padding:0}
   /* hide clocks entirely on mobile */
   .clock-bar{display:none}
