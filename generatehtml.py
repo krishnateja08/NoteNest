@@ -1,8 +1,4 @@
-import os
-
-OUTPUT_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "docs", "index.html")
-
-HTML = r"""<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -390,6 +386,52 @@ body.theme-neon  .db-compose-dt{color:var(--accent);background:rgba(0,229,255,.0
   .db-compose{padding:10px 12px}
 }
 @media(min-width:641px){.db-filters-mobile{display:none}}
+
+/* -- DAYBOOK PIN LOCK ------------------------------ */
+.db-lock-overlay{
+  position:absolute;inset:0;
+  background:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  z-index:100;flex-direction:column;gap:0
+}
+.db-lock-box{
+  background:var(--sidebar);border:1px solid var(--border);
+  border-radius:16px;padding:36px 40px;
+  display:flex;flex-direction:column;align-items:center;gap:18px;
+  min-width:300px;max-width:360px;width:90%
+}
+.db-lock-icon{font-size:40px;line-height:1;margin-bottom:4px}
+.db-lock-title{font-family:'Fraunces',serif;font-size:20px;font-weight:700;color:var(--text);text-align:center}
+.db-lock-sub{font-size:12px;color:var(--muted);text-align:center;line-height:1.5}
+.db-pin-dots{display:flex;gap:12px;margin:6px 0}
+.db-pin-dot{
+  width:14px;height:14px;border-radius:50%;
+  border:2px solid var(--border2);background:transparent;
+  transition:all .15s
+}
+.db-pin-dot.filled{background:#1a9a6c;border-color:#1a9a6c}
+body.theme-beige .db-pin-dot.filled{background:var(--accent);border-color:var(--accent)}
+body.theme-neon  .db-pin-dot.filled{background:var(--accent);border-color:var(--accent)}
+.db-pin-error{font-size:12px;color:var(--red);font-weight:600;min-height:16px;text-align:center}
+.db-numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%}
+.db-num-btn{
+  background:var(--bg);border:1px solid var(--border);
+  border-radius:10px;padding:14px 0;
+  font-size:18px;font-weight:600;color:var(--text);
+  cursor:pointer;font-family:'Inter',sans-serif;
+  transition:all .12s;text-align:center;line-height:1
+}
+.db-num-btn:hover{background:var(--s2);border-color:var(--border2)}
+.db-num-btn:active{transform:scale(.94)}
+.db-num-btn.del{font-size:16px;color:var(--muted)}
+.db-num-btn.clear{font-size:13px;color:var(--muted)}
+@keyframes db-shake{
+  0%,100%{transform:translateX(0)}
+  20%{transform:translateX(-8px)}
+  40%{transform:translateX(8px)}
+  60%{transform:translateX(-6px)}
+  80%{transform:translateX(6px)}
+}
 
 /* -- RICH DASHBOARD -------------------------------- */
 .dash-wrap{padding:20px 28px;display:flex;flex-direction:column;gap:16px}
@@ -3363,7 +3405,37 @@ body.theme-neon .fin-vtbtn.active{color:#080c14}
   </div><!-- end #page-scroll-area -->
 
 <!-- ── DAYBOOK PAGE ───────────────────────────────── -->
-<div id="page-daybook" style="display:none;flex-direction:column;width:100%;height:calc(100vh - 58px);background:var(--bg)">
+<div id="page-daybook" style="display:none;flex-direction:column;width:100%;height:calc(100vh - 58px);background:var(--bg);position:relative">
+
+  <!-- PIN LOCK OVERLAY -->
+  <div class="db-lock-overlay" id="db-lock-overlay" style="display:none">
+    <div class="db-lock-box">
+      <div class="db-lock-icon">🔐</div>
+      <div class="db-lock-title">Daybook is Locked</div>
+      <div class="db-lock-sub" id="db-lock-sub">Enter your PIN to open your private diary</div>
+      <div class="db-pin-dots" id="db-pin-dots">
+        <div class="db-pin-dot" id="db-dot-0"></div>
+        <div class="db-pin-dot" id="db-dot-1"></div>
+        <div class="db-pin-dot" id="db-dot-2"></div>
+        <div class="db-pin-dot" id="db-dot-3"></div>
+      </div>
+      <div class="db-pin-error" id="db-pin-error"></div>
+      <div class="db-numpad">
+        <button class="db-num-btn" onclick="dbPinPress('1')">1</button>
+        <button class="db-num-btn" onclick="dbPinPress('2')">2</button>
+        <button class="db-num-btn" onclick="dbPinPress('3')">3</button>
+        <button class="db-num-btn" onclick="dbPinPress('4')">4</button>
+        <button class="db-num-btn" onclick="dbPinPress('5')">5</button>
+        <button class="db-num-btn" onclick="dbPinPress('6')">6</button>
+        <button class="db-num-btn" onclick="dbPinPress('7')">7</button>
+        <button class="db-num-btn" onclick="dbPinPress('8')">8</button>
+        <button class="db-num-btn" onclick="dbPinPress('9')">9</button>
+        <button class="db-num-btn clear" onclick="dbPinClear()">CLR</button>
+        <button class="db-num-btn" onclick="dbPinPress('0')">0</button>
+        <button class="db-num-btn del" onclick="dbPinBack()">⌫</button>
+      </div>
+    </div>
+  </div>
   <div class="db-layout">
 
     <!-- LEFT: filters -->
@@ -3799,10 +3871,10 @@ body.theme-neon .fin-vtbtn.active{color:#080c14}
       <div style="display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center">
         <input id="f-due-date" type="date" style="width:100%">
         <select id="f-due-hour" style="padding:9px 8px;background:var(--bg);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;outline:none;cursor:pointer">
-          HOUR_OPTIONS_PLACEHOLDER
+          <option value="00">00</option><option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04">04</option><option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option><option value="09">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option>
         </select>
         <select id="f-due-min" style="padding:9px 8px;background:var(--bg);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;outline:none;cursor:pointer">
-          MIN_OPTIONS_PLACEHOLDER
+          <option value="00">00</option><option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04">04</option><option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option><option value="09">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option><option value="32">32</option><option value="33">33</option><option value="34">34</option><option value="35">35</option><option value="36">36</option><option value="37">37</option><option value="38">38</option><option value="39">39</option><option value="40">40</option><option value="41">41</option><option value="42">42</option><option value="43">43</option><option value="44">44</option><option value="45">45</option><option value="46">46</option><option value="47">47</option><option value="48">48</option><option value="49">49</option><option value="50">50</option><option value="51">51</option><option value="52">52</option><option value="53">53</option><option value="54">54</option><option value="55">55</option><option value="56">56</option><option value="57">57</option><option value="58">58</option><option value="59">59</option>
         </select>
       </div>
       <div style="font-size:11px;color:var(--muted);margin-top:4px">Format: Date · Hour (00-23) · Minute (00-59)</div>
@@ -3930,6 +4002,25 @@ body.theme-neon .fin-vtbtn.active{color:#080c14}
     <button class="btn-ghost" onclick="closeSettings()">Close</button>
     <button class="btn" onclick="saveConfig()">Save & Connect</button>
   </div>
+
+  <!-- DAYBOOK PIN -->
+  <div class="settings-section-title" style="margin-top:24px">🔐 Daybook PIN Lock</div>
+  <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6">
+    Set a 4-digit PIN to lock your Daybook. Leave blank to disable the lock. PIN is stored only in your browser.
+  </p>
+  <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap">
+    <div class="frow" style="flex:1;min-width:140px;margin-bottom:0">
+      <label>New PIN (4 digits)</label>
+      <input id="cfg-db-pin" type="password" maxlength="4" pattern="[0-9]*" inputmode="numeric" placeholder="e.g. 1234" style="letter-spacing:6px;font-size:18px">
+    </div>
+    <div class="frow" style="flex:1;min-width:140px;margin-bottom:0">
+      <label>Confirm PIN</label>
+      <input id="cfg-db-pin2" type="password" maxlength="4" pattern="[0-9]*" inputmode="numeric" placeholder="repeat PIN" style="letter-spacing:6px;font-size:18px">
+    </div>
+    <button class="btn" onclick="dbSavePin()" style="white-space:nowrap;margin-bottom:2px">Save PIN</button>
+    <button class="btn-ghost" onclick="dbClearPin()" style="white-space:nowrap;margin-bottom:2px">Remove Lock</button>
+  </div>
+  <div id="db-pin-settings-msg" style="font-size:12px;margin-top:8px;min-height:16px"></div>
 </div>
 </div>
 
@@ -5569,6 +5660,8 @@ createNewNote = async function(){
 };
 
 function showPage(page, btn){
+  // Lock daybook when navigating away
+  if(page !== 'daybook' && dbGetPin()) _dbUnlocked = false;
   const pages = ['dashboard','notes','reminders','sticky','journal','routine','tasknotes','finance','daybook'];
   const displayMap = {dashboard:'',notes:'flex',reminders:'flex',sticky:'flex',journal:'flex',routine:'flex',tasknotes:'flex',finance:'flex',daybook:'flex'};
   pages.forEach(p=>{
@@ -5641,7 +5734,16 @@ function showPage(page, btn){
   if(page==='journal')    renderJournal();
   if(page==='routine')  showRoutineView('today');
   if(page==='finance')  renderFinance();
-  if(page==='daybook')  { dbRender(); dbUpdateCounts(); }
+  if(page==='daybook'){
+    const pin = dbGetPin();
+    if(pin && !_dbUnlocked){
+      dbShowLock();
+    } else {
+      dbHideLock();
+      dbRender();
+      dbUpdateCounts();
+    }
+  }
 }
 
 /* -- STICKY NOTES PAGE --------------------------- */
@@ -8401,7 +8503,102 @@ function fabAction(type){
 /* ── DAYBOOK ──────────────────────────────────────── */
 let _dbFilter = 'all';
 let _dbEditId = null;
+let _dbUnlocked = false;   // session unlock flag
+let _dbPinEntry = '';      // digits typed so far on lock screen
 const DB_TAGS = ['trade','personal','idea','health','work','family'];
+
+/* ── DAYBOOK PIN ── */
+function dbGetPin(){ return localStorage.getItem('db_pin')||''; }
+
+function dbSavePin(){
+  const p1 = document.getElementById('cfg-db-pin').value.trim();
+  const p2 = document.getElementById('cfg-db-pin2').value.trim();
+  const msg = document.getElementById('db-pin-settings-msg');
+  if(!p1){ msg.style.color='var(--red)'; msg.textContent='Enter a PIN first.'; return; }
+  if(!/^\d{4}$/.test(p1)){ msg.style.color='var(--red)'; msg.textContent='PIN must be exactly 4 digits.'; return; }
+  if(p1!==p2){ msg.style.color='var(--red)'; msg.textContent='PINs do not match.'; return; }
+  localStorage.setItem('db_pin', p1);
+  _dbUnlocked = false; // force re-lock on next visit
+  document.getElementById('cfg-db-pin').value='';
+  document.getElementById('cfg-db-pin2').value='';
+  msg.style.color='var(--green)';
+  msg.textContent='✓ PIN saved! Daybook will be locked next time you open it.';
+  setTimeout(()=>{ msg.textContent=''; },3000);
+}
+
+function dbClearPin(){
+  localStorage.removeItem('db_pin');
+  _dbUnlocked = true;
+  document.getElementById('cfg-db-pin').value='';
+  document.getElementById('cfg-db-pin2').value='';
+  const msg = document.getElementById('db-pin-settings-msg');
+  msg.style.color='var(--green)';
+  msg.textContent='✓ PIN removed. Daybook is now unlocked.';
+  setTimeout(()=>{ msg.textContent=''; },3000);
+}
+
+function dbShowLock(){
+  _dbPinEntry = '';
+  dbUpdateDots();
+  document.getElementById('db-pin-error').textContent='';
+  document.getElementById('db-lock-sub').textContent='Enter your PIN to open your private diary';
+  document.getElementById('db-lock-overlay').style.display='flex';
+}
+
+function dbHideLock(){
+  document.getElementById('db-lock-overlay').style.display='none';
+}
+
+function dbUpdateDots(){
+  for(let i=0;i<4;i++){
+    const dot = document.getElementById('db-dot-'+i);
+    if(dot) dot.classList.toggle('filled', i < _dbPinEntry.length);
+  }
+}
+
+function dbPinPress(digit){
+  if(_dbPinEntry.length >= 4) return;
+  _dbPinEntry += digit;
+  dbUpdateDots();
+  document.getElementById('db-pin-error').textContent='';
+  if(_dbPinEntry.length === 4) setTimeout(dbCheckPin, 120);
+}
+
+function dbPinBack(){
+  _dbPinEntry = _dbPinEntry.slice(0,-1);
+  dbUpdateDots();
+}
+
+function dbPinClear(){
+  _dbPinEntry = '';
+  dbUpdateDots();
+  document.getElementById('db-pin-error').textContent='';
+}
+
+function dbCheckPin(){
+  const stored = dbGetPin();
+  if(_dbPinEntry === stored){
+    _dbUnlocked = true;
+    dbHideLock();
+    dbRender();
+    dbUpdateCounts();
+  } else {
+    document.getElementById('db-pin-error').textContent='Wrong PIN. Try again.';
+    // shake animation
+    const box = document.querySelector('.db-lock-box');
+    if(box){ box.style.animation='none'; void box.offsetWidth; box.style.animation='db-shake .35s ease'; }
+    setTimeout(()=>{ _dbPinEntry=''; dbUpdateDots(); },600);
+  }
+}
+
+// keyboard support on lock screen
+document.addEventListener('keydown', e=>{
+  const overlay = document.getElementById('db-lock-overlay');
+  if(!overlay || overlay.style.display==='none') return;
+  if(/^[0-9]$/.test(e.key)) dbPinPress(e.key);
+  else if(e.key==='Backspace') dbPinBack();
+  else if(e.key==='Escape') dbPinClear();
+});
 
 function dbGetEntries(){ return DATA.daybook || []; }
 
@@ -8644,17 +8841,4 @@ window.addEventListener('DOMContentLoaded',()=>{
 </script>
 
 </body>
-</html>"""
-
-def main():
-    hour_opts = ''.join(f'<option value="{i:02d}">{i:02d}</option>' for i in range(24))
-    min_opts  = ''.join(f'<option value="{i:02d}">{i:02d}</option>' for i in range(60))
-    html = HTML.replace('HOUR_OPTIONS_PLACEHOLDER', hour_opts)
-    html = html.replace('MIN_OPTIONS_PLACEHOLDER',  min_opts)
-    os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)
-    with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
-        f.write(html)
-    print(f"✅ HTML generated → {OUTPUT_FILE}")
-
-if __name__ == "__main__":
-    main()
+</html>
