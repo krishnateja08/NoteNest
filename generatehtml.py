@@ -1135,7 +1135,7 @@ body.theme-neon   .vtbtn.active{color:#080c14}
   display:none;position:fixed;inset:0;
   background:var(--over-bg);
   z-index:200;align-items:flex-start;justify-content:center;
-  padding:40px 20px;overflow-y:scroll;-webkit-overflow-scrolling:touch;
+  padding:40px 20px 60px;overflow-y:auto;-webkit-overflow-scrolling:touch;
   touch-action:pan-y
 }
 .overlay.open{display:flex}
@@ -1217,6 +1217,11 @@ body.theme-neon  .tt.active{color:#080c14;border-bottom-color:var(--accent)}
 .frow select option{background:var(--sidebar)}
 .mfoot{display:flex;gap:8px;justify-content:flex-end;margin-top:18px;padding-top:14px;border-top:1px solid var(--border);align-items:center;flex-wrap:wrap}
 .mfoot .btn,.mfoot .btn-ghost{min-height:44px;padding:10px 20px;font-size:14px;touch-action:manipulation}
+@media(max-width:640px){
+  .mfoot{position:sticky;bottom:0;background:var(--sidebar);padding:12px 0 4px;margin-top:14px;z-index:10;}
+  .mfoot .btn{flex:1;justify-content:center;font-size:15px;min-height:50px;border-radius:12px;}
+  .mfoot .btn-ghost{flex:1;justify-content:center;font-size:15px;min-height:50px;}
+}
 .autosave-lbl{font-size:11px;color:var(--green);margin-right:auto;opacity:0;transition:opacity 0.4s;font-weight:600}
 .autosave-lbl.show{opacity:1}
 /* Tag chip input */
@@ -2362,11 +2367,11 @@ body.theme-neon .fin-vtbtn.active{color:#080c14}
   /* Priority badge: smaller */
   .prio-badge{font-size:9px;padding:1px 6px}
   .lrow-due{font-size:10px;padding:2px 6px}
-  .modal{padding:20px}
+  .modal{padding:16px}
   /* Finance modal: single column on mobile so Save button is always reachable */
   .fin-modal-grid{grid-template-columns:1fr !important}
-  /* Overlay: tighter padding on mobile */
-  .overlay{padding:16px 10px}
+  /* Overlay: proper padding on mobile — extra bottom so Save button clears the browser chrome */
+  .overlay{padding:12px 8px 80px;align-items:flex-start}
   /* Dashboard calendar widget: stack on mobile so reminders panel gets full width */
   .dash-cal-widget{grid-template-columns:1fr;gap:10px}
   .dash-cal-left{min-width:unset}
@@ -3209,7 +3214,7 @@ body.theme-neon .fin-vtbtn.active{color:#080c14}
 
 <!-- ── FINANCE ENTRY MODAL ─────────────────────────── -->
 <div class="overlay" id="fin-modal-overlay">
-<div class="modal" style="max-width:520px">
+<div class="modal" style="max-width:520px;display:flex;flex-direction:column;max-height:92vh;overflow-y:auto;-webkit-overflow-scrolling:touch">
   <div class="mhead">
     <h2 id="fin-modal-title">New Entry</h2>
     <button class="mclose" onclick="closeFinModal()">✕</button>
@@ -6607,11 +6612,14 @@ async function saveFinEntry(){
   else  {FINANCE.unshift(entry);}
   // Persist to localStorage immediately so data is never lost on mobile
   try{ localStorage.setItem('fin_backup', JSON.stringify(FINANCE)); }catch(e){}
-  closeFinModal();
-  renderFinance();
+
+  // Disable Save button immediately to prevent double-tap on mobile
+  const saveBtn = document.querySelector('#fin-modal-overlay .btn');
+  if(saveBtn){ saveBtn.disabled=true; saveBtn.textContent='⏳ Saving…'; }
+
   // On slow mobile networks, GitHub data may not be loaded yet — wait up to 8s
   if(!dataLoaded){
-    toast('Saving\u2026','success');
+    toast('Saving\u2026 please wait','success');
     let waited=0;
     await new Promise(resolve=>{
       const check=setInterval(()=>{
@@ -6620,7 +6628,11 @@ async function saveFinEntry(){
       },250);
     });
   }
+
   const ok = await saveFinance();
+  // Close modal AFTER save completes (prevents iOS Safari losing async context)
+  closeFinModal();
+  renderFinance();
   toast(ok!==false?'Entry saved \u2713':'Entry saved locally (sync pending)','success');
 }
 
