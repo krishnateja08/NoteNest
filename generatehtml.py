@@ -3890,6 +3890,15 @@ async function saveToGitHub(){
   if(!c.token){toast('Set up GitHub first','error');openSettings();return false;}
   setSyncing(true,'Saving...');
   try{
+    // CRITICAL: Always sync module-level arrays into DATA before snapshotting.
+    // This ensures a brand-new Finance entry (or any other new item) is never lost
+    // when refreshSHA() falls back to remote data.
+    if(typeof FINANCE !== 'undefined' && FINANCE.length > 0)  DATA.finance      = [...FINANCE];
+    if(typeof TRADES  !== 'undefined' && TRADES.length  > 0)  DATA.trades       = [...TRADES];
+    if(typeof TASKNOTES !== 'undefined' && TASKNOTES.length > 0) DATA.tasknotes  = [...TASKNOTES];
+    if(typeof ROUTINES !== 'undefined' && ROUTINES.length > 0)   DATA.routines   = [...ROUTINES];
+    if(typeof ROUTINE_LOGS !== 'undefined' && ROUTINE_LOGS.length > 0) DATA.routine_logs = [...ROUTINE_LOGS];
+
     // Snapshot the current DATA before refreshSHA so refreshSHA cannot overwrite
     // in-memory changes (e.g. a new Finance entry on mobile) with stale remote data.
     const _snap = {
@@ -3907,18 +3916,21 @@ async function saveToGitHub(){
     };
     // Always refresh SHA before saving to avoid stale conflicts
     await refreshSHA();
-    // Restore snapshot so refreshSHA's remote-fallback doesn't clobber unsaved local data
-    if(_snap.notes.length)        DATA.notes        = _snap.notes;
-    if(_snap.reminders.length)    DATA.reminders    = _snap.reminders;
-    if(_snap.finance.length)      DATA.finance      = _snap.finance;
-    if(_snap.trades.length)       DATA.trades       = _snap.trades;
-    if(_snap.tasknotes.length)    DATA.tasknotes    = _snap.tasknotes;
-    if(_snap.routines.length)     DATA.routines     = _snap.routines;
-    if(_snap.routine_logs.length) DATA.routine_logs = _snap.routine_logs;
-    if(_snap.stickies.length)     DATA.stickies     = _snap.stickies;
-    if(_snap.archived.length)     DATA.archived     = _snap.archived;
-    if(_snap.note_folders.length) DATA.note_folders = _snap.note_folders;
-    if(_snap.rem_lists.length)    DATA.rem_lists    = _snap.rem_lists;
+    // Restore snapshot so refreshSHA's remote-fallback doesn't clobber unsaved local data.
+    // NOTE: Use >= 0 (always restore), not > 0, so a freshly cleared array is also respected.
+    // The only time we want remote data is when our local copy was genuinely empty before
+    // the user made changes — but by the time saveToGitHub() is called, local is authoritative.
+    DATA.notes        = _snap.notes.length        ? _snap.notes        : DATA.notes;
+    DATA.reminders    = _snap.reminders.length    ? _snap.reminders    : DATA.reminders;
+    DATA.finance      = _snap.finance.length      ? _snap.finance      : DATA.finance;
+    DATA.trades       = _snap.trades.length       ? _snap.trades       : DATA.trades;
+    DATA.tasknotes    = _snap.tasknotes.length    ? _snap.tasknotes    : DATA.tasknotes;
+    DATA.routines     = _snap.routines.length     ? _snap.routines     : DATA.routines;
+    DATA.routine_logs = _snap.routine_logs.length ? _snap.routine_logs : DATA.routine_logs;
+    DATA.stickies     = _snap.stickies.length     ? _snap.stickies     : DATA.stickies;
+    DATA.archived     = _snap.archived.length     ? _snap.archived     : DATA.archived;
+    DATA.note_folders = _snap.note_folders.length ? _snap.note_folders : DATA.note_folders;
+    DATA.rem_lists    = _snap.rem_lists.length    ? _snap.rem_lists    : DATA.rem_lists;
     const res = await fetch(apiUrl(),{
       method:'PUT',
       headers:{Authorization:`token ${c.token}`,Accept:'application/vnd.github.v3+json','Content-Type':'application/json'},
@@ -6593,8 +6605,21 @@ async function saveFinEntry(){
   };
   if(id){FINANCE=FINANCE.map(e=>e.id===id?entry:e);}
   else  {FINANCE.unshift(entry);}
+  // Persist to localStorage immediately so data is never lost on mobile
+  try{ localStorage.setItem('fin_backup', JSON.stringify(FINANCE)); }catch(e){}
   closeFinModal();
   renderFinance();
+  // On slow mobile networks, GitHub data may not be loaded yet — wait up to 8s
+  if(!dataLoaded){
+    toast('Saving\u2026','success');
+    let waited=0;
+    await new Promise(resolve=>{
+      const check=setInterval(()=>{
+        waited+=250;
+        if(dataLoaded||waited>=8000){clearInterval(check);resolve();}
+      },250);
+    });
+  }
   const ok = await saveFinance();
   toast(ok!==false?'Entry saved \u2713':'Entry saved locally (sync pending)','success');
 }
@@ -7011,12 +7036,11 @@ let ROUTINE_LOGS = [];
 const RT_COLORS = {blue:'#3b5bdb',green:'#059669',purple:'#7c3aed',yellow:'#d97706',red:'#dc2626'};
 
 function todayStr(){
-  // Use LOCAL date (not UTC) so midnight IST correctly resets the day
-  const d = new Date();
-  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  // Use CST (America/Chicago) timezone so routine resets at 12:00 AM CST as expected
+  return new Date().toLocaleDateString('en-CA',{timeZone:'America/Chicago'}); // YYYY-MM-DD
 }
 function todayDayName(){
-  return new Date().toLocaleDateString('en-US',{weekday:'short'}); // Mon,Tue...
+  return new Date().toLocaleDateString('en-US',{timeZone:'America/Chicago',weekday:'short'}); // Mon,Tue...
 }
 
 function updateRoutineCount(){
@@ -7050,14 +7074,11 @@ function isTaskDoneToday(taskId){
 }
 
 function getWeekCount(taskId){
-  // how many days in the last 7 days was this task done
-  // Use LOCAL date (not UTC) so IST midnight doesn't bleed into previous day
-  const now = new Date();
+  // how many days in the last 7 days was this task done (using CST for day boundaries)
   let count = 0;
   for(let i=0;i<7;i++){
-    const d = new Date(now);
-    d.setDate(d.getDate()-i);
-    const ds = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    const d = new Date(Date.now() - i*86400000);
+    const ds = d.toLocaleDateString('en-CA',{timeZone:'America/Chicago'}); // YYYY-MM-DD in CST
     if(ROUTINE_LOGS.some(l=>l.date===ds && l.task_id===taskId && l.done)) count++;
   }
   return count;
