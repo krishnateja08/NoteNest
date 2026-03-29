@@ -585,7 +585,8 @@ body.theme-neon .dash-tasks-count.open{background:rgba(0,229,255,.1);color:#00e5
 .notes-folders-panel{
   width:190px;flex-shrink:0;background:var(--s2);
   border-right:1px solid var(--border);
-  display:flex;flex-direction:column;overflow:hidden
+  display:flex;flex-direction:column;overflow:hidden;
+  flex:0 0 190px;align-self:stretch
 }
 .notes-folders-hdr{
   padding:14px 14px 10px;border-bottom:1px solid var(--border);
@@ -639,7 +640,7 @@ body.theme-neon  .notes-folder-item.active{background:rgba(0,229,255,.08);color:
   width:260px;flex-shrink:0;
   background:var(--sidebar);border-right:1px solid var(--border2);
   display:flex;flex-direction:column;overflow:hidden;
-  align-self:stretch;height:100%
+  flex:0 0 260px;align-self:stretch
 }
 .notes-list-hdr{
   padding:12px 14px 10px;border-bottom:1px solid var(--border);
@@ -673,7 +674,7 @@ body.theme-neon  .notes-folder-item.active{background:rgba(0,229,255,.08);color:
   user-select:none;background:transparent
 }
 
-.notes-list-items{flex:1;overflow-y:visible}
+.notes-list-items{flex:1;overflow-y:auto;scrollbar-width:none}
 .notes-list-items::-webkit-scrollbar{display:none}
 .notes-list-item{
   padding:11px 14px 11px 17px;border-bottom:1px solid var(--border);
@@ -2764,8 +2765,8 @@ body.theme-neon .fin-vtbtn.active{color:#080c14}
   </div>
 
   <!-- == NOTES PAGE (3-column Apple Notes style) == -->
-  <div id="page-notes" style="display:none;flex-direction:row;height:calc(100vh - 58px)">
-    <div class="notes-page-wrap" style="width:100%;height:100%">
+  <div id="page-notes" style="display:none;flex-direction:row;height:calc(100vh - 58px);align-items:stretch">
+    <div class="notes-page-wrap" style="width:100%;height:100%;align-items:stretch">
 
       <!-- Column 1: Folders -->
       <div class="notes-folders-panel">
