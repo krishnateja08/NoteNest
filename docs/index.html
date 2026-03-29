@@ -268,6 +268,125 @@ body.theme-neon .fab-main{box-shadow:0 4px 24px rgba(0,229,255,.4)}
   display:flex;flex-direction:column;
 }
 
+/* -- DAYBOOK --------------------------------------- */
+.db-layout{display:flex;flex:1;min-height:0;overflow:hidden}
+.db-left{width:220px;flex-shrink:0;background:var(--sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.db-left-head{padding:16px 14px 12px;border-bottom:1px solid var(--border)}
+.db-left-title{font-family:'Fraunces',serif;font-size:15px;font-weight:700;color:var(--accent);display:flex;align-items:center;gap:7px}
+.db-left-sub{font-size:10px;color:var(--muted);margin-top:2px;font-weight:500;letter-spacing:.3px}
+.db-left-search{padding:10px 10px 6px}
+.db-left-search input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:6px 10px;font-size:12px;color:var(--text);font-family:'Inter',sans-serif;outline:none}
+.db-left-search input::placeholder{color:var(--muted)}
+.db-left-search input:focus{border-color:var(--accent)}
+.db-filter-section{padding:8px 12px 3px;font-size:9px;text-transform:uppercase;letter-spacing:2px;color:var(--text2);font-weight:700}
+.db-filter-btn{display:flex;align-items:center;gap:8px;padding:7px 12px;font-size:12px;color:var(--text2);cursor:pointer;border-radius:7px;margin:1px 6px;border:none;background:none;font-family:'Inter',sans-serif;width:calc(100% - 12px);text-align:left;transition:all .15s}
+.db-filter-btn:hover{background:var(--s2);color:var(--text)}
+.db-filter-btn.active{background:rgba(26,154,108,.12);color:#1a9a6c;font-weight:600}
+body.theme-beige .db-filter-btn.active{background:rgba(124,92,191,.12);color:var(--accent)}
+body.theme-neon  .db-filter-btn.active{background:rgba(0,229,255,.1);color:var(--accent)}
+.db-filter-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.db-filter-count{margin-left:auto;font-size:10px;background:var(--s2);border-radius:12px;padding:1px 7px;color:var(--text2);font-weight:600}
+.db-filter-btn.active .db-filter-count{background:rgba(26,154,108,.15);color:#1a9a6c}
+body.theme-beige .db-filter-btn.active .db-filter-count{background:rgba(124,92,191,.12);color:var(--accent)}
+body.theme-neon  .db-filter-btn.active .db-filter-count{background:rgba(0,229,255,.1);color:var(--accent)}
+.db-left-footer{margin-top:auto;padding:10px}
+.db-new-btn{width:100%;background:var(--accent);color:#fff;border:none;border-radius:8px;padding:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;gap:6px;transition:background .2s}
+.db-new-btn:hover{background:var(--accent2)}
+body.theme-cream .db-new-btn{background:#1a9a6c}
+body.theme-cream .db-new-btn:hover{background:#0f7a55}
+
+.db-right{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
+.db-entries-wrap{flex:1;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.db-entries-wrap::-webkit-scrollbar{width:4px}
+.db-entries-wrap::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+.db-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;color:var(--muted);gap:10px}
+.db-empty-icon{font-size:40px;opacity:.5}
+.db-empty-text{font-size:14px}
+
+.db-date-group{border-bottom:1px solid var(--border)}
+.db-date-header{padding:16px 22px 6px;display:flex;align-items:baseline;gap:0;position:sticky;top:0;background:var(--bg);z-index:2;border-bottom:1px solid rgba(200,180,140,.25)}
+body.theme-neon .db-date-header{background:var(--bg);border-bottom-color:rgba(26,34,64,.8)}
+.dh-day{font-size:30px;font-weight:700;color:#1a9a6c;line-height:1;font-family:'Fraunces',serif}
+body.theme-beige .dh-day{color:var(--accent)}
+body.theme-neon  .dh-day{color:var(--accent)}
+.dh-mon{font-size:14px;font-weight:700;color:#1a9a6c;text-transform:uppercase;letter-spacing:.5px;margin-left:6px;align-self:flex-end;margin-bottom:3px}
+body.theme-beige .dh-mon{color:var(--accent)}
+body.theme-neon  .dh-mon{color:var(--accent)}
+.dh-rest{font-size:11px;color:var(--muted);margin-left:8px;align-self:flex-end;margin-bottom:4px;font-weight:500}
+.dh-ecount{margin-left:auto;font-size:10px;background:rgba(26,154,108,.1);color:#1a9a6c;border-radius:12px;padding:2px 9px;font-weight:700}
+body.theme-beige .dh-ecount{background:rgba(124,92,191,.1);color:var(--accent)}
+body.theme-neon  .dh-ecount{background:rgba(0,229,255,.1);color:var(--accent)}
+
+.db-entry{padding:12px 22px;border-bottom:1px solid rgba(200,180,140,.18);cursor:pointer;transition:background .12s;display:flex;gap:14px}
+.db-entry:hover{background:rgba(232,220,200,.3)}
+body.theme-neon .db-entry:hover{background:rgba(0,229,255,.04)}
+.db-entry:last-child{border-bottom:none}
+.db-entry-time-col{width:60px;flex-shrink:0;padding-top:2px}
+.db-entry-time{font-size:12px;font-weight:600;color:#1a9a6c;font-variant-numeric:tabular-nums}
+body.theme-beige .db-entry-time{color:var(--accent)}
+body.theme-neon  .db-entry-time{color:var(--accent)}
+.db-entry-ampm{font-size:10px;color:var(--muted);font-weight:500}
+.db-entry-body{flex:1;min-width:0}
+.db-entry-text{font-size:13px;color:var(--text);line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;white-space:pre-wrap}
+.db-entry-tags{display:flex;gap:5px;margin-top:6px;flex-wrap:wrap}
+.db-tag{font-size:10px;padding:2px 9px;border-radius:20px;font-weight:600}
+.db-tag-trade{background:#e6f7f1;color:#0f6e56}
+.db-tag-personal{background:#eeedfe;color:#534ab7}
+.db-tag-idea{background:#faeeda;color:#854f0b}
+.db-tag-health{background:#fce8e8;color:#a32d2d}
+.db-tag-work{background:#e6f1fb;color:#185fa5}
+.db-tag-family{background:#fbeaf0;color:#993556}
+body.theme-neon .db-tag-trade{background:rgba(0,255,157,.12);color:#00ff9d}
+body.theme-neon .db-tag-personal{background:rgba(191,0,255,.12);color:#bf00ff}
+body.theme-neon .db-tag-idea{background:rgba(255,170,0,.1);color:#ffaa00}
+body.theme-neon .db-tag-health{background:rgba(255,51,102,.1);color:#ff3366}
+body.theme-neon .db-tag-work{background:rgba(0,170,255,.1);color:#00aaff}
+body.theme-neon .db-tag-family{background:rgba(255,100,150,.1);color:#ff6496}
+.db-entry-actions{display:flex;gap:3px;align-items:flex-start;opacity:0;transition:opacity .15s;flex-shrink:0}
+.db-entry:hover .db-entry-actions{opacity:1}
+.db-ea-btn{background:none;border:none;font-size:12px;cursor:pointer;color:var(--muted);padding:2px 5px;border-radius:4px;line-height:1;transition:color .15s}
+.db-ea-btn:hover{color:var(--text)}
+
+/* compose bar */
+.db-compose{border-top:1px solid var(--border);background:var(--sidebar);padding:12px 18px;flex-shrink:0;display:none;flex-direction:column;gap:9px}
+.db-compose.open{display:flex}
+.db-compose-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.db-compose-dt{font-size:11px;color:#1a9a6c;font-weight:600;background:rgba(26,154,108,.1);padding:4px 10px;border-radius:6px}
+body.theme-beige .db-compose-dt{color:var(--accent);background:rgba(124,92,191,.1)}
+body.theme-neon  .db-compose-dt{color:var(--accent);background:rgba(0,229,255,.08)}
+.db-compose-tags{display:flex;gap:5px;flex-wrap:wrap;align-items:center}
+.db-compose-tag-lbl{font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:1px}
+.db-ctag{font-size:10px;padding:3px 9px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;font-family:'Inter',sans-serif;transition:all .12s}
+.db-ctag:hover{border-color:var(--accent);color:var(--accent)}
+.db-ctag.sel{border-width:1.5px}
+.db-ctag.sel-trade{background:#e6f7f1;color:#0f6e56;border-color:#0f6e56}
+.db-ctag.sel-personal{background:#eeedfe;color:#534ab7;border-color:#534ab7}
+.db-ctag.sel-idea{background:#faeeda;color:#854f0b;border-color:#854f0b}
+.db-ctag.sel-health{background:#fce8e8;color:#a32d2d;border-color:#a32d2d}
+.db-ctag.sel-work{background:#e6f1fb;color:#185fa5;border-color:#185fa5}
+.db-ctag.sel-family{background:#fbeaf0;color:#993556;border-color:#993556}
+.db-compose-input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--text);font-family:'Inter',sans-serif;outline:none;resize:none;line-height:1.55;min-height:72px;transition:border-color .2s}
+.db-compose-input::placeholder{color:var(--muted)}
+.db-compose-input:focus{border-color:var(--accent)}
+.db-compose-footer{display:flex;justify-content:flex-end;gap:8px}
+
+/* mobile daybook */
+@media(max-width:640px){
+  .db-layout{flex-direction:column}
+  .db-left{width:100%;border-right:none;border-bottom:1px solid var(--border);max-height:none;overflow:visible}
+  .db-left-search,.db-filter-section{display:none}
+  .db-left-head{padding:10px 14px}
+  .db-left-footer{padding:6px 10px;margin-top:0}
+  .db-filters-mobile{display:flex;gap:6px;padding:8px 12px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--border)}
+  .db-filters-mobile::-webkit-scrollbar{display:none}
+  .db-right{min-height:400px}
+  .db-date-header{padding:12px 14px 4px}
+  .db-entry{padding:10px 14px}
+  .db-entry-actions{opacity:1}
+  .db-compose{padding:10px 12px}
+}
+@media(min-width:641px){.db-filters-mobile{display:none}}
+
 /* -- RICH DASHBOARD -------------------------------- */
 .dash-wrap{padding:20px 28px;display:flex;flex-direction:column;gap:16px}
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
@@ -2597,6 +2716,10 @@ body.theme-neon .fin-vtbtn.active{color:#080c14}
     <span class="nav-icon">💰</span> Finance Tracker
     <span class="nav-count" id="nav-finance-count">0</span>
   </button>
+  <button class="nav-item" id="nav-daybook-btn" onclick="showPage('daybook',this)">
+    <span class="nav-icon">📖</span> Daybook
+    <span class="nav-count" id="nav-daybook-count">0</span>
+  </button>
 
   <div class="sidebar-section">Status</div>
   <button class="nav-item" onclick="showPage('dashboard',this);filterCards('pending',this)">
@@ -2662,6 +2785,10 @@ body.theme-neon .fin-vtbtn.active{color:#080c14}
         <!-- finance: new entry -->
         <div id="ctx-finance" style="display:none;align-items:center;gap:8px">
           <button class="btn" onclick="openFinModal()">+ New Entry</button>
+        </div>
+        <!-- daybook: new entry -->
+        <div id="ctx-daybook" style="display:none;align-items:center;gap:8px">
+          <button class="btn" onclick="dbOpenCompose()">+ New Entry</button>
         </div>
       </div>
       <!-- Clock -->
@@ -3231,6 +3358,91 @@ body.theme-neon .fin-vtbtn.active{color:#080c14}
 
   </div><!-- end #page-scroll-area -->
 
+<!-- ── DAYBOOK PAGE ───────────────────────────────── -->
+<div id="page-daybook" style="display:none;flex-direction:column;width:100%;height:calc(100vh - 58px);background:var(--bg)">
+  <div class="db-layout">
+
+    <!-- LEFT: filters -->
+    <div class="db-left">
+      <div class="db-left-head">
+        <div class="db-left-title">📖 Daybook</div>
+        <div class="db-left-sub">Personal diary &amp; notes</div>
+      </div>
+      <div class="db-left-search">
+        <input id="db-search" placeholder="🔍  Search entries..." oninput="dbRender()">
+      </div>
+      <div class="db-filter-section">Filter by tag</div>
+      <button class="db-filter-btn active" id="db-f-all" onclick="dbSetFilter('all',this)">
+        <span class="db-filter-dot" style="background:#1a9a6c"></span> All entries
+        <span class="db-filter-count" id="db-cnt-all">0</span>
+      </button>
+      <button class="db-filter-btn" id="db-f-trade" onclick="dbSetFilter('trade',this)">
+        <span class="db-filter-dot" style="background:#1d9e75"></span> Trade
+        <span class="db-filter-count" id="db-cnt-trade">0</span>
+      </button>
+      <button class="db-filter-btn" id="db-f-personal" onclick="dbSetFilter('personal',this)">
+        <span class="db-filter-dot" style="background:#7f77dd"></span> Personal
+        <span class="db-filter-count" id="db-cnt-personal">0</span>
+      </button>
+      <button class="db-filter-btn" id="db-f-idea" onclick="dbSetFilter('idea',this)">
+        <span class="db-filter-dot" style="background:#ba7517"></span> Idea
+        <span class="db-filter-count" id="db-cnt-idea">0</span>
+      </button>
+      <button class="db-filter-btn" id="db-f-health" onclick="dbSetFilter('health',this)">
+        <span class="db-filter-dot" style="background:#e24b4a"></span> Health
+        <span class="db-filter-count" id="db-cnt-health">0</span>
+      </button>
+      <button class="db-filter-btn" id="db-f-work" onclick="dbSetFilter('work',this)">
+        <span class="db-filter-dot" style="background:#378add"></span> Work
+        <span class="db-filter-count" id="db-cnt-work">0</span>
+      </button>
+      <button class="db-filter-btn" id="db-f-family" onclick="dbSetFilter('family',this)">
+        <span class="db-filter-dot" style="background:#d4537e"></span> Family
+        <span class="db-filter-count" id="db-cnt-family">0</span>
+      </button>
+      <!-- mobile filter row -->
+      <div class="db-filters-mobile" id="db-filters-mobile"></div>
+      <div class="db-left-footer">
+        <button class="db-new-btn" onclick="dbOpenCompose()">＋ New Entry</button>
+      </div>
+    </div>
+
+    <!-- RIGHT: entries + compose -->
+    <div class="db-right">
+      <div class="db-entries-wrap" id="db-entries-wrap">
+        <div class="db-empty" id="db-empty-state">
+          <div class="db-empty-icon">📖</div>
+          <div class="db-empty-text">No entries yet — write your first one!</div>
+        </div>
+        <div id="db-entries-list"></div>
+      </div>
+
+      <!-- compose bar -->
+      <div class="db-compose" id="db-compose">
+        <div class="db-compose-top">
+          <span class="db-compose-dt" id="db-compose-dt">📅 —</span>
+          <div class="db-compose-tags">
+            <span class="db-compose-tag-lbl">Tag:</span>
+            <button class="db-ctag" data-tag="trade"    onclick="dbToggleTag(this)">trade</button>
+            <button class="db-ctag" data-tag="personal" onclick="dbToggleTag(this)">personal</button>
+            <button class="db-ctag" data-tag="idea"     onclick="dbToggleTag(this)">idea</button>
+            <button class="db-ctag" data-tag="health"   onclick="dbToggleTag(this)">health</button>
+            <button class="db-ctag" data-tag="work"     onclick="dbToggleTag(this)">work</button>
+            <button class="db-ctag" data-tag="family"   onclick="dbToggleTag(this)">family</button>
+          </div>
+        </div>
+        <textarea class="db-compose-input" id="db-compose-text" rows="3"
+          placeholder="Write your entry… (what happened, trades, thoughts, anything)"></textarea>
+        <div class="db-compose-footer">
+          <button class="btn-ghost" onclick="dbCloseCompose()">Cancel</button>
+          <button class="btn" onclick="dbSaveEntry()">💾 Save Entry</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 <!-- ── FINANCE ENTRY MODAL ─────────────────────────── -->
 <div class="overlay" id="fin-modal-overlay">
 <div class="modal" style="max-width:520px;display:flex;flex-direction:column;max-height:92vh;overflow-y:auto;-webkit-overflow-scrolling:touch">
@@ -3720,7 +3932,7 @@ body.theme-neon .fin-vtbtn.active{color:#080c14}
 <div id="toast"></div>
 
 <script>
-let DATA={notes:[],reminders:[],stickies:[],archived:[],trades:[],routines:[],routine_logs:[],tasknotes:[],finance:[],note_folders:[],rem_lists:[]};
+let DATA={notes:[],reminders:[],stickies:[],archived:[],trades:[],routines:[],routine_logs:[],tasknotes:[],finance:[],note_folders:[],rem_lists:[],daybook:[]};
 let fileSHA=null;
 let dataLoaded=false; // guard: prevents any save before GitHub data is fully loaded
 let currentType='note';
@@ -3798,6 +4010,7 @@ async function loadFromGitHub(){
     if(!DATA.finance)       DATA.finance       = [];
     if(!DATA.stickies)      DATA.stickies      = [];
     if(!DATA.archived)      DATA.archived      = [];
+    if(!DATA.daybook)       DATA.daybook       = [];
 
     // ── EMOJI SANITIZER ──────────────────────────────────────────────────────
     // Detects garbled multi-byte strings in icon/color/emoji fields and resets them.
@@ -3879,6 +4092,8 @@ async function loadFromGitHub(){
     renderTaskNotes();
     renderFinance();
     initSticky(); // re-init with synced DATA
+    dbUpdateCounts();
+    dbRender();
 
     if(needsRepair){
       // Double-check: only save if data actually changed from what was on GitHub
@@ -3937,6 +4152,7 @@ async function saveToGitHub(){
       archived:     DATA.archived     ? [...DATA.archived]     : [],
       note_folders: DATA.note_folders ? [...DATA.note_folders] : [],
       rem_lists:    DATA.rem_lists    ? [...DATA.rem_lists]    : [],
+      daybook:      DATA.daybook      ? [...DATA.daybook]      : [],
     };
     // Always refresh SHA before saving to avoid stale conflicts
     await refreshSHA();
@@ -3955,6 +4171,7 @@ async function saveToGitHub(){
     DATA.archived     = _snap.archived.length     ? _snap.archived     : DATA.archived;
     DATA.note_folders = _snap.note_folders.length ? _snap.note_folders : DATA.note_folders;
     DATA.rem_lists    = _snap.rem_lists.length    ? _snap.rem_lists    : DATA.rem_lists;
+    DATA.daybook      = _snap.daybook.length      ? _snap.daybook      : DATA.daybook;
     const res = await fetch(apiUrl(),{
       method:'PUT',
       headers:{Authorization:`token ${c.token}`,Accept:'application/vnd.github.v3+json','Content-Type':'application/json'},
@@ -4026,6 +4243,7 @@ async function refreshSHA(){
       if(!DATA.rem_lists.length)    DATA.rem_lists    = remote.rem_lists    || [{id:'personal',name:'Personal',icon:'🔵'},{id:'official',name:'Official',icon:'🔴'}];
       if(!DATA.stickies.length)     DATA.stickies     = remote.stickies     || [];
       if(!DATA.archived.length)     DATA.archived     = remote.archived     || [];
+      if(!DATA.daybook.length)      DATA.daybook      = remote.daybook      || [];
     }
   }catch(e){ console.warn('refreshSHA failed',e); }
 }
@@ -5347,8 +5565,8 @@ createNewNote = async function(){
 };
 
 function showPage(page, btn){
-  const pages = ['dashboard','notes','reminders','sticky','journal','routine','tasknotes','finance'];
-  const displayMap = {dashboard:'',notes:'flex',reminders:'flex',sticky:'flex',journal:'flex',routine:'flex',tasknotes:'flex',finance:'flex'};
+  const pages = ['dashboard','notes','reminders','sticky','journal','routine','tasknotes','finance','daybook'];
+  const displayMap = {dashboard:'',notes:'flex',reminders:'flex',sticky:'flex',journal:'flex',routine:'flex',tasknotes:'flex',finance:'flex',daybook:'flex'};
   pages.forEach(p=>{
     const el=document.getElementById('page-'+p);
     if(el){
@@ -5375,12 +5593,13 @@ function showPage(page, btn){
     journal:'📈 Trading Journal',
     routine:'🔁 Routine',
     tasknotes:'✍️ Task Notes',
-    finance:'💰 Finance Tracker'
+    finance:'💰 Finance Tracker',
+    daybook:'📖 Daybook'
   };
   document.getElementById('page-title').textContent = titles[page]||'📋 Dashboard';
 
   // 5. Context-aware actions
-  ['dashboard','notes','reminders','sticky','journal','routine','tasknotes','finance'].forEach(p=>{
+  ['dashboard','notes','reminders','sticky','journal','routine','tasknotes','finance','daybook'].forEach(p=>{
     const el=document.getElementById('ctx-'+p);
     if(el) el.style.display=p===page?'flex':'none';
   });
@@ -5418,6 +5637,7 @@ function showPage(page, btn){
   if(page==='journal')    renderJournal();
   if(page==='routine')  showRoutineView('today');
   if(page==='finance')  renderFinance();
+  if(page==='daybook')  { dbRender(); dbUpdateCounts(); }
 }
 
 /* -- STICKY NOTES PAGE --------------------------- */
@@ -8172,6 +8392,214 @@ function fabAction(type){
     if(navSt) navSt.click();
     setTimeout(()=>addSticky(), 150);
   }
+}
+
+/* ── DAYBOOK ──────────────────────────────────────── */
+let _dbFilter = 'all';
+let _dbEditId = null;
+const DB_TAGS = ['trade','personal','idea','health','work','family'];
+
+function dbGetEntries(){ return DATA.daybook || []; }
+
+function dbUpdateCounts(){
+  const entries = dbGetEntries();
+  const countEl = document.getElementById('nav-daybook-count');
+  if(countEl) countEl.textContent = entries.length;
+  document.getElementById('db-cnt-all') && (document.getElementById('db-cnt-all').textContent = entries.length);
+  DB_TAGS.forEach(t=>{
+    const el = document.getElementById('db-cnt-'+t);
+    if(el) el.textContent = entries.filter(e=>(e.tags||[]).includes(t)).length;
+  });
+  // mobile filter row
+  const mf = document.getElementById('db-filters-mobile');
+  if(mf){
+    mf.innerHTML = ['all',...DB_TAGS].map(t=>{
+      const cnt = t==='all' ? entries.length : entries.filter(e=>(e.tags||[]).includes(t)).length;
+      const isActive = _dbFilter===t;
+      return `<button class="db-filter-btn${isActive?' active':''}" style="white-space:nowrap;border-radius:20px;padding:5px 12px;margin:0" onclick="dbSetFilter('${t}',this)">${t==='all'?'All':t} <span style="opacity:.7">${cnt}</span></button>`;
+    }).join('');
+  }
+}
+
+function dbSetFilter(tag, btn){
+  _dbFilter = tag;
+  document.querySelectorAll('.db-filter-btn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  dbRender();
+  dbUpdateCounts();
+}
+
+function dbRender(){
+  const entries = dbGetEntries();
+  const search  = (document.getElementById('db-search')||{}).value||'';
+  const sq = search.trim().toLowerCase();
+
+  let filtered = [...entries].reverse();
+  if(_dbFilter !== 'all') filtered = filtered.filter(e=>(e.tags||[]).includes(_dbFilter));
+  if(sq) filtered = filtered.filter(e=>(e.text||'').toLowerCase().includes(sq)||(e.tags||[]).join(' ').includes(sq));
+
+  const wrap = document.getElementById('db-entries-list');
+  const empty = document.getElementById('db-empty-state');
+  if(!wrap) return;
+
+  if(!filtered.length){
+    wrap.innerHTML='';
+    if(empty) empty.style.display='flex';
+    return;
+  }
+  if(empty) empty.style.display='none';
+
+  // Group by date
+  const groups = {};
+  filtered.forEach(e=>{
+    const d = (e.date||'').slice(0,10);
+    if(!groups[d]) groups[d]=[];
+    groups[d].push(e);
+  });
+
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const DAYS   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+  wrap.innerHTML = Object.keys(groups).sort((a,b)=>b.localeCompare(a)).map(dateStr=>{
+    const items = groups[dateStr];
+    const d = new Date(dateStr+'T00:00:00');
+    const dayNum  = d.getDate();
+    const monStr  = MONTHS[d.getMonth()];
+    const yearStr = d.getFullYear();
+    const dayName = DAYS[d.getDay()];
+
+    const entriesHtml = items.map(e=>{
+      const t = e.time||'';
+      const [hh,mm] = t.split(':');
+      const h = parseInt(hh)||0;
+      const ampm = h>=12?'PM':'AM';
+      const h12  = h===0?12:h>12?h-12:h;
+      const timeStr = `${String(h12).padStart(2,'0')}:${mm||'00'}`;
+      const tagsHtml = (e.tags||[]).map(tg=>`<span class="db-tag db-tag-${tg}">${tg}</span>`).join('');
+      const textEsc = (e.text||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      return `
+      <div class="db-entry" onclick="dbOpenEdit('${e.id}')">
+        <div class="db-entry-time-col">
+          <div class="db-entry-time">${timeStr}</div>
+          <div class="db-entry-ampm">${ampm}</div>
+        </div>
+        <div class="db-entry-body">
+          <div class="db-entry-text">${textEsc}</div>
+          ${tagsHtml?`<div class="db-entry-tags">${tagsHtml}</div>`:''}
+        </div>
+        <div class="db-entry-actions">
+          <button class="db-ea-btn" onclick="event.stopPropagation();dbOpenEdit('${e.id}')" title="Edit">✏️</button>
+          <button class="db-ea-btn" onclick="event.stopPropagation();dbDeleteEntry('${e.id}')" title="Delete">🗑</button>
+        </div>
+      </div>`;
+    }).join('');
+
+    return `
+    <div class="db-date-group">
+      <div class="db-date-header">
+        <span class="dh-day">${String(dayNum).padStart(2,'0')}</span>
+        <span class="dh-mon">${monStr}</span>
+        <span class="dh-rest">${yearStr}, ${dayName}</span>
+        <span class="dh-ecount">${items.length} entr${items.length===1?'y':'ies'}</span>
+      </div>
+      ${entriesHtml}
+    </div>`;
+  }).join('');
+}
+
+function dbOpenCompose(){
+  _dbEditId = null;
+  // Reset fields
+  document.getElementById('db-compose-text').value='';
+  document.querySelectorAll('.db-ctag').forEach(b=>{b.className='db-ctag';});
+  // Set datetime label
+  const now = new Date();
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const h = now.getHours(), m = now.getMinutes();
+  const ampm = h>=12?'PM':'AM', h12 = h===0?12:h>12?h-12:h;
+  document.getElementById('db-compose-dt').textContent =
+    `📅 ${String(now.getDate()).padStart(2,'0')} ${MONTHS[now.getMonth()]} ${now.getFullYear()}  🕐 ${String(h12).padStart(2,'0')}:${String(m).padStart(2,'0')} ${ampm}`;
+  document.getElementById('db-compose').classList.add('open');
+  document.getElementById('db-compose-text').focus();
+}
+
+function dbOpenEdit(id){
+  const entry = dbGetEntries().find(e=>e.id===id);
+  if(!entry) return;
+  _dbEditId = id;
+  document.getElementById('db-compose-text').value = entry.text||'';
+  document.querySelectorAll('.db-ctag').forEach(b=>{
+    const t = b.dataset.tag;
+    b.className = 'db-ctag' + ((entry.tags||[]).includes(t) ? ` sel sel-${t}` : '');
+  });
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const d = new Date((entry.date||'')+'T'+(entry.time||'00:00')+':00');
+  const h=d.getHours(), m=d.getMinutes(), ampm=h>=12?'PM':'AM', h12=h===0?12:h>12?h-12:h;
+  document.getElementById('db-compose-dt').textContent =
+    `📅 ${String(d.getDate()).padStart(2,'0')} ${MONTHS[d.getMonth()]} ${d.getFullYear()}  🕐 ${String(h12).padStart(2,'0')}:${String(m).padStart(2,'0')} ${ampm}`;
+  document.getElementById('db-compose').classList.add('open');
+  document.getElementById('db-compose-text').focus();
+}
+
+function dbCloseCompose(){
+  document.getElementById('db-compose').classList.remove('open');
+  _dbEditId = null;
+}
+
+function dbToggleTag(btn){
+  const tag = btn.dataset.tag;
+  const isOn = btn.classList.contains('sel');
+  if(isOn){
+    btn.className='db-ctag';
+  } else {
+    btn.className=`db-ctag sel sel-${tag}`;
+  }
+}
+
+async function dbSaveEntry(){
+  const text = document.getElementById('db-compose-text').value.trim();
+  if(!text){ toast('Write something first','error'); return; }
+  const tags = [...document.querySelectorAll('.db-ctag.sel')].map(b=>b.dataset.tag);
+  const now  = new Date();
+  const pad  = n=>String(n).padStart(2,'0');
+  const dateStr = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
+  const timeStr = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
+
+  if(!DATA.daybook) DATA.daybook=[];
+
+  if(_dbEditId){
+    const idx = DATA.daybook.findIndex(e=>e.id===_dbEditId);
+    if(idx>=0){
+      DATA.daybook[idx].text = text;
+      DATA.daybook[idx].tags = tags;
+      DATA.daybook[idx].edited = now.toISOString();
+    }
+    toast('Entry updated ✓','success');
+  } else {
+    DATA.daybook.push({
+      id: 'db_'+Date.now(),
+      date: dateStr,
+      time: timeStr,
+      text,
+      tags,
+      created: now.toISOString()
+    });
+    toast('Entry saved ✓','success');
+  }
+
+  dbCloseCompose();
+  dbRender();
+  dbUpdateCounts();
+  await saveToGitHub();
+}
+
+async function dbDeleteEntry(id){
+  if(!confirm('Delete this entry?')) return;
+  DATA.daybook = (DATA.daybook||[]).filter(e=>e.id!==id);
+  dbRender();
+  dbUpdateCounts();
+  toast('Entry deleted','success');
+  await saveToGitHub();
 }
 
 /* -- INIT ---------------------------------------- */
