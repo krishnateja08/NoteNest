@@ -4392,7 +4392,8 @@ function renderAll(){
   updateFinanceCount();
   const now=new Date();
   const pending=reminders.filter(r=>!r.sent).length;
-  const overdue=reminders.filter(r=>{try{return!r.sent&&new Date(r.due.replace(' ','T'))<now;}catch{return false;}}).length;
+  const todayStr=now.toISOString().slice(0,10);
+  const overdue=reminders.filter(r=>!r.sent&&r.due&&r.due.slice(0,10)<=todayStr).length;
   const sent=reminders.filter(r=>r.sent).length;
 
   document.getElementById('stat-notes').textContent=notes.length;
@@ -4471,7 +4472,7 @@ function renderNoteCard(n){
 function renderReminderCard(r){
   const now=new Date();
   let sc='pending',sl='🔔 Pending';
-  try{const d=new Date(r.due.replace(' ','T'));if(r.sent){sc='sent';sl='✅ Done';}else if(d<now){sc='overdue';sl='🔴 Overdue';}}catch{}
+  try{const todayStr=now.toISOString().slice(0,10);const dueDate=(r.due||'').slice(0,10);if(r.sent){sc='sent';sl='✅ Done';}else if(dueDate&&dueDate<=todayStr){sc='overdue';sl='🔴 Overdue';}}catch{}
   const tags=(r.tags||[]).map(t=>`<span class="ctag">#${esc(t)}</span>`).join('');
   const rep=r.repeat&&r.repeat!=='none'?`<span class="ctag">🔁 ${r.repeat}</span>`:'';
   const prio=r.priority||'medium';
@@ -4521,7 +4522,7 @@ function renderNoteRow(n){
 function renderReminderRow(r){
   const now=new Date();
   let sc='pending';
-  try{const d=new Date(r.due.replace(' ','T'));if(r.sent){sc='sent';}else if(d<now){sc='overdue';}}catch{}
+  try{const todayStr=now.toISOString().slice(0,10);const dueDate=(r.due||'').slice(0,10);if(r.sent){sc='sent';}else if(dueDate&&dueDate<=todayStr){sc='overdue';}}catch{}
   const tags=(r.tags||[]).slice(0,2).map(t=>`<span class="ctag">#${esc(t)}</span>`).join('');
   const rep=r.repeat&&r.repeat!=='none'?`<span class="ctag">🔁 ${r.repeat}</span>`:'';
   const doneBtn = !r.sent
@@ -5473,7 +5474,7 @@ function _renderRemChecklist(){
 
   const renderRow = r => {
     const dueDate = (r.due||'').slice(0,10);
-    const isOver  = !r.sent && r.due && new Date(r.due.replace(' ','T')) < now;
+    const isOver  = !r.sent && r.due && r.due.slice(0,10) <= todayStr;
     const isToday = dueDate===todayStr;
     const dueCls  = isOver?'overdue':isToday?'today':'';
     const dueLabel= r.due ? (isOver?'⚠ Overdue · ':isToday?'📅 Today · ':'📅 ')+r.due.slice(0,10) : '';
@@ -7980,7 +7981,7 @@ function updateDashboardWidgets(){
   const totalItems  = notes.length + reminders.length;
   const pending     = reminders.filter(r=>!r.sent && r.due && r.due.slice(0,10) >= todayStr).length;
   const completed   = reminders.filter(r=>r.sent).length;
-  const missed      = reminders.filter(r=>{try{return !r.sent && r.due && new Date(r.due.replace(' ','T'))<now;}catch{return false;}}).length;
+  const missed      = reminders.filter(r=>!r.sent && r.due && r.due.slice(0,10)<=todayStr).length;
 
   const elNotes   = document.getElementById('stat-notes');
   const elPend    = document.getElementById('stat-pending');
