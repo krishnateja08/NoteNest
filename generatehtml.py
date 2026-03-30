@@ -331,7 +331,7 @@ body.theme-beige .db-entry-time{color:var(--accent)}
 body.theme-neon  .db-entry-time{color:var(--accent)}
 .db-entry-ampm{font-size:10px;color:var(--muted);font-weight:500}
 .db-entry-body{flex:1;min-width:0}
-.db-entry-text{font-size:13px;color:var(--text);line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;white-space:pre-wrap}
+.db-entry-text{font-size:14px;color:var(--text);line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;white-space:pre-wrap}
 .db-entry-tags{display:flex;gap:5px;margin-top:6px;flex-wrap:wrap}
 .db-tag{font-size:10px;padding:2px 9px;border-radius:20px;font-weight:600}
 .db-tag-trade{background:#e6f7f1;color:#0f6e56}
@@ -496,7 +496,7 @@ body.theme-neon .stat-card.sc-missed::before{background:#ff3366}
 body.theme-neon .ri.ri-next{background:rgba(0,229,255,.08);border-color:rgba(0,229,255,.2)}
 .ri-time{font-size:11px;font-weight:700;color:var(--muted);min-width:40px;font-variant-numeric:tabular-nums}
 .ri-info{flex:1;min-width:0}
-.ri-name{font-size:13px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ri-name{font-size:14px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ri-countdown{font-size:10px;color:var(--accent);font-weight:700;margin-top:1px}
 .ri-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;white-space:nowrap;flex-shrink:0}
 .badge-next{background:rgba(124,92,191,.15);color:#7c5cbf}
@@ -637,7 +637,7 @@ body.theme-neon .dash-tasks-count.open{background:rgba(0,229,255,.1);color:#00e5
 .dash-task-prio.high{background:#fee2e2;color:#991b1b}
 .dash-task-prio.medium{background:#fef3c7;color:#92400e}
 .dash-task-prio.low{background:#d1fae5;color:#065f46}
-.dash-task-text{flex:1;font-size:13px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dash-task-text{flex:1;font-size:14px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .dash-task-row.is-done .dash-task-text{text-decoration:line-through;color:var(--muted)}
 .dash-task-cat{font-size:10px;color:var(--muted);flex-shrink:0;white-space:nowrap}
 .dash-task-date{font-size:10px;color:var(--muted);flex-shrink:0;white-space:nowrap}
@@ -713,10 +713,10 @@ body.theme-neon .dash-tasks-count.open{background:rgba(0,229,255,.1);color:#00e5
 .schip.sent{background:#e8f4ec;color:#2a7a40}
 .schip.overdue{background:#f8eeec;color:#c04040}
 .ctitle{
-  font-family:'Fraunces',serif;font-size:15px;
+  font-family:'Fraunces',serif;font-size:16px;
   color:var(--text);line-height:1.3;font-weight:700
 }
-.cbody{font-size:13px;line-height:1.6;color:var(--text2);flex:1;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.cbody{font-size:14px;line-height:1.6;color:var(--text2);flex:1;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
 .due-row{
   display:flex;align-items:center;gap:5px;font-size:11px;
   color:#8b5e2a;background:rgba(139,94,42,.08);
@@ -1840,7 +1840,7 @@ body.theme-beige .nav-item.active{color:#7c5cbf}
 }
 .rt-task-info{flex:1;min-width:0}
 .rt-task-name{
-  font-size:13px;font-weight:600;color:#1a2040;
+  font-size:14px;font-weight:600;color:#1a2040;
   transition:color 0.2s
 }
 .rt-task-row.done .rt-task-name{
@@ -2258,12 +2258,12 @@ body.theme-beige .nav-item.active{color:#7c5cbf}
 .fin-settled-body.collapsed{display:none}
 .fin-card-eyebrow{display:flex;align-items:center;justify-content:space-between}
 .fin-card-type{font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);font-weight:700}
-.fin-card-person{font-family:'Fraunces',serif;font-size:15px;font-weight:700;color:var(--text);line-height:1.3}
+.fin-card-person{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--text);line-height:1.3}
 .fin-card-amount{font-family:'Fraunces',serif;font-size:19px;font-weight:700}
 .fin-card-amount.gave{color:#059669}
 .fin-card-amount.borrowed{color:#dc2626}
 .fin-card-amount.settled{color:var(--muted)}
-.fin-card-note{font-family:'EB Garamond',serif;font-size:13px;color:var(--text2);line-height:1.5}
+.fin-card-note{font-family:'EB Garamond',serif;font-size:14px;color:var(--text2);line-height:1.5}
 .fin-card-tags{display:flex;gap:5px;flex-wrap:wrap}
 .fin-card-meta{
   display:flex;align-items:center;justify-content:space-between;
@@ -6913,6 +6913,7 @@ function finToggleSettled(key){
 
 function finSetFilter(f,btn){
   _finFilter=f;
+  if(f==='all') _finPersonFilter='all';
   document.querySelectorAll('#fin-f-all,#fin-f-gave,#fin-f-borrowed,#fin-f-pending,#fin-f-partial,#fin-f-overdue,#fin-f-settled')
     .forEach(b=>b.classList.remove('active'));
   if(btn) btn.classList.add('active');
@@ -7951,28 +7952,36 @@ function updateDashboardWidgets(){
   // -- MISSED & OVERDUE --
   const missedEl = document.getElementById('dash-missed-list');
   if(missedEl){
-    const overdueRems = reminders.filter(r=>!r.sent && r.due && r.due.slice(0,10) < todayStr)
+    const overdueRems = reminders.filter(r=>!r.sent && r.due && new Date(r.due.replace(' ','T')) < now)
       .sort((a,b)=>b.due.localeCompare(a.due))
-      .slice(0,5);
+      .slice(0,4);
 
-    if(!overdueRems.length){
+    const overdueTasks = (TASKNOTES||[])
+      .filter(t=>!t.done && t.date && t.date.slice(0,10) <= todayStr)
+      .slice(0,3);
+
+    const allOverdue = [
+      ...overdueRems.map(r=>({type:'rem', title:r.title||'Untitled', due:r.due.slice(0,10), cat:r.category||'personal'})),
+      ...overdueTasks.map(t=>({type:'task', title:t.text||'Untitled', due:new Date(t.date).toISOString().slice(0,10), cat:t.category||'personal'}))
+    ];
+
+    if(!allOverdue.length){
       missedEl.innerHTML='<div class="dash-empty">Nothing missed — great job! 🎉</div>';
     } else {
-      const html = overdueRems.map(r=>{
-        const dueDateStr = r.due.slice(0,10);
-        const dueDate  = new Date(dueDateStr+'T00:00:00');
+      missedEl.innerHTML = allOverdue.map(item=>{
+        const dueDate = new Date(item.due+'T00:00:00');
         const diffDays = Math.round((now-dueDate)/(1000*60*60*24));
         const ageLabel = diffDays<=0?'Today':diffDays===1?'1d ago':diffDays+'d ago';
+        const icon = item.type==='task' ? '✍️' : '🔔';
         return `<div class="mi">
-          <div class="mi-icon">🔔</div>
+          <div class="mi-icon">${icon}</div>
           <div class="mi-info">
-            <div class="mi-name">${r.title||'Untitled'}</div>
-            <div class="mi-meta">Due ${dueDateStr} · ${r.category||'personal'}</div>
+            <div class="mi-name">${item.title}</div>
+            <div class="mi-meta">Due ${item.due} · ${item.cat}</div>
           </div>
           <span class="mi-age">${ageLabel}</span>
         </div>`;
       }).join('');
-      missedEl.innerHTML = html;
     }
   }
 
