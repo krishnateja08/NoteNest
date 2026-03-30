@@ -7439,12 +7439,14 @@ function initRoutineDrag(){
 
   container.querySelectorAll('.rt-manage-group[draggable]').forEach(el=>{
     el.addEventListener('dragstart', e=>{
-      // only start if the drag originates from the handle or the header
-      if(e.target.closest('.rt-manage-task-row')) { e.stopPropagation(); return; }
+      // only start if the drag originates from the group-level drag handle
+      if(!e.target.closest('.rt-drag-handle') || e.target.closest('.rt-manage-task-row')) {
+        e.preventDefault(); return;
+      }
       dragSrcGroup = el;
       el.classList.add('dragging');
       e.dataTransfer.effectAllowed = 'move';
-      e.dataTransfer.setData('text/group-id', el.dataset.groupId);
+      e.dataTransfer.setData('text/plain', el.dataset.groupId);
     });
     el.addEventListener('dragend', ()=>{
       el.classList.remove('dragging');
@@ -7453,8 +7455,6 @@ function initRoutineDrag(){
     });
     el.addEventListener('dragover', e=>{
       if(!dragSrcGroup || el === dragSrcGroup) return;
-      // only handle group drag here, not task drag
-      if(e.dataTransfer.types.includes('text/task-id')) return;
       e.preventDefault();
       e.dataTransfer.dropEffect = 'move';
       container.querySelectorAll('.rt-manage-group').forEach(g=>g.classList.remove('drag-over'));
@@ -7463,10 +7463,9 @@ function initRoutineDrag(){
     el.addEventListener('dragleave', ()=>el.classList.remove('drag-over'));
     el.addEventListener('drop', e=>{
       if(!dragSrcGroup || el === dragSrcGroup) return;
-      if(e.dataTransfer.types.includes('text/task-id')) return;
       e.preventDefault();
       el.classList.remove('drag-over');
-      const fromId = e.dataTransfer.getData('text/group-id');
+      const fromId = e.dataTransfer.getData('text/plain');
       const toId   = el.dataset.groupId;
       const fromIdx = ROUTINES.findIndex(r=>r.id===fromId);
       const toIdx   = ROUTINES.findIndex(r=>r.id===toId);
@@ -7486,12 +7485,12 @@ function initRoutineDrag(){
 
     tasksEl.querySelectorAll('.rt-manage-task-row[draggable]').forEach(row=>{
       row.addEventListener('dragstart', e=>{
+        if(!e.target.closest('.rt-drag-handle')){ e.preventDefault(); return; }
         e.stopPropagation(); // don't bubble to group drag
         dragSrcTask = row;
         row.classList.add('dragging');
         e.dataTransfer.effectAllowed = 'move';
-        e.dataTransfer.setData('text/task-id', row.dataset.taskId);
-        e.dataTransfer.setData('text/task-group', groupId);
+        e.dataTransfer.setData('text/plain', row.dataset.taskId+'|'+groupId);
       });
       row.addEventListener('dragend', ()=>{
         row.classList.remove('dragging');
@@ -7511,7 +7510,8 @@ function initRoutineDrag(){
         e.preventDefault();
         e.stopPropagation();
         row.classList.remove('drag-over-top');
-        const fromTaskId = e.dataTransfer.getData('text/task-id');
+        const raw = e.dataTransfer.getData('text/plain');
+        const fromTaskId = raw.split('|')[0];
         const toTaskId   = row.dataset.taskId;
         const group = ROUTINES.find(g=>g.id===groupId);
         if(!group) return;
@@ -8065,7 +8065,7 @@ function updateDashboardWidgets(){
   // -- MISSED & OVERDUE --
   const missedEl = document.getElementById('dash-missed-list');
   if(missedEl){
-    const overdueRems = reminders.filter(r=>!r.sent && r.due && new Date(r.due.replace(' ','T')) < now)
+    const overdueRems = reminders.filter(r=>!r.sent && r.due && r.due.slice(0,10) <= todayStr)
       .sort((a,b)=>b.due.localeCompare(a.due))
       .slice(0,4);
 
