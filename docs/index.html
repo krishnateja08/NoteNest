@@ -1806,6 +1806,17 @@ body.theme-beige .nav-item.active{color:#7c5cbf}
   background:#f0f4ff;border-radius:20px;padding:3px 10px
 }
 .rt-group-toggle{font-size:12px;color:#8898c0;margin-left:4px}
+.rt-today-drag-handle{
+  display:inline-flex;flex-direction:column;gap:3px;
+  cursor:grab;padding:4px 8px;flex-shrink:0;user-select:none;
+  opacity:.5;transition:opacity .15s;margin-right:2px
+}
+.rt-today-drag-handle:hover{opacity:1}
+.rt-today-drag-handle:active{cursor:grabbing;opacity:1}
+.rt-today-drag-handle span{display:flex;gap:3px}
+.rt-today-drag-handle span i{display:block;width:4px;height:4px;border-radius:50%;background:#3b5bdb;font-style:normal}
+.rt-group.today-dragging{opacity:.4}
+.rt-group.today-drag-over{border:2px dashed #3b5bdb;background:#f0f4ff}
 
 /* color accent on group */
 .rt-group.c-blue .rt-group-header{border-left:4px solid #3b5bdb}
@@ -4387,8 +4398,9 @@ function renderAll(){
   updateTaskNotesCount();
   updateFinanceCount();
   const now=new Date();
+  const todayStr=now.toISOString().slice(0,10);
   const pending=reminders.filter(r=>!r.sent).length;
-  const overdue=reminders.filter(r=>{try{return!r.sent&&new Date(r.due.replace(' ','T'))<now;}catch{return false;}}).length;
+  const overdue=reminders.filter(r=>!r.sent&&r.due&&r.due.slice(0,10)<=todayStr).length;
   const sent=reminders.filter(r=>r.sent).length;
 
   document.getElementById('stat-notes').textContent=notes.length;
@@ -4467,7 +4479,7 @@ function renderNoteCard(n){
 function renderReminderCard(r){
   const now=new Date();
   let sc='pending',sl='🔔 Pending';
-  try{const d=new Date(r.due.replace(' ','T'));if(r.sent){sc='sent';sl='✅ Done';}else if(d<now){sc='overdue';sl='🔴 Overdue';}}catch{}
+  try{const todayStr=now.toISOString().slice(0,10);const dueDate=(r.due||'').slice(0,10);if(r.sent){sc='sent';sl='✅ Done';}else if(dueDate&&dueDate<=todayStr){sc='overdue';sl='🔴 Overdue';}}catch{}
   const tags=(r.tags||[]).map(t=>`<span class="ctag">#${esc(t)}</span>`).join('');
   const rep=r.repeat&&r.repeat!=='none'?`<span class="ctag">🔁 ${r.repeat}</span>`:'';
   const prio=r.priority||'medium';
@@ -4517,7 +4529,7 @@ function renderNoteRow(n){
 function renderReminderRow(r){
   const now=new Date();
   let sc='pending';
-  try{const d=new Date(r.due.replace(' ','T'));if(r.sent){sc='sent';}else if(d<now){sc='overdue';}}catch{}
+  try{const todayStr=now.toISOString().slice(0,10);const dueDate=(r.due||'').slice(0,10);if(r.sent){sc='sent';}else if(dueDate&&dueDate<=todayStr){sc='overdue';}}catch{}
   const tags=(r.tags||[]).slice(0,2).map(t=>`<span class="ctag">#${esc(t)}</span>`).join('');
   const rep=r.repeat&&r.repeat!=='none'?`<span class="ctag">🔁 ${r.repeat}</span>`:'';
   const doneBtn = !r.sent
@@ -5469,7 +5481,7 @@ function _renderRemChecklist(){
 
   const renderRow = r => {
     const dueDate = (r.due||'').slice(0,10);
-    const isOver  = !r.sent && r.due && new Date(r.due.replace(' ','T')) < now;
+    const isOver  = !r.sent && r.due && r.due.slice(0,10) <= todayStr;
     const isToday = dueDate===todayStr;
     const dueCls  = isOver?'overdue':isToday?'today':'';
     const dueLabel= r.due ? (isOver?'⚠ Overdue · ':isToday?'📅 Today · ':'📅 ')+r.due.slice(0,10) : '';
@@ -7435,10 +7447,7 @@ function initRoutineDrag(){
 
   container.querySelectorAll('.rt-manage-group[draggable]').forEach(el=>{
     el.addEventListener('dragstart', e=>{
-      // only start if the drag originates from the group-level drag handle
-      if(!e.target.closest('.rt-drag-handle') || e.target.closest('.rt-manage-task-row')) {
-        e.preventDefault(); return;
-      }
+      if(!e.target.closest('.rt-drag-handle') || e.target.closest('.rt-manage-task-row')){ e.preventDefault(); return; }
       dragSrcGroup = el;
       el.classList.add('dragging');
       e.dataTransfer.effectAllowed = 'move';
@@ -7482,7 +7491,7 @@ function initRoutineDrag(){
     tasksEl.querySelectorAll('.rt-manage-task-row[draggable]').forEach(row=>{
       row.addEventListener('dragstart', e=>{
         if(!e.target.closest('.rt-drag-handle')){ e.preventDefault(); return; }
-        e.stopPropagation(); // don't bubble to group drag
+        e.stopPropagation();
         dragSrcTask = row;
         row.classList.add('dragging');
         e.dataTransfer.effectAllowed = 'move';
@@ -7597,8 +7606,9 @@ function renderTodayChecklist(){
     const colorClass = 'c-'+(group.color||'blue');
     const pct = todayTasks.length ? Math.round((doneTasks.length/todayTasks.length)*100) : 0;
 
-    html += `<div class="rt-group ${colorClass}" id="rtg-${group.id}">
+    html += `<div class="rt-group ${colorClass}" id="rtg-${group.id}" draggable="true" data-group-id="${group.id}">
       <div class="rt-group-header" onclick="toggleGroup('${group.id}')">
+        <span class="rt-today-drag-handle" title="Drag to reorder" onclick="event.stopPropagation()"><span><i></i><i></i></span><span><i></i><i></i></span><span><i></i><i></i></span></span>
         <span class="rt-group-icon">${group.icon||'🔁'}</span>
         <span class="rt-group-name">${esc(group.name)}</span>
         <span class="rt-group-progress">${doneTasks.length}/${todayTasks.length} · ${pct}%</span>
@@ -7630,6 +7640,50 @@ function renderTodayChecklist(){
   container.innerHTML = html || `<div style="text-align:center;padding:40px;color:#8898c0;font-size:13px">
     No tasks scheduled for today</div>`;
   updateProgress(doneToday, totalToday);
+  initTodayDrag();
+}
+
+function initTodayDrag(){
+  const container = document.getElementById('rt-checklist');
+  if(!container) return;
+  let dragSrc = null;
+  container.querySelectorAll('.rt-group[draggable]').forEach(el=>{
+    el.addEventListener('dragstart', e=>{
+      if(!e.target.closest('.rt-today-drag-handle')){ e.preventDefault(); return; }
+      dragSrc = el;
+      el.classList.add('today-dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', el.dataset.groupId);
+    });
+    el.addEventListener('dragend', ()=>{
+      el.classList.remove('today-dragging');
+      container.querySelectorAll('.rt-group').forEach(g=>g.classList.remove('today-drag-over'));
+      dragSrc = null;
+    });
+    el.addEventListener('dragover', e=>{
+      if(!dragSrc || el === dragSrc) return;
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      container.querySelectorAll('.rt-group').forEach(g=>g.classList.remove('today-drag-over'));
+      el.classList.add('today-drag-over');
+    });
+    el.addEventListener('dragleave', ()=>el.classList.remove('today-drag-over'));
+    el.addEventListener('drop', e=>{
+      if(!dragSrc || el === dragSrc) return;
+      e.preventDefault();
+      el.classList.remove('today-drag-over');
+      const fromId = e.dataTransfer.getData('text/plain');
+      const toId   = el.dataset.groupId;
+      const fromIdx = ROUTINES.findIndex(r=>r.id===fromId);
+      const toIdx   = ROUTINES.findIndex(r=>r.id===toId);
+      if(fromIdx<0||toIdx<0) return;
+      const [moved] = ROUTINES.splice(fromIdx, 1);
+      ROUTINES.splice(toIdx, 0, moved);
+      renderTodayChecklist();
+      saveRoutines();
+      toast('Routine order saved ✓','success');
+    });
+  });
 }
 
 function updateProgress(done, total){
@@ -7976,7 +8030,7 @@ function updateDashboardWidgets(){
   const totalItems  = notes.length + reminders.length;
   const pending     = reminders.filter(r=>!r.sent && r.due && r.due.slice(0,10) >= todayStr).length;
   const completed   = reminders.filter(r=>r.sent).length;
-  const missed      = reminders.filter(r=>{try{return !r.sent && r.due && new Date(r.due.replace(' ','T'))<now;}catch{return false;}}).length;
+  const missed      = reminders.filter(r=>!r.sent && r.due && r.due.slice(0,10)<=todayStr).length;
 
   const elNotes   = document.getElementById('stat-notes');
   const elPend    = document.getElementById('stat-pending');
