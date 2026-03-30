@@ -4394,7 +4394,7 @@ function renderAll(){
   updateTaskNotesCount();
   updateFinanceCount();
   const now=new Date();
-  const todayStr=now.toISOString().slice(0,10);
+  const todayStr=localToday();
   const pending=reminders.filter(r=>!r.sent).length;
   const overdue=reminders.filter(r=>!r.sent&&r.due&&r.due.slice(0,10)<=todayStr).length;
   const sent=reminders.filter(r=>r.sent).length;
@@ -4475,7 +4475,7 @@ function renderNoteCard(n){
 function renderReminderCard(r){
   const now=new Date();
   let sc='pending',sl='🔔 Pending';
-  try{const todayStr=now.toISOString().slice(0,10);const dueDate=(r.due||'').slice(0,10);if(r.sent){sc='sent';sl='✅ Done';}else if(dueDate&&dueDate<=todayStr){sc='overdue';sl='🔴 Overdue';}}catch{}
+  try{const todayStr=localToday();const dueDate=(r.due||'').slice(0,10);if(r.sent){sc='sent';sl='✅ Done';}else if(dueDate&&dueDate<=todayStr){sc='overdue';sl='🔴 Overdue';}}catch{}
   const tags=(r.tags||[]).map(t=>`<span class="ctag">#${esc(t)}</span>`).join('');
   const rep=r.repeat&&r.repeat!=='none'?`<span class="ctag">🔁 ${r.repeat}</span>`:'';
   const prio=r.priority||'medium';
@@ -4525,7 +4525,7 @@ function renderNoteRow(n){
 function renderReminderRow(r){
   const now=new Date();
   let sc='pending';
-  try{const todayStr=now.toISOString().slice(0,10);const dueDate=(r.due||'').slice(0,10);if(r.sent){sc='sent';}else if(dueDate&&dueDate<=todayStr){sc='overdue';}}catch{}
+  try{const todayStr=localToday();const dueDate=(r.due||'').slice(0,10);if(r.sent){sc='sent';}else if(dueDate&&dueDate<=todayStr){sc='overdue';}}catch{}
   const tags=(r.tags||[]).slice(0,2).map(t=>`<span class="ctag">#${esc(t)}</span>`).join('');
   const rep=r.repeat&&r.repeat!=='none'?`<span class="ctag">🔁 ${r.repeat}</span>`:'';
   const doneBtn = !r.sent
@@ -4713,7 +4713,7 @@ function updatePreview(){
   pTags.innerHTML = tagArr.map(t=>`<span class="ctag">#${esc(t)}</span>`).join('');
   pTags.style.display = tagArr.length?'':'none';
 
-  const now = new Date().toISOString().slice(0,10);
+  const now = localToday();
   pDate.textContent = 'Created '+now;
   pPin.innerHTML = pinned?'<span class="pinned-badge">📌 Pinned</span>':'';
 }
@@ -4835,7 +4835,7 @@ async function saveItem(){
   const tags=getTagChips();
   const color=document.getElementById('f-color').value||'default';
   const pinned=document.getElementById('f-pinned').value==='true';
-  const now=new Date().toISOString().slice(0,16).replace('T',' ');
+  const now=localNow();
   const ex=id?[...(DATA.notes||[]),...(DATA.reminders||[])].find(i=>i.id===id):null;
   if(currentType==='note'){
     const note={id:id||uid(),type:'note',category:document.getElementById('f-category').value||'personal',title,body:document.getElementById('f-body').value.trim(),tags,color,pinned,created:ex?ex.created:now,updated:now,attachments:ex?ex.attachments||[]:[]};
@@ -4867,6 +4867,19 @@ async function deleteItem(id){
 }
 
 const uid=()=>Math.random().toString(36).slice(2,10);
+
+// Returns local datetime as 'YYYY-MM-DD HH:MM' (no UTC shift)
+function localNow(){
+  const d=new Date();
+  const pad=n=>String(n).padStart(2,'0');
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+// Returns local date as 'YYYY-MM-DD'
+function localToday(){
+  const d=new Date();
+  const pad=n=>String(n).padStart(2,'0');
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+}
 
 /* -- STAT CARD FILTER ---------------------------- */
 function statFilter(type, btn){
@@ -5220,7 +5233,7 @@ async function saveCurrentNoteInline(){
   const bodyEl  = document.getElementById('notes-editor-body');
   const title   = titleEl?.value.trim()||'';
   const body    = bodyEl?.value||'';
-  const now     = new Date().toISOString().slice(0,16).replace('T',' ');
+  const now=localNow();
   DATA.notes = (DATA.notes||[]).map(n=>{
     if(n.id!==_selectedNoteId) return n;
     return {...n, title:title||'New Note', body, updated:now};
@@ -5256,7 +5269,7 @@ function hideSavedIndicator(){
 }
 
 async function createNewNote(){
-  const now       = new Date().toISOString().slice(0,16).replace('T',' ');
+  const now=localNow();
   const folderId  = _selectedFolderId==='all' ? 'personal' : _selectedFolderId;
   const newNote   = {
     id: uid(), type:'note',
@@ -5380,7 +5393,7 @@ function renderRemindersPage(resetPanel){
 function _updateRemTiles(){
   const rems = DATA.reminders||[];
   const now  = new Date();
-  const todayStr = now.toISOString().slice(0,10);
+  const todayStr = localToday();
   const todayCount     = rems.filter(r=>!r.sent && (r.due||'').slice(0,10)===todayStr).length;
   const scheduledCount = rems.filter(r=>!r.sent && r.due).length;
   const allCount       = rems.filter(r=>!r.sent).length;
@@ -5435,7 +5448,7 @@ function selectRemList(id){
 function _getFilteredRems(){
   const rems = DATA.reminders||[];
   const now  = new Date();
-  const todayStr = now.toISOString().slice(0,10);
+  const todayStr = localToday();
   let filtered;
   if(_remListId){
     filtered = rems.filter(r=>(r.list_id||r.category||'personal')===_remListId);
@@ -5473,7 +5486,7 @@ function _renderRemChecklist(){
   const undone = items.filter(r=>!r.sent).sort((a,b)=>(a.due||'').localeCompare(b.due||''));
   const done   = items.filter(r=>r.sent);
   const now    = new Date();
-  const todayStr = now.toISOString().slice(0,10);
+  const todayStr = localToday();
 
   const renderRow = r => {
     const dueDate = (r.due||'').slice(0,10);
@@ -5550,7 +5563,7 @@ function _doAddReminder(listId){
   const dueEl   = document.getElementById('rem-add-due');
   const title   = titleEl?.value.trim();
   if(!title){ titleEl?.focus(); return; }
-  const now = new Date().toISOString().slice(0,16).replace('T',' ');
+  const now=localNow();
   const dueStr = dueEl?.value ? dueEl.value+' 09:00' : '';
   const rem = {
     id:uid(),type:'reminder',
@@ -5826,7 +5839,7 @@ function pickSPColor(id){
 
 function addSticky(){
   const colorObj = SP_COLORS.find(c=>c.id===activeSPColor)||SP_COLORS[0];
-  const now = new Date().toISOString().slice(0,16).replace('T',' ');
+  const now=localNow();
   const s = {
     id: Math.random().toString(36).slice(2,10),
     text: '',
@@ -5870,7 +5883,7 @@ function archiveSticky(id){
   if(card){ card.classList.add('removing'); }
   setTimeout(()=>{
     STICKIES = STICKIES.filter(x=>x.id!==id);
-    ARCHIVED.unshift({...s, archivedAt: new Date().toISOString().slice(0,10)});
+    ARCHIVED.unshift({...s, archivedAt: localToday()});
     saveStickies(true);
     renderStickyBoard();
     renderArchiveGrid();
@@ -5923,7 +5936,7 @@ function saveStickyText(id, el, immediate=true){
   const s=STICKIES.find(s=>s.id===id);
   if(s){
     s.text=el.innerText;
-    s.updated=new Date().toISOString().slice(0,16).replace('T',' ');
+    s.updated=localNow();
     const dateEl=document.getElementById('sdate-'+id);
     if(dateEl) dateEl.innerHTML=stickyDateHtml(s);
     saveStickies(immediate);
@@ -6424,7 +6437,7 @@ function openTradeModal(id){
   document.getElementById('trade-modal-heading').textContent = existing ? 'Edit Trade' : 'Log New Trade';
   document.getElementById('trade-edit-id').value = existing ? existing.id : '';
   document.getElementById('tj-symbol').value     = existing?.symbol     || '';
-  document.getElementById('tj-date').value       = existing?.date       || new Date().toISOString().slice(0,10);
+  document.getElementById('tj-date').value       = existing?.date       || localToday();
   document.getElementById('tj-instrument').value = existing?.instrument || 'equity';
   document.getElementById('tj-status').value     = existing?.status     || 'open';
   document.getElementById('tj-notes').value      = existing?.notes      || '';
@@ -6587,7 +6600,7 @@ function addTaskNote(){
     priority: 'medium',
     tags:     [],
     done:     false,
-    date:     new Date().toISOString().slice(0,10),
+    date:     localToday(),
     created:  new Date().toISOString(),
   };
   TASKNOTES.unshift(note);
@@ -6949,7 +6962,7 @@ function openFinModal(id){
   document.getElementById('fin-amount').value     =ex?.amount    ||'';
   document.getElementById('fin-paymethod').value  =ex?.paymethod ||'cash';
   document.getElementById('fin-interest').value   =ex?.interestRate||'';
-  document.getElementById('fin-date').value       =ex?.date      ||new Date().toISOString().slice(0,10);
+  document.getElementById('fin-date').value       =ex?.date      ||localToday();
   document.getElementById('fin-duedate').value    =ex?.duedate   ||'';
   document.getElementById('fin-notes').value      =ex?.notes     ||'';
   document.getElementById('fin-modal-overlay').classList.add('open');
@@ -7016,7 +7029,7 @@ function markFinSettled(id){
   if(!e) return;
   e.status='settled';
   const rem=finRemaining(e);
-  if(rem>0) e.repayments.push({amount:rem,repayType:'principal',paymethod:'cash',note:'Settled',date:new Date().toISOString().slice(0,10)});
+  if(rem>0) e.repayments.push({amount:rem,repayType:'principal',paymethod:'cash',note:'Settled',date:localToday()});
   saveFinance();renderFinance();
   toast('Marked as settled \u2713','success');
 }
@@ -7046,7 +7059,7 @@ function addRepayment(id){
     repayType: typeEl?.value   ||'principal',
     paymethod: methodEl?.value ||'cash',
     note:      noteEl?.value.trim()||'',
-    date:      dateEl?.value||new Date().toISOString().slice(0,10),
+    date:      dateEl?.value||localToday(),
   });
   saveFinance();renderFinance();
   toast('Payment recorded \u2713','success');
@@ -7072,7 +7085,7 @@ function toggleFinRepay(id){
   document.getElementById('fin-pay-entry-id').value=id;
   document.getElementById('fin-pay-amt').value='';
   document.getElementById('fin-pay-note').value='';
-  document.getElementById('fin-pay-date').value=new Date().toISOString().slice(0,10);
+  document.getElementById('fin-pay-date').value=localToday();
   document.getElementById('fin-pay-type').value='principal';
   document.getElementById('fin-pay-method').value=e.paymethod||'cash';
   document.getElementById('fin-pay-modal-title').textContent='Record Payment — '+esc(e.person);
@@ -7289,7 +7302,7 @@ function renderFinance(){
               <option value="bank">🏦 Bank</option>
               <option value="upi">📱 UPI</option>
             </select>
-            <input class="fin-repay-input" id="fin-repay-date-${e.id}" type="date" style="width:130px" value="${new Date().toISOString().slice(0,10)}" onclick="event.stopPropagation()">
+            <input class="fin-repay-input" id="fin-repay-date-${e.id}" type="date" style="width:130px" value="${localToday()}" onclick="event.stopPropagation()">
             <input class="fin-repay-input" id="fin-repay-note-${e.id}" placeholder="Note (optional)" style="flex:1;min-width:80px" onclick="event.stopPropagation()">
             <button class="fin-add-repay-btn" onclick="event.stopPropagation();addRepayment('${e.id}')">Add</button>
           </div>
@@ -7904,7 +7917,7 @@ function dashCalNav(dir){
 function renderDashCal(){
   const reminders = DATA.reminders||[];
   const now = new Date();
-  const todayStr = now.toISOString().slice(0,10);
+  const todayStr = localToday();
   const year  = _dashCalYear;
   const month = _dashCalMonth;
 
@@ -8005,7 +8018,7 @@ function updateDashboardWidgets(){
   const notes      = DATA.notes||[];
   const reminders  = DATA.reminders||[];
   const now        = new Date();
-  const todayStr   = now.toISOString().slice(0,10);
+  const todayStr   = localToday();
 
   // -- GREETING BANNER --
   const hour = now.getHours();
@@ -8268,7 +8281,7 @@ function checkDueReminders(){
 // Clear notified list daily so recurring reminders fire again
 function cleanNotifiedIds(){
   const key = 'notified_date';
-  const today = new Date().toISOString().slice(0,10);
+  const today = localToday();
   if(localStorage.getItem(key)!==today){
     localStorage.removeItem('notified_ids');
     localStorage.setItem(key, today);
@@ -8334,7 +8347,7 @@ function renderFullCal(){
     remMap[ds].push(r);
   });
 
-  const today       = new Date().toISOString().slice(0,10);
+  const today       = localToday();
   const firstDay    = new Date(_calYear, _calMonth, 1).getDay(); // 0=Sun
   const daysInMonth = new Date(_calYear, _calMonth+1, 0).getDate();
   // prev month fill
@@ -8471,7 +8484,7 @@ function mdInsert(text){
    ============================================================ */
 const TEMPLATES = {
   daily: {
-    title: '📅 Daily Log — '+new Date().toISOString().slice(0,10),
+    title: '📅 Daily Log — '+localToday(),
     body: `## Morning
 - 
 
@@ -8501,7 +8514,7 @@ const TEMPLATES = {
 `
   },
   trading: {
-    title: '📈 Trading Plan — '+new Date().toISOString().slice(0,10),
+    title: '📈 Trading Plan — '+localToday(),
     body: `## Market Overview
 
 ## Setup
