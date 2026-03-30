@@ -1810,7 +1810,7 @@ body.theme-beige .nav-item.active{color:#7c5cbf}
 .rt-today-drag-handle:hover{opacity:1}
 .rt-today-drag-handle:active{cursor:grabbing;opacity:1}
 .rt-today-drag-handle span{display:flex;gap:3px}
-.rt-today-drag-handle span i{display:block;width:4px;height:4px;border-radius:50%;background:#3b5bdb;font-style:normal}
+.rt-today-drag-handle span i{display:block;width:4px;height:4px;border-radius:50%;background:#3b5bdb;font-style:normal;pointer-events:none}
 .rt-group.today-dragging{opacity:.4}
 .rt-group.today-drag-over{border:2px dashed #3b5bdb;background:#f0f4ff}
 
@@ -7643,15 +7643,24 @@ function initTodayDrag(){
   const container = document.getElementById('rt-checklist');
   if(!container) return;
   let dragSrc = null;
+  let dragAllowed = false;
+
+  // Set draggable only when mousedown is on the handle
+  container.querySelectorAll('.rt-today-drag-handle').forEach(handle=>{
+    handle.addEventListener('mousedown', ()=>{ dragAllowed = true; });
+  });
+  document.addEventListener('mouseup', ()=>{ dragAllowed = false; }, true);
+
   container.querySelectorAll('.rt-group[draggable]').forEach(el=>{
     el.addEventListener('dragstart', e=>{
-      if(!e.target.closest('.rt-today-drag-handle')){e.preventDefault();return;}
+      if(!dragAllowed){ e.preventDefault(); return; }
       dragSrc = el;
       el.classList.add('today-dragging');
       e.dataTransfer.effectAllowed = 'move';
       e.dataTransfer.setData('text/plain', el.dataset.groupId);
     });
     el.addEventListener('dragend', ()=>{
+      dragAllowed = false;
       el.classList.remove('today-dragging');
       container.querySelectorAll('.rt-group').forEach(g=>g.classList.remove('today-drag-over'));
       dragSrc = null;
