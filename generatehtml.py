@@ -1812,19 +1812,13 @@ body.theme-beige .nav-item.active{color:#7c5cbf}
 .rt-group-toggle{font-size:12px;color:#8898c0;margin-left:4px}
 .rt-today-drag-handle{
   display:inline-flex;flex-direction:column;gap:3px;
-  cursor:grab;padding:4px 6px;flex-shrink:0;user-select:none;
-  opacity:.45;transition:opacity .15s
+  cursor:grab;padding:4px 8px;flex-shrink:0;user-select:none;
+  opacity:.5;transition:opacity .15s;margin-right:2px
 }
 .rt-today-drag-handle:hover{opacity:1}
 .rt-today-drag-handle:active{cursor:grabbing;opacity:1}
-.rt-today-drag-handle span{
-  display:flex;gap:3px
-}
-.rt-today-drag-handle span i{
-  display:block;width:4px;height:4px;border-radius:50%;
-  background:#3b5bdb;font-style:normal
-}
-.rt-today-drag-handle:active{cursor:grabbing}
+.rt-today-drag-handle span{display:flex;gap:3px}
+.rt-today-drag-handle span i{display:block;width:4px;height:4px;border-radius:50%;background:#3b5bdb;font-style:normal}
 .rt-group.today-dragging{opacity:.4}
 .rt-group.today-drag-over{border:2px dashed #3b5bdb;background:#f0f4ff}
 
@@ -4408,8 +4402,8 @@ function renderAll(){
   updateTaskNotesCount();
   updateFinanceCount();
   const now=new Date();
-  const pending=reminders.filter(r=>!r.sent).length;
   const todayStr=now.toISOString().slice(0,10);
+  const pending=reminders.filter(r=>!r.sent).length;
   const overdue=reminders.filter(r=>!r.sent&&r.due&&r.due.slice(0,10)<=todayStr).length;
   const sent=reminders.filter(r=>r.sent).length;
 
@@ -7457,10 +7451,7 @@ function initRoutineDrag(){
 
   container.querySelectorAll('.rt-manage-group[draggable]').forEach(el=>{
     el.addEventListener('dragstart', e=>{
-      // only start if the drag originates from the group-level drag handle
-      if(!e.target.closest('.rt-drag-handle') || e.target.closest('.rt-manage-task-row')) {
-        e.preventDefault(); return;
-      }
+      if(!e.target.closest('.rt-drag-handle') || e.target.closest('.rt-manage-task-row')){ e.preventDefault(); return; }
       dragSrcGroup = el;
       el.classList.add('dragging');
       e.dataTransfer.effectAllowed = 'move';
@@ -7504,7 +7495,7 @@ function initRoutineDrag(){
     tasksEl.querySelectorAll('.rt-manage-task-row[draggable]').forEach(row=>{
       row.addEventListener('dragstart', e=>{
         if(!e.target.closest('.rt-drag-handle')){ e.preventDefault(); return; }
-        e.stopPropagation(); // don't bubble to group drag
+        e.stopPropagation();
         dragSrcTask = row;
         row.classList.add('dragging');
         e.dataTransfer.effectAllowed = 'move';
@@ -7660,7 +7651,6 @@ function initTodayDrag(){
   const container = document.getElementById('rt-checklist');
   if(!container) return;
   let dragSrc = null;
-
   container.querySelectorAll('.rt-group[draggable]').forEach(el=>{
     el.addEventListener('dragstart', e=>{
       if(!e.target.closest('.rt-today-drag-handle')){ e.preventDefault(); return; }
