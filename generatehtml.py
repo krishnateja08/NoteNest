@@ -1868,12 +1868,23 @@ body.theme-beige .nav-item.active{color:#7c5cbf}
 }
 .rt-manage-group{
   background:#fff;border:1px solid #dde4f5;border-radius:12px;
-  margin-bottom:14px;overflow:hidden
+  margin-bottom:14px;overflow:hidden;transition:box-shadow 0.15s,opacity 0.15s
 }
+.rt-manage-group.drag-over{
+  box-shadow:0 0 0 2px #3b5bdb;border-color:#3b5bdb
+}
+.rt-manage-group.dragging{opacity:.45}
 .rt-manage-group-header{
   display:flex;align-items:center;gap:10px;padding:14px 18px;
   background:#f8faff;border-bottom:1px solid #f0f4ff
 }
+.rt-drag-handle{
+  cursor:grab;color:#c8d4ee;font-size:16px;line-height:1;
+  padding:0 4px;user-select:none;flex-shrink:0
+}
+.rt-drag-handle:active{cursor:grabbing}
+.rt-manage-task-row.drag-over-top{border-top:2px solid #3b5bdb}
+.rt-manage-task-row.dragging{opacity:.4}
 .rt-manage-group-name{font-weight:700;color:#1a2040;font-size:14px;flex:1}
 .rt-mg-btn{
   background:#f0f4ff;border:1px solid #dde4f5;border-radius:6px;
@@ -7419,6 +7430,104 @@ async function saveRoutines(){
   await saveToGitHub();
 }
 
+/* -- ROUTINE DRAG-TO-REORDER ---------------------- */
+function initRoutineDrag(){
+  // ── GROUP-LEVEL DRAG ──────────────────────────────
+  const container = document.getElementById('rt-groups-list');
+  if(!container) return;
+  let dragSrcGroup = null;
+
+  container.querySelectorAll('.rt-manage-group[draggable]').forEach(el=>{
+    el.addEventListener('dragstart', e=>{
+      // only start if the drag originates from the handle or the header
+      if(e.target.closest('.rt-manage-task-row')) { e.stopPropagation(); return; }
+      dragSrcGroup = el;
+      el.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/group-id', el.dataset.groupId);
+    });
+    el.addEventListener('dragend', ()=>{
+      el.classList.remove('dragging');
+      container.querySelectorAll('.rt-manage-group').forEach(g=>g.classList.remove('drag-over'));
+      dragSrcGroup = null;
+    });
+    el.addEventListener('dragover', e=>{
+      if(!dragSrcGroup || el === dragSrcGroup) return;
+      // only handle group drag here, not task drag
+      if(e.dataTransfer.types.includes('text/task-id')) return;
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      container.querySelectorAll('.rt-manage-group').forEach(g=>g.classList.remove('drag-over'));
+      el.classList.add('drag-over');
+    });
+    el.addEventListener('dragleave', ()=>el.classList.remove('drag-over'));
+    el.addEventListener('drop', e=>{
+      if(!dragSrcGroup || el === dragSrcGroup) return;
+      if(e.dataTransfer.types.includes('text/task-id')) return;
+      e.preventDefault();
+      el.classList.remove('drag-over');
+      const fromId = e.dataTransfer.getData('text/group-id');
+      const toId   = el.dataset.groupId;
+      const fromIdx = ROUTINES.findIndex(r=>r.id===fromId);
+      const toIdx   = ROUTINES.findIndex(r=>r.id===toId);
+      if(fromIdx<0||toIdx<0) return;
+      const [moved] = ROUTINES.splice(fromIdx, 1);
+      ROUTINES.splice(toIdx, 0, moved);
+      renderManageView();
+      saveRoutines();
+      toast('Routine order saved ✓','success');
+    });
+  });
+
+  // ── TASK-LEVEL DRAG (within each group) ───────────
+  container.querySelectorAll('.rt-manage-tasks[data-group-id]').forEach(tasksEl=>{
+    const groupId = tasksEl.dataset.groupId;
+    let dragSrcTask = null;
+
+    tasksEl.querySelectorAll('.rt-manage-task-row[draggable]').forEach(row=>{
+      row.addEventListener('dragstart', e=>{
+        e.stopPropagation(); // don't bubble to group drag
+        dragSrcTask = row;
+        row.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/task-id', row.dataset.taskId);
+        e.dataTransfer.setData('text/task-group', groupId);
+      });
+      row.addEventListener('dragend', ()=>{
+        row.classList.remove('dragging');
+        tasksEl.querySelectorAll('.rt-manage-task-row').forEach(r=>r.classList.remove('drag-over-top'));
+        dragSrcTask = null;
+      });
+      row.addEventListener('dragover', e=>{
+        if(!dragSrcTask || row === dragSrcTask) return;
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        tasksEl.querySelectorAll('.rt-manage-task-row').forEach(r=>r.classList.remove('drag-over-top'));
+        row.classList.add('drag-over-top');
+      });
+      row.addEventListener('dragleave', ()=>row.classList.remove('drag-over-top'));
+      row.addEventListener('drop', e=>{
+        if(!dragSrcTask || row === dragSrcTask) return;
+        e.preventDefault();
+        e.stopPropagation();
+        row.classList.remove('drag-over-top');
+        const fromTaskId = e.dataTransfer.getData('text/task-id');
+        const toTaskId   = row.dataset.taskId;
+        const group = ROUTINES.find(g=>g.id===groupId);
+        if(!group) return;
+        const fromIdx = group.tasks.findIndex(t=>t.id===fromTaskId);
+        const toIdx   = group.tasks.findIndex(t=>t.id===toTaskId);
+        if(fromIdx<0||toIdx<0) return;
+        const [moved] = group.tasks.splice(fromIdx, 1);
+        group.tasks.splice(toIdx, 0, moved);
+        renderManageView();
+        saveRoutines();
+        toast('Task order saved ✓','success');
+      });
+    });
+  });
+}
+
 /* -- TASK VISIBILITY ------------------------ */
 function isTaskForToday(task){
   if(task.frequency === 'daily') return true;
@@ -7571,17 +7680,19 @@ function renderManageView(){
       No routines yet. Click <strong>+ New Routine</strong> to get started.</div>`;
     return;
   }
-  container.innerHTML = ROUTINES.map(group=>`
-    <div class="rt-manage-group">
+  container.innerHTML = ROUTINES.map((group,gi)=>`
+    <div class="rt-manage-group" draggable="true" data-group-id="${group.id}" data-group-idx="${gi}">
       <div class="rt-manage-group-header">
+        <span class="rt-drag-handle" title="Drag to reorder">⠿</span>
         <span style="font-size:18px">${group.icon||'🔁'}</span>
         <span class="rt-manage-group-name">${esc(group.name)}</span>
         <button class="rt-mg-btn" onclick="openRoutineGroupModal('${group.id}')">Edit</button>
         <button class="rt-mg-btn del" onclick="deleteRoutineGroup('${group.id}')">Delete</button>
       </div>
-      <div class="rt-manage-tasks">
-        ${(group.tasks||[]).map(t=>`
-        <div class="rt-manage-task-row">
+      <div class="rt-manage-tasks" data-group-id="${group.id}">
+        ${(group.tasks||[]).map((t,ti)=>`
+        <div class="rt-manage-task-row" draggable="true" data-task-id="${t.id}" data-task-idx="${ti}" data-task-group="${group.id}">
+          <span class="rt-drag-handle" title="Drag to reorder">⠿</span>
           <div class="rt-mtr-info">
             <div class="rt-mtr-name">${esc(t.name)}</div>
             <div class="rt-mtr-meta">${t.frequency==='weekly'?'📅 '+((t.days||[]).join(', ')):'🔁 Daily'}${t.time?' · ⏰ '+t.time:''}</div>
@@ -7594,7 +7705,9 @@ function renderManageView(){
         <button class="rt-add-task-btn" onclick="openRoutineTaskModal('${group.id}')">+ Add task to ${esc(group.name)}</button>
       </div>
     </div>`).join('');
+  initRoutineDrag();
 }
+
 
 function showRoutineView(view){
   document.getElementById('rt-today-view').style.display  = view==='today'   ? '' : 'none';
@@ -7867,7 +7980,7 @@ function updateDashboardWidgets(){
   const totalItems  = notes.length + reminders.length;
   const pending     = reminders.filter(r=>!r.sent && r.due && r.due.slice(0,10) >= todayStr).length;
   const completed   = reminders.filter(r=>r.sent).length;
-  const missed      = reminders.filter(r=>!r.sent && r.due && r.due.slice(0,10) < todayStr).length;
+  const missed      = reminders.filter(r=>{try{return !r.sent && r.due && new Date(r.due.replace(' ','T'))<now;}catch{return false;}}).length;
 
   const elNotes   = document.getElementById('stat-notes');
   const elPend    = document.getElementById('stat-pending');
