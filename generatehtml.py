@@ -1810,11 +1810,7 @@ body.theme-beige .nav-item.active{color:#7c5cbf}
   background:#f0f4ff;border-radius:20px;padding:3px 10px
 }
 .rt-group-toggle{font-size:12px;color:#8898c0;margin-left:4px}
-.rt-today-drag-handle{
-  display:inline-flex;flex-direction:column;gap:3px;
-  cursor:grab;padding:4px 8px;flex-shrink:0;user-select:none;
-  opacity:.5;transition:opacity .15s;margin-right:2px
-}
+.rt-today-drag-handle{display:inline-flex;flex-direction:column;gap:3px;cursor:grab;padding:4px 8px;flex-shrink:0;user-select:none;opacity:.5;transition:opacity .15s;margin-right:2px}
 .rt-today-drag-handle:hover{opacity:1}
 .rt-today-drag-handle:active{cursor:grabbing;opacity:1}
 .rt-today-drag-handle span{display:flex;gap:3px}
@@ -7451,7 +7447,7 @@ function initRoutineDrag(){
 
   container.querySelectorAll('.rt-manage-group[draggable]').forEach(el=>{
     el.addEventListener('dragstart', e=>{
-      if(!e.target.closest('.rt-drag-handle') || e.target.closest('.rt-manage-task-row')){ e.preventDefault(); return; }
+      if(!e.target.closest('.rt-drag-handle')||e.target.closest('.rt-manage-task-row')){e.preventDefault();return;}
       dragSrcGroup = el;
       el.classList.add('dragging');
       e.dataTransfer.effectAllowed = 'move';
@@ -7494,7 +7490,7 @@ function initRoutineDrag(){
 
     tasksEl.querySelectorAll('.rt-manage-task-row[draggable]').forEach(row=>{
       row.addEventListener('dragstart', e=>{
-        if(!e.target.closest('.rt-drag-handle')){ e.preventDefault(); return; }
+        if(!e.target.closest('.rt-drag-handle')){e.preventDefault();return;}
         e.stopPropagation();
         dragSrcTask = row;
         row.classList.add('dragging');
@@ -7653,7 +7649,7 @@ function initTodayDrag(){
   let dragSrc = null;
   container.querySelectorAll('.rt-group[draggable]').forEach(el=>{
     el.addEventListener('dragstart', e=>{
-      if(!e.target.closest('.rt-today-drag-handle')){ e.preventDefault(); return; }
+      if(!e.target.closest('.rt-today-drag-handle')){e.preventDefault();return;}
       dragSrc = el;
       el.classList.add('today-dragging');
       e.dataTransfer.effectAllowed = 'move';
@@ -7665,15 +7661,14 @@ function initTodayDrag(){
       dragSrc = null;
     });
     el.addEventListener('dragover', e=>{
-      if(!dragSrc || el === dragSrc) return;
+      if(!dragSrc || el===dragSrc) return;
       e.preventDefault();
-      e.dataTransfer.dropEffect = 'move';
       container.querySelectorAll('.rt-group').forEach(g=>g.classList.remove('today-drag-over'));
       el.classList.add('today-drag-over');
     });
     el.addEventListener('dragleave', ()=>el.classList.remove('today-drag-over'));
     el.addEventListener('drop', e=>{
-      if(!dragSrc || el === dragSrc) return;
+      if(!dragSrc || el===dragSrc) return;
       e.preventDefault();
       el.classList.remove('today-drag-over');
       const fromId = e.dataTransfer.getData('text/plain');
@@ -7681,8 +7676,8 @@ function initTodayDrag(){
       const fromIdx = ROUTINES.findIndex(r=>r.id===fromId);
       const toIdx   = ROUTINES.findIndex(r=>r.id===toId);
       if(fromIdx<0||toIdx<0) return;
-      const [moved] = ROUTINES.splice(fromIdx, 1);
-      ROUTINES.splice(toIdx, 0, moved);
+      const [moved] = ROUTINES.splice(fromIdx,1);
+      ROUTINES.splice(toIdx,0,moved);
       renderTodayChecklist();
       saveRoutines();
       toast('Routine order saved ✓','success');
