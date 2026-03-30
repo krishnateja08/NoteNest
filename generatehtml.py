@@ -1811,8 +1811,18 @@ body.theme-beige .nav-item.active{color:#7c5cbf}
 }
 .rt-group-toggle{font-size:12px;color:#8898c0;margin-left:4px}
 .rt-today-drag-handle{
-  font-size:16px;color:#c0c8e0;cursor:grab;padding:0 4px;line-height:1;
-  flex-shrink:0;user-select:none
+  display:inline-flex;flex-direction:column;gap:3px;
+  cursor:grab;padding:4px 6px;flex-shrink:0;user-select:none;
+  opacity:.45;transition:opacity .15s
+}
+.rt-today-drag-handle:hover{opacity:1}
+.rt-today-drag-handle:active{cursor:grabbing;opacity:1}
+.rt-today-drag-handle span{
+  display:flex;gap:3px
+}
+.rt-today-drag-handle span i{
+  display:block;width:4px;height:4px;border-radius:50%;
+  background:#3b5bdb;font-style:normal
 }
 .rt-today-drag-handle:active{cursor:grabbing}
 .rt-group.today-dragging{opacity:.4}
@@ -7611,7 +7621,7 @@ function renderTodayChecklist(){
 
     html += `<div class="rt-group ${colorClass}" id="rtg-${group.id}" draggable="true" data-group-id="${group.id}">
       <div class="rt-group-header" onclick="toggleGroup('${group.id}')">
-        <span class="rt-today-drag-handle" title="Drag to reorder" onclick="event.stopPropagation()">⠿</span>
+        <span class="rt-today-drag-handle" title="Drag to reorder" onclick="event.stopPropagation()"><span><i></i><i></i></span><span><i></i><i></i></span><span><i></i><i></i></span></span>
         <span class="rt-group-icon">${group.icon||'🔁'}</span>
         <span class="rt-group-name">${esc(group.name)}</span>
         <span class="rt-group-progress">${doneTasks.length}/${todayTasks.length} · ${pct}%</span>
