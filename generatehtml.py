@@ -1810,6 +1810,13 @@ body.theme-beige .nav-item.active{color:#7c5cbf}
   background:#f0f4ff;border-radius:20px;padding:3px 10px
 }
 .rt-group-toggle{font-size:12px;color:#8898c0;margin-left:4px}
+.rt-today-drag-handle{
+  font-size:16px;color:#c0c8e0;cursor:grab;padding:0 4px;line-height:1;
+  flex-shrink:0;user-select:none
+}
+.rt-today-drag-handle:active{cursor:grabbing}
+.rt-group.today-dragging{opacity:.4}
+.rt-group.today-drag-over{border:2px dashed #3b5bdb;background:#f0f4ff}
 
 /* color accent on group */
 .rt-group.c-blue .rt-group-header{border-left:4px solid #3b5bdb}
@@ -7602,8 +7609,9 @@ function renderTodayChecklist(){
     const colorClass = 'c-'+(group.color||'blue');
     const pct = todayTasks.length ? Math.round((doneTasks.length/todayTasks.length)*100) : 0;
 
-    html += `<div class="rt-group ${colorClass}" id="rtg-${group.id}">
+    html += `<div class="rt-group ${colorClass}" id="rtg-${group.id}" draggable="true" data-group-id="${group.id}">
       <div class="rt-group-header" onclick="toggleGroup('${group.id}')">
+        <span class="rt-today-drag-handle" title="Drag to reorder" onclick="event.stopPropagation()">⠿</span>
         <span class="rt-group-icon">${group.icon||'🔁'}</span>
         <span class="rt-group-name">${esc(group.name)}</span>
         <span class="rt-group-progress">${doneTasks.length}/${todayTasks.length} · ${pct}%</span>
@@ -7635,6 +7643,51 @@ function renderTodayChecklist(){
   container.innerHTML = html || `<div style="text-align:center;padding:40px;color:#8898c0;font-size:13px">
     No tasks scheduled for today</div>`;
   updateProgress(doneToday, totalToday);
+  initTodayDrag();
+}
+
+function initTodayDrag(){
+  const container = document.getElementById('rt-checklist');
+  if(!container) return;
+  let dragSrc = null;
+
+  container.querySelectorAll('.rt-group[draggable]').forEach(el=>{
+    el.addEventListener('dragstart', e=>{
+      if(!e.target.closest('.rt-today-drag-handle')){ e.preventDefault(); return; }
+      dragSrc = el;
+      el.classList.add('today-dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', el.dataset.groupId);
+    });
+    el.addEventListener('dragend', ()=>{
+      el.classList.remove('today-dragging');
+      container.querySelectorAll('.rt-group').forEach(g=>g.classList.remove('today-drag-over'));
+      dragSrc = null;
+    });
+    el.addEventListener('dragover', e=>{
+      if(!dragSrc || el === dragSrc) return;
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      container.querySelectorAll('.rt-group').forEach(g=>g.classList.remove('today-drag-over'));
+      el.classList.add('today-drag-over');
+    });
+    el.addEventListener('dragleave', ()=>el.classList.remove('today-drag-over'));
+    el.addEventListener('drop', e=>{
+      if(!dragSrc || el === dragSrc) return;
+      e.preventDefault();
+      el.classList.remove('today-drag-over');
+      const fromId = e.dataTransfer.getData('text/plain');
+      const toId   = el.dataset.groupId;
+      const fromIdx = ROUTINES.findIndex(r=>r.id===fromId);
+      const toIdx   = ROUTINES.findIndex(r=>r.id===toId);
+      if(fromIdx<0||toIdx<0) return;
+      const [moved] = ROUTINES.splice(fromIdx, 1);
+      ROUTINES.splice(toIdx, 0, moved);
+      renderTodayChecklist();
+      saveRoutines();
+      toast('Routine order saved ✓','success');
+    });
+  });
 }
 
 function updateProgress(done, total){
