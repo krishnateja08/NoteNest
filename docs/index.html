@@ -2629,9 +2629,19 @@ body.theme-neon .fin-vtbtn.active{color:#080c14}
 /* Mobile: single-panel navigation */
 @media(max-width:640px){
   /* ── NOTES PAGE ── */
+  /* Give the notes page a fixed viewport height so absolute slide panels work */
+  #page-notes{
+    height:calc(100vh - 58px);
+    max-height:calc(100vh - 58px);
+    flex:none;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column
+  }
   .notes-page-wrap{
-    flex-direction:row;height:calc(100vh - 58px);
-    overflow:hidden;position:relative
+    flex-direction:row;height:100%;
+    overflow:hidden;position:relative;
+    flex:1;min-height:0
   }
   /* All 3 panels become full-width slides */
   .notes-folders-panel,
