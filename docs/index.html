@@ -2496,9 +2496,9 @@ body.theme-neon .fin-vtbtn.active{color:#080c14}
   .clock-block:nth-child(3){display:none}
   .clock-block{min-width:90px;padding:0 12px}
   .clock-time{font-size:13px}
-  /* Notes: hide folders panel on tablet, keep list+editor */
-  .notes-folders-panel{display:none}
-  .notes-list-panel{width:240px}
+  /* Notes: compact columns on tablet */
+  .notes-folders-panel{width:160px}
+  .notes-list-panel{width:220px}
   /* Reminders: compact tiles */
   .rem-summary-row{grid-template-columns:repeat(2,1fr);padding:10px 14px}
   .rem-lists-panel{width:160px}
@@ -2590,11 +2590,7 @@ body.theme-neon .fin-vtbtn.active{color:#080c14}
   .upc-title{white-space:normal;overflow:visible;text-overflow:clip;font-size:12px}
   .upc-item{flex-wrap:wrap;gap:6px}
   .upc-due{font-size:11px}
-  /* Notes page: stack list on top of editor (hide editor by default) */
-  .notes-page-wrap{flex-direction:column}
-  .notes-folders-panel{display:none}
-  .notes-list-panel{width:100%;height:50vh;flex-shrink:0;border-right:none;border-bottom:1px solid var(--border2)}
-  .notes-editor-panel{height:50vh}
+  /* Notes page: handled by the dedicated mobile block below */
   /* Reminders page: summary tiles only — slide panel layout is handled in the second @media block below */
   .rem-summary-row{grid-template-columns:repeat(2,1fr);padding:10px 12px;gap:8px}
   .rem-tile-count{font-size:22px}
