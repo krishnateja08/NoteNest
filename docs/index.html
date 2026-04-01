@@ -4647,6 +4647,8 @@ function renderAll(){
   if(document.getElementById('page-reminders')?.style.display!=='none') renderRemindersPage();
   // Update dashboard widgets
   updateDashboardWidgets();
+  // Update favicon + PWA badge with latest counts
+  updateBadge();
 }
 
 const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -6837,11 +6839,11 @@ function toggleTanDone(id){
     const el = document.getElementById('tan-item-'+id);
     if(el){
       el.classList.add('fading-out');
-      setTimeout(()=>{ saveTaskNotes(); renderTaskNotes(); }, 260);
+      setTimeout(()=>{ saveTaskNotes(); renderTaskNotes(); updateBadge(); }, 260);
       return;
     }
   }
-  saveTaskNotes(); renderTaskNotes();
+  saveTaskNotes(); renderTaskNotes(); updateBadge();
 }
 
 function deleteTanNote(id){
@@ -8493,6 +8495,8 @@ function checkDueReminders(){
       }
     }catch{}
   });
+  // Refresh badge count after checking reminders
+  updateBadge();
 }
 
 // Clear notified list daily so recurring reminders fire again
@@ -8503,6 +8507,100 @@ function cleanNotifiedIds(){
     localStorage.removeItem('notified_ids');
     localStorage.setItem(key, today);
   }
+}
+
+/* ============================================================
+   BADGE COUNT — browser tab favicon + PWA home screen icon
+   Counts: today's incomplete tasks + pending/overdue reminders
+   ============================================================ */
+function getBadgeCount(){
+  const today = localToday();
+
+  // 1. Today's incomplete tasks (TASKNOTES)
+  const pendingTasks = (TASKNOTES||[]).filter(t=>{
+    if(t.done) return false;
+    const taskDate = (t.date||t.created||'').slice(0,10);
+    return taskDate === today;
+  }).length;
+
+  // 2. Pending reminders: not sent, due today or already overdue
+  const now = new Date();
+  const pendingRem = (DATA.reminders||[]).filter(r=>{
+    if(r.sent) return false;
+    if(!r.due) return false;
+    try{
+      const due = new Date(r.due.replace(' ','T'));
+      // include: already overdue OR due today
+      return due <= now || r.due.slice(0,10) === today;
+    }catch{ return false; }
+  }).length;
+
+  return pendingTasks + pendingRem;
+}
+
+function drawFaviconBadge(count){
+  // Build a 32x32 favicon; if count>0 overlay a red circle with number
+  const canvas = document.createElement('canvas');
+  canvas.width = 32; canvas.height = 32;
+  const ctx = canvas.getContext('2d');
+
+  // Base icon — simple bell emoji rendered as text
+  ctx.font = '24px serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('⏰', 16, 17);
+
+  if(count > 0){
+    const label = count > 99 ? '99+' : String(count);
+    const r = label.length > 1 ? 10 : 8;
+    // red circle
+    ctx.beginPath();
+    ctx.arc(26, 6, r, 0, Math.PI*2);
+    ctx.fillStyle = '#e53935';
+    ctx.fill();
+    // white number
+    ctx.fillStyle = '#ffffff';
+    ctx.font = `bold ${label.length > 1 ? 9 : 11}px Inter,sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(label, 26, 6);
+  }
+
+  // Update or create favicon link element
+  let link = document.querySelector("link[rel~='icon']");
+  if(!link){
+    link = document.createElement('link');
+    link.rel = 'icon';
+    document.head.appendChild(link);
+  }
+  link.href = canvas.toDataURL('image/png');
+}
+
+function updateBadge(){
+  const count = getBadgeCount();
+
+  // 1. Favicon badge (browser tab)
+  try{ drawFaviconBadge(count); }catch(e){}
+
+  // 2. PWA home screen badge (iOS 16.4+ / Android Chrome)
+  try{
+    if('setAppBadge' in navigator){
+      if(count > 0) navigator.setAppBadge(count);
+      else          navigator.clearAppBadge();
+    }
+  }catch(e){}
+
+  // 3. Update document title to show count
+  const baseTitle = 'My Notes & Reminders';
+  document.title = count > 0 ? `(${count}) ${baseTitle}` : baseTitle;
+}
+
+// Start badge updater — runs every 60s independently of notification permission
+let _badgeInterval = null;
+function startBadgeUpdater(){
+  updateBadge(); // run immediately
+  if(_badgeInterval) return;
+  _badgeInterval = setInterval(updateBadge, 60000);
 }
 
 /* ============================================================
@@ -9237,6 +9335,8 @@ window.addEventListener('DOMContentLoaded',()=>{
   // Notification permission check
   checkNotifPermissionPrompt();
   cleanNotifiedIds();
+  // Badge updater — works without notification permission (favicon + PWA icon)
+  startBadgeUpdater();
 
   const c=getConfig();
   if(!c.token){
