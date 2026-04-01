@@ -2820,107 +2820,105 @@ body.theme-ember .fin-vtbtn.active{color:#0f0d0b}
   .notes-mobile-back,.rem-mobile-back{display:none !important}
 }
 
+
 /* ====================================================
    DARK THEME OVERRIDES (midnight + ember)
    ==================================================== */
 
-/* Notes editor panel */
-body.theme-midnight, body.theme-ember .notes-editor-panel {background:var(--bg)}
-body.theme-midnight, body.theme-ember .notes-editor-topbar {background:var(--sidebar);border-bottom:1px solid var(--border)}
+/* ── Notes editor ─────────────────────────────── */
+body.theme-midnight .notes-editor-panel, body.theme-ember .notes-editor-panel {background:var(--bg)}
+body.theme-midnight .notes-editor-topbar, body.theme-ember .notes-editor-topbar {background:var(--sidebar);border-bottom:1px solid var(--border)}
 
-/* Trading Journal toolbar & stats bar */
-body.theme-midnight, body.theme-ember .tj-toolbar {background:var(--sidebar);border-bottom:2px solid var(--border)}
-body.theme-midnight, body.theme-ember .tj-stats {background:var(--sidebar);border-bottom:1px solid var(--border)}
-body.theme-midnight, body.theme-ember .tj-stat-lbl {color:var(--muted)}
-body.theme-midnight, body.theme-ember .tj-stat-num.b {color:var(--blue)}
+/* ── Trading Journal ──────────────────────────── */
+body.theme-midnight .tj-toolbar, body.theme-ember .tj-toolbar {background:var(--sidebar);border-bottom:2px solid var(--border)}
+body.theme-midnight .tj-stats, body.theme-ember .tj-stats {background:var(--sidebar);border-bottom:1px solid var(--border)}
+body.theme-midnight .tj-stat-lbl, body.theme-ember .tj-stat-lbl {color:var(--muted)}
+body.theme-midnight .tj-stat-num.b, body.theme-ember .tj-stat-num.b {color:var(--blue)}
+body.theme-midnight .tj-table, body.theme-ember .tj-table {background:var(--s2);border:1px solid var(--border);box-shadow:none}
+body.theme-midnight .tj-table th, body.theme-ember .tj-table th {background:var(--sidebar);color:var(--accent);border-bottom:1px solid var(--border)}
+body.theme-midnight .tj-table td, body.theme-ember .tj-table td {border-bottom:1px solid var(--border);color:var(--text2)}
+body.theme-midnight .tj-table tr:hover td, body.theme-ember .tj-table tr:hover td {background:rgba(255,255,255,.03)}
+body.theme-midnight .tj-select, body.theme-ember .tj-select {background:var(--s2);border:1px solid var(--border);color:var(--text)}
+body.theme-midnight .tj-mode-badge.actual, body.theme-ember .tj-mode-badge.actual {background:rgba(90,170,112,.15);color:#6aba88}
+body.theme-midnight .tj-mode-badge.dummy, body.theme-ember .tj-mode-badge.dummy {background:rgba(160,128,220,.15);color:#a080dc}
 
-/* Trading journal table */
-body.theme-midnight, body.theme-ember .tj-table {background:var(--s2);border:1px solid var(--border);box-shadow:none}
-body.theme-midnight, body.theme-ember .tj-table th {background:var(--sidebar);color:var(--accent);border-bottom:1px solid var(--border)}
-body.theme-midnight, body.theme-ember .tj-table td {border-bottom:1px solid var(--border);color:var(--text2)}
-body.theme-midnight, body.theme-ember .tj-table tr:hover td {background:rgba(255,255,255,.03);cursor:pointer}
-body.theme-midnight, body.theme-ember .tj-select {background:var(--s2);border:1px solid var(--border);color:var(--text)}
+/* ── Routine header ───────────────────────────── */
+body.theme-midnight .rt-header, body.theme-ember .rt-header {background:var(--sidebar);box-shadow:none;border-bottom:2px solid var(--accent)}
+body.theme-midnight .rt-today-label, body.theme-ember .rt-today-label {color:var(--text)}
+body.theme-midnight .rt-progress-bar, body.theme-ember .rt-progress-bar {background:var(--border)}
+body.theme-midnight .rt-progress-fill, body.theme-ember .rt-progress-fill {background:var(--accent)}
+body.theme-midnight .rt-progress-pct, body.theme-ember .rt-progress-pct {color:var(--accent)}
 
-/* Trading journal badges */
-body.theme-midnight, body.theme-ember .tj-mode-badge.actual {background:rgba(90,170,112,.15);color:#6aba88}
-body.theme-midnight, body.theme-ember .tj-mode-badge.dummy {background:rgba(160,128,220,.15);color:#a080dc}
+/* ── Routine groups ───────────────────────────── */
+body.theme-midnight .rt-group, body.theme-ember .rt-group {background:var(--s2);border:1px solid var(--border);box-shadow:none}
+body.theme-midnight .rt-group-header, body.theme-ember .rt-group-header {background:var(--s2);border-bottom:1px solid var(--border)}
+body.theme-midnight .rt-group-name, body.theme-ember .rt-group-name {color:var(--text)}
+body.theme-midnight .rt-group-progress, body.theme-ember .rt-group-progress {background:var(--sidebar);color:var(--muted)}
+body.theme-midnight .rt-group-toggle, body.theme-ember .rt-group-toggle {color:var(--muted)}
 
-/* Routine header */
-body.theme-midnight, body.theme-ember .rt-header {background:var(--sidebar);box-shadow:none;border-bottom:2px solid var(--accent)}
-body.theme-midnight, body.theme-ember .rt-today-label {color:var(--text)}
-body.theme-midnight, body.theme-ember .rt-progress-bar {background:var(--border)}
-body.theme-midnight, body.theme-ember .rt-progress-fill {background:var(--accent)}
-body.theme-midnight, body.theme-ember .rt-progress-pct {color:var(--accent)}
+/* ── Routine tasks ────────────────────────────── */
+body.theme-midnight .rt-task-row, body.theme-ember .rt-task-row {border-bottom:1px solid var(--border)}
+body.theme-midnight .rt-task-row:hover, body.theme-ember .rt-task-row:hover {background:rgba(255,255,255,.04)}
+body.theme-midnight .rt-task-name, body.theme-ember .rt-task-name {color:var(--text);font-size:14px;font-weight:500}
+body.theme-midnight .rt-task-time, body.theme-ember .rt-task-time {color:var(--accent);font-weight:600}
+body.theme-midnight .rt-task-freq, body.theme-ember .rt-task-freq {background:rgba(255,255,255,.08);color:var(--text2);border:1px solid var(--border)}
+body.theme-midnight .rt-week-count, body.theme-ember .rt-week-count {background:var(--sidebar);color:var(--muted)}
+body.theme-midnight .rt-checkbox, body.theme-ember .rt-checkbox {background:var(--s2);border:2px solid var(--border2)}
+body.theme-midnight .rt-task-row.done .rt-checkbox, body.theme-ember .rt-task-row.done .rt-checkbox {background:var(--accent);border-color:var(--accent)}
 
-/* Routine groups */
-body.theme-midnight, body.theme-ember .rt-group {background:var(--s2);border:1px solid var(--border);box-shadow:none}
-body.theme-midnight, body.theme-ember .rt-group-header {border-bottom:1px solid var(--border)}
-body.theme-midnight, body.theme-ember .rt-group-name {color:var(--text)}
-body.theme-midnight, body.theme-ember .rt-group-progress {background:var(--sidebar);color:var(--muted)}
-body.theme-midnight, body.theme-ember .rt-group-toggle {color:var(--muted)}
+/* ── Routine manage view ──────────────────────── */
+body.theme-midnight .rt-manage-group, body.theme-ember .rt-manage-group {background:var(--s2);border:1px solid var(--border)}
+body.theme-midnight .rt-manage-group-header, body.theme-ember .rt-manage-group-header {background:var(--sidebar);border-bottom:1px solid var(--border)}
+body.theme-midnight .rt-manage-group-name, body.theme-ember .rt-manage-group-name {color:var(--text)}
+body.theme-midnight .rt-manage-task-row, body.theme-ember .rt-manage-task-row {border-bottom:1px solid var(--border);color:var(--text2)}
+body.theme-midnight .rt-mtr-name, body.theme-ember .rt-mtr-name {color:var(--text)}
+body.theme-midnight .rt-mtr-meta, body.theme-ember .rt-mtr-meta {color:var(--muted)}
+body.theme-midnight .rt-add-task-row, body.theme-ember .rt-add-task-row {background:var(--sidebar);border-top:1px solid var(--border)}
+body.theme-midnight .rt-add-task-btn, body.theme-ember .rt-add-task-btn {border-color:var(--border2);color:var(--muted)}
+body.theme-midnight .rt-add-task-btn:hover, body.theme-ember .rt-add-task-btn:hover {border-color:var(--accent);color:var(--accent)}
+body.theme-midnight .rt-mg-btn, body.theme-ember .rt-mg-btn {background:var(--s2);border:1px solid var(--border);color:var(--text2)}
+body.theme-midnight .rt-mg-btn:hover, body.theme-ember .rt-mg-btn:hover {border-color:var(--accent);color:var(--accent)}
+body.theme-midnight .rt-icon-opt:hover, body.theme-ember .rt-icon-opt:hover {background:var(--s2)}
+body.theme-midnight .rt-icon-opt.selected, body.theme-ember .rt-icon-opt.selected {border-color:var(--accent);background:rgba(255,255,255,.06)}
+body.theme-midnight .rt-day-opt, body.theme-ember .rt-day-opt {background:var(--s2);border:1px solid var(--border);color:var(--text2)}
+body.theme-midnight .rt-day-opt.selected, body.theme-ember .rt-day-opt.selected {background:var(--accent);color:var(--sidebar);border-color:var(--accent)}
+body.theme-midnight .rt-group.today-drag-over, body.theme-ember .rt-group.today-drag-over {border:2px dashed var(--accent);background:rgba(255,255,255,.03)}
+body.theme-midnight .rt-manage-group.drag-over, body.theme-ember .rt-manage-group.drag-over {box-shadow:0 0 0 2px var(--accent);border-color:var(--accent)}
 
-/* Routine tasks */
-body.theme-midnight, body.theme-ember .rt-task-row {border-bottom:1px solid var(--border)}
-body.theme-midnight, body.theme-ember .rt-task-row:hover {background:rgba(255,255,255,.04)}
-body.theme-midnight, body.theme-ember .rt-task-name {color:var(--text)}
-body.theme-midnight, body.theme-ember .rt-task-time {color:var(--muted)}
-body.theme-midnight, body.theme-ember .rt-task-freq {background:rgba(255,255,255,.06);color:var(--accent)}
-body.theme-midnight, body.theme-ember .rt-week-count {background:var(--sidebar);color:var(--muted)}
-body.theme-midnight, body.theme-ember .rt-checkbox {background:var(--s2);border-color:var(--border2)}
-body.theme-midnight, body.theme-ember .rt-task-row.done .rt-checkbox {background:var(--accent);border-color:var(--accent)}
+/* ── Routine colour group accents ─────────────── */
+body.theme-midnight .rt-group.c-blue .rt-group-header, body.theme-ember .rt-group.c-blue .rt-group-header {border-left:4px solid var(--blue)}
+body.theme-midnight .rt-group.c-green .rt-group-header, body.theme-ember .rt-group.c-green .rt-group-header {border-left:4px solid var(--green)}
+body.theme-midnight .rt-group.c-purple .rt-group-header, body.theme-ember .rt-group.c-purple .rt-group-header {border-left:4px solid #9a80d4}
+body.theme-midnight .rt-group.c-yellow .rt-group-header, body.theme-ember .rt-group.c-yellow .rt-group-header {border-left:4px solid var(--accent)}
+body.theme-midnight .rt-group.c-red .rt-group-header, body.theme-ember .rt-group.c-red .rt-group-header {border-left:4px solid var(--red)}
 
-/* Routine manage view */
-body.theme-midnight, body.theme-ember .rt-manage-group {background:var(--s2);border:1px solid var(--border)}
-body.theme-midnight, body.theme-ember .rt-manage-group-header {background:var(--sidebar);border-bottom:1px solid var(--border)}
-body.theme-midnight, body.theme-ember .rt-manage-group-name {color:var(--text)}
-body.theme-midnight, body.theme-ember .rt-manage-task-row {border-bottom:1px solid var(--border);color:var(--text2)}
-body.theme-midnight, body.theme-ember .rt-mtr-name {color:var(--text)}
-body.theme-midnight, body.theme-ember .rt-mtr-meta {color:var(--muted)}
-body.theme-midnight, body.theme-ember .rt-add-task-row {background:var(--sidebar);border-top:1px solid var(--border)}
-body.theme-midnight, body.theme-ember .rt-add-task-btn {border-color:var(--border2);color:var(--muted)}
-body.theme-midnight, body.theme-ember .rt-add-task-btn:hover {border-color:var(--accent);color:var(--accent)}
-body.theme-midnight, body.theme-ember .rt-mg-btn {background:var(--s2);border:1px solid var(--border);color:var(--text2)}
-body.theme-midnight, body.theme-ember .rt-mg-btn:hover {border-color:var(--accent);color:var(--accent)}
-body.theme-midnight, body.theme-ember .rt-icon-opt:hover {background:var(--s2)}
-body.theme-midnight, body.theme-ember .rt-icon-opt.selected {border-color:var(--accent);background:rgba(255,255,255,.06)}
-body.theme-midnight, body.theme-ember .rt-day-opt {background:var(--s2);border:1px solid var(--border);color:var(--muted)}
-body.theme-midnight, body.theme-ember .rt-day-opt.selected {background:var(--accent);color:var(--sidebar);border-color:var(--accent)}
-body.theme-midnight, body.theme-ember .rt-group.today-drag-over {border:2px dashed var(--accent);background:rgba(255,255,255,.03)}
-body.theme-midnight, body.theme-ember .rt-today-drag-handle span i {background:var(--muted)}
+/* ── Task & Action Notes ──────────────────────── */
+body.theme-midnight .tan-item-priority.high, body.theme-ember .tan-item-priority.high {background:rgba(220,80,80,.18);color:#f08080}
+body.theme-midnight .tan-item-priority.medium, body.theme-ember .tan-item-priority.medium {background:rgba(217,119,6,.18);color:#e8a840}
+body.theme-midnight .tan-item-priority.low, body.theme-ember .tan-item-priority.low {background:rgba(5,150,105,.18);color:#50c880}
+body.theme-midnight .tan-cat-badge.personal, body.theme-ember .tan-cat-badge.personal {background:rgba(59,91,219,.18);color:#80a0f0}
+body.theme-midnight .tan-cat-badge.official, body.theme-ember .tan-cat-badge.official {background:rgba(107,33,168,.18);color:#c080e0}
+body.theme-midnight .tan-item-text, body.theme-ember .tan-item-text {color:var(--text)}
+body.theme-midnight .tan-item-text.done, body.theme-ember .tan-item-text.done {color:var(--muted)}
+body.theme-midnight .tan-section-title, body.theme-ember .tan-section-title {color:var(--text2)}
+body.theme-midnight .tan-section-count, body.theme-ember .tan-section-count {background:var(--border);color:var(--text2)}
+body.theme-midnight .del-act:hover, body.theme-ember .del-act:hover {background:rgba(192,64,64,.15)!important;border-color:var(--red)!important}
 
-/* Routine colour accents */
-body.theme-midnight, body.theme-ember .rt-group.c-blue .rt-group-header {border-left:4px solid var(--blue)}
-body.theme-midnight, body.theme-ember .rt-group.c-green .rt-group-header {border-left:4px solid var(--green)}
-body.theme-midnight, body.theme-ember .rt-group.c-purple .rt-group-header {border-left:4px solid #9a80d4}
-body.theme-midnight, body.theme-ember .rt-group.c-yellow .rt-group-header {border-left:4px solid var(--accent)}
-body.theme-midnight, body.theme-ember .rt-group.c-red .rt-group-header {border-left:4px solid var(--red)}
+/* ── Misc badges and chips ────────────────────── */
+body.theme-midnight .pin-btn.pinned, body.theme-ember .pin-btn.pinned {background:rgba(232,168,74,.15);border-color:var(--accent);color:var(--accent)}
+body.theme-midnight .pinned-badge, body.theme-ember .pinned-badge {background:rgba(232,168,74,.15);color:var(--accent)}
+body.theme-midnight .schip.pending, body.theme-ember .schip.pending {background:rgba(232,168,74,.15);color:var(--accent)}
+body.theme-midnight .dash-task-prio.medium, body.theme-ember .dash-task-prio.medium {background:rgba(192,144,48,.15);color:#c09030}
 
-/* Manage-group drag */
-body.theme-midnight, body.theme-ember .rt-manage-group.drag-over {box-shadow:0 0 0 2px var(--accent);border-color:var(--accent)}
+/* ── Finance tracker ──────────────────────────── */
+body.theme-midnight .fin-status-badge.pending, body.theme-ember .fin-status-badge.pending {background:rgba(192,144,48,.15);color:#c09030}
+body.theme-midnight .fin-due-badge.warn, body.theme-ember .fin-due-badge.warn {background:rgba(192,80,64,.15);color:var(--red)}
+body.theme-midnight .fin-pay-badge.upi, body.theme-ember .fin-pay-badge.upi {background:rgba(232,168,74,.15);color:var(--accent)}
 
-/* Pin badge */
-body.theme-midnight, body.theme-ember .pin-btn.pinned {background:rgba(232,168,74,.15);border-color:var(--accent);color:var(--accent)}
-body.theme-midnight, body.theme-ember .pinned-badge {background:rgba(232,168,74,.15);color:var(--accent)}
-
-/* Status chips (pending etc.) */
-body.theme-midnight, body.theme-ember .schip.pending {background:rgba(232,168,74,.15);color:var(--accent)}
-
-/* Priority badges */
-body.theme-midnight, body.theme-ember .dash-task-prio.medium {background:rgba(192,144,48,.15);color:#c09030}
-
-/* Finance tracker */
-body.theme-midnight, body.theme-ember .fin-header {background:var(--sidebar);border-bottom:2px solid var(--accent)}
-body.theme-midnight, body.theme-ember .fin-tabs {background:var(--sidebar);border-bottom:1px solid var(--border)}
-body.theme-midnight, body.theme-ember .fin-card {background:var(--s2);border:1px solid var(--border);box-shadow:none}
-body.theme-midnight, body.theme-ember .fin-card:hover {background:var(--sidebar)}
-body.theme-midnight, body.theme-ember .fin-sum-card {background:var(--s2);border:1px solid var(--border)}
-body.theme-midnight, body.theme-ember .fin-status-badge.pending {background:rgba(192,144,48,.15);color:#c09030}
-body.theme-midnight, body.theme-ember .fin-due-badge.warn {background:rgba(192,80,64,.15);color:var(--red)}
-body.theme-midnight, body.theme-ember .fin-pay-badge.upi {background:rgba(232,168,74,.15);color:var(--accent)}
-
-/* Sticky notes lighter bg */
-body.theme-midnight, body.theme-ember .ncard {background:var(--s2);border:1px solid var(--border)}
-body.theme-midnight, body.theme-ember .ncard:hover {background:var(--sidebar)}
+/* ── Sticky notes ─────────────────────────────── */
+body.theme-midnight .ncard, body.theme-ember .ncard {background:var(--s2);border:1px solid var(--border)}
+body.theme-midnight .ncard:hover, body.theme-ember .ncard:hover {background:var(--sidebar)}
+body.theme-midnight .ncard.pinned-card, body.theme-ember .ncard.pinned-card {border-top:3px solid var(--accent)}
 
 </style>
 </head>
@@ -4614,6 +4612,8 @@ function renderAll(){
   document.getElementById('nav-pending').textContent=pending;
   document.getElementById('nav-overdue').textContent=overdue;
   document.getElementById('nav-sent').textContent=sent;
+  const navSticky=document.getElementById('nav-sticky-count');
+  if(navSticky) navSticky.textContent=(DATA.stickies||[]).length;
   const remPill=document.getElementById('rem-pill');
   const notesPill=document.getElementById('notes-pill');
   if(remPill) remPill.textContent=reminders.length;
@@ -6229,6 +6229,11 @@ function renderStickyBoard(){
   const board=document.getElementById('sp-board');
   const empty=document.getElementById('sp-empty');
   if(!board) return;
+  // always keep sidebar count in sync
+  const navEl=document.getElementById('nav-sticky-count');
+  if(navEl) navEl.textContent=STICKIES.length;
+  const cntEl=document.getElementById('sp-count');
+  if(cntEl) cntEl.textContent=STICKIES.length+' stick'+(STICKIES.length===1?'y':'ies');
   board.querySelectorAll('.sticky-card').forEach(el=>el.remove());
 
   // filter
