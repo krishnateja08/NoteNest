@@ -2823,6 +2823,109 @@ body.theme-ember .fin-vtbtn.active{color:#0f0d0b}
 @media(min-width:641px){
   .notes-mobile-back,.rem-mobile-back{display:none !important}
 }
+
+/* ====================================================
+   DARK THEME OVERRIDES (midnight + ember)
+   ==================================================== */
+
+/* Notes editor panel */
+body.theme-midnight, body.theme-ember .notes-editor-panel {background:var(--bg)}
+body.theme-midnight, body.theme-ember .notes-editor-topbar {background:var(--sidebar);border-bottom:1px solid var(--border)}
+
+/* Trading Journal toolbar & stats bar */
+body.theme-midnight, body.theme-ember .tj-toolbar {background:var(--sidebar);border-bottom:2px solid var(--border)}
+body.theme-midnight, body.theme-ember .tj-stats {background:var(--sidebar);border-bottom:1px solid var(--border)}
+body.theme-midnight, body.theme-ember .tj-stat-lbl {color:var(--muted)}
+body.theme-midnight, body.theme-ember .tj-stat-num.b {color:var(--blue)}
+
+/* Trading journal table */
+body.theme-midnight, body.theme-ember .tj-table {background:var(--s2);border:1px solid var(--border);box-shadow:none}
+body.theme-midnight, body.theme-ember .tj-table th {background:var(--sidebar);color:var(--accent);border-bottom:1px solid var(--border)}
+body.theme-midnight, body.theme-ember .tj-table td {border-bottom:1px solid var(--border);color:var(--text2)}
+body.theme-midnight, body.theme-ember .tj-table tr:hover td {background:rgba(255,255,255,.03);cursor:pointer}
+body.theme-midnight, body.theme-ember .tj-select {background:var(--s2);border:1px solid var(--border);color:var(--text)}
+
+/* Trading journal badges */
+body.theme-midnight, body.theme-ember .tj-mode-badge.actual {background:rgba(90,170,112,.15);color:#6aba88}
+body.theme-midnight, body.theme-ember .tj-mode-badge.dummy {background:rgba(160,128,220,.15);color:#a080dc}
+
+/* Routine header */
+body.theme-midnight, body.theme-ember .rt-header {background:var(--sidebar);box-shadow:none;border-bottom:2px solid var(--accent)}
+body.theme-midnight, body.theme-ember .rt-today-label {color:var(--text)}
+body.theme-midnight, body.theme-ember .rt-progress-bar {background:var(--border)}
+body.theme-midnight, body.theme-ember .rt-progress-fill {background:var(--accent)}
+body.theme-midnight, body.theme-ember .rt-progress-pct {color:var(--accent)}
+
+/* Routine groups */
+body.theme-midnight, body.theme-ember .rt-group {background:var(--s2);border:1px solid var(--border);box-shadow:none}
+body.theme-midnight, body.theme-ember .rt-group-header {border-bottom:1px solid var(--border)}
+body.theme-midnight, body.theme-ember .rt-group-name {color:var(--text)}
+body.theme-midnight, body.theme-ember .rt-group-progress {background:var(--sidebar);color:var(--muted)}
+body.theme-midnight, body.theme-ember .rt-group-toggle {color:var(--muted)}
+
+/* Routine tasks */
+body.theme-midnight, body.theme-ember .rt-task-row {border-bottom:1px solid var(--border)}
+body.theme-midnight, body.theme-ember .rt-task-row:hover {background:rgba(255,255,255,.04)}
+body.theme-midnight, body.theme-ember .rt-task-name {color:var(--text)}
+body.theme-midnight, body.theme-ember .rt-task-time {color:var(--muted)}
+body.theme-midnight, body.theme-ember .rt-task-freq {background:rgba(255,255,255,.06);color:var(--accent)}
+body.theme-midnight, body.theme-ember .rt-week-count {background:var(--sidebar);color:var(--muted)}
+body.theme-midnight, body.theme-ember .rt-checkbox {background:var(--s2);border-color:var(--border2)}
+body.theme-midnight, body.theme-ember .rt-task-row.done .rt-checkbox {background:var(--accent);border-color:var(--accent)}
+
+/* Routine manage view */
+body.theme-midnight, body.theme-ember .rt-manage-group {background:var(--s2);border:1px solid var(--border)}
+body.theme-midnight, body.theme-ember .rt-manage-group-header {background:var(--sidebar);border-bottom:1px solid var(--border)}
+body.theme-midnight, body.theme-ember .rt-manage-group-name {color:var(--text)}
+body.theme-midnight, body.theme-ember .rt-manage-task-row {border-bottom:1px solid var(--border);color:var(--text2)}
+body.theme-midnight, body.theme-ember .rt-mtr-name {color:var(--text)}
+body.theme-midnight, body.theme-ember .rt-mtr-meta {color:var(--muted)}
+body.theme-midnight, body.theme-ember .rt-add-task-row {background:var(--sidebar);border-top:1px solid var(--border)}
+body.theme-midnight, body.theme-ember .rt-add-task-btn {border-color:var(--border2);color:var(--muted)}
+body.theme-midnight, body.theme-ember .rt-add-task-btn:hover {border-color:var(--accent);color:var(--accent)}
+body.theme-midnight, body.theme-ember .rt-mg-btn {background:var(--s2);border:1px solid var(--border);color:var(--text2)}
+body.theme-midnight, body.theme-ember .rt-mg-btn:hover {border-color:var(--accent);color:var(--accent)}
+body.theme-midnight, body.theme-ember .rt-icon-opt:hover {background:var(--s2)}
+body.theme-midnight, body.theme-ember .rt-icon-opt.selected {border-color:var(--accent);background:rgba(255,255,255,.06)}
+body.theme-midnight, body.theme-ember .rt-day-opt {background:var(--s2);border:1px solid var(--border);color:var(--muted)}
+body.theme-midnight, body.theme-ember .rt-day-opt.selected {background:var(--accent);color:var(--sidebar);border-color:var(--accent)}
+body.theme-midnight, body.theme-ember .rt-group.today-drag-over {border:2px dashed var(--accent);background:rgba(255,255,255,.03)}
+body.theme-midnight, body.theme-ember .rt-today-drag-handle span i {background:var(--muted)}
+
+/* Routine colour accents */
+body.theme-midnight, body.theme-ember .rt-group.c-blue .rt-group-header {border-left:4px solid var(--blue)}
+body.theme-midnight, body.theme-ember .rt-group.c-green .rt-group-header {border-left:4px solid var(--green)}
+body.theme-midnight, body.theme-ember .rt-group.c-purple .rt-group-header {border-left:4px solid #9a80d4}
+body.theme-midnight, body.theme-ember .rt-group.c-yellow .rt-group-header {border-left:4px solid var(--accent)}
+body.theme-midnight, body.theme-ember .rt-group.c-red .rt-group-header {border-left:4px solid var(--red)}
+
+/* Manage-group drag */
+body.theme-midnight, body.theme-ember .rt-manage-group.drag-over {box-shadow:0 0 0 2px var(--accent);border-color:var(--accent)}
+
+/* Pin badge */
+body.theme-midnight, body.theme-ember .pin-btn.pinned {background:rgba(232,168,74,.15);border-color:var(--accent);color:var(--accent)}
+body.theme-midnight, body.theme-ember .pinned-badge {background:rgba(232,168,74,.15);color:var(--accent)}
+
+/* Status chips (pending etc.) */
+body.theme-midnight, body.theme-ember .schip.pending {background:rgba(232,168,74,.15);color:var(--accent)}
+
+/* Priority badges */
+body.theme-midnight, body.theme-ember .dash-task-prio.medium {background:rgba(192,144,48,.15);color:#c09030}
+
+/* Finance tracker */
+body.theme-midnight, body.theme-ember .fin-header {background:var(--sidebar);border-bottom:2px solid var(--accent)}
+body.theme-midnight, body.theme-ember .fin-tabs {background:var(--sidebar);border-bottom:1px solid var(--border)}
+body.theme-midnight, body.theme-ember .fin-card {background:var(--s2);border:1px solid var(--border);box-shadow:none}
+body.theme-midnight, body.theme-ember .fin-card:hover {background:var(--sidebar)}
+body.theme-midnight, body.theme-ember .fin-sum-card {background:var(--s2);border:1px solid var(--border)}
+body.theme-midnight, body.theme-ember .fin-status-badge.pending {background:rgba(192,144,48,.15);color:#c09030}
+body.theme-midnight, body.theme-ember .fin-due-badge.warn {background:rgba(192,80,64,.15);color:var(--red)}
+body.theme-midnight, body.theme-ember .fin-pay-badge.upi {background:rgba(232,168,74,.15);color:var(--accent)}
+
+/* Sticky notes lighter bg */
+body.theme-midnight, body.theme-ember .ncard {background:var(--s2);border:1px solid var(--border)}
+body.theme-midnight, body.theme-ember .ncard:hover {background:var(--sidebar)}
+
 </style>
 </head>
 <body class="theme-cream">
