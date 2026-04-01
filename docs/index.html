@@ -2990,7 +2990,7 @@ body.theme-neon .fin-vtbtn.active{color:#080c14}
 
   <!-- == NOTES PAGE (3-column Apple Notes style) == -->
   <div id="page-notes" style="display:none">
-    <div class="notes-page-wrap" style="width:100%;flex:1;min-height:0">
+    <div class="notes-page-wrap" style="width:100%;flex:1;min-height:0;height:100%">
 
       <!-- Column 1: Folders -->
       <div class="notes-folders-panel">
@@ -5715,6 +5715,14 @@ function showPage(page, btn){
         el.classList.remove('page-entering');
         void el.offsetWidth; // force reflow
         el.classList.add('page-entering');
+        // On mobile, notes page needs fixed height for slide panels
+        if(p==='notes' && isMobile()){
+          el.style.height = 'calc(100vh - 58px)';
+          el.style.maxHeight = 'calc(100vh - 58px)';
+          el.style.flexDirection = 'column';
+          el.style.overflow = 'hidden';
+          el.style.flex = 'none';
+        }
       }
     }
   });
@@ -5766,7 +5774,14 @@ function showPage(page, btn){
     document.querySelectorAll('.filter-empty').forEach(e=>e.remove());
     document.querySelectorAll('.stat-card').forEach(c=>c.classList.remove('active'));
   }
-  if(page==='notes')      renderNotesPage();
+  if(page==='notes'){
+    renderNotesPage();
+    // Always reset to folders panel on mobile when navigating to Notes
+    if(isMobile()){
+      const wrap = document.querySelector('.notes-page-wrap');
+      if(wrap) wrap.classList.remove('show-list','show-editor');
+    }
+  }
   if(page==='reminders'){
     // Always reset to 'all' view when navigating to reminders, so mobile users aren't locked to one list
     _remListId = null;
