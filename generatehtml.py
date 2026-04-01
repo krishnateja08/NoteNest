@@ -4415,6 +4415,12 @@ function renderAll(){
   updateRoutineCount();
   updateTaskNotesCount();
   updateFinanceCount();
+  // Update sticky count from DATA (in case initSticky hasn't run yet)
+  const stickyCount = (DATA.stickies||[]).length;
+  const navSt = document.getElementById('nav-sticky-count');
+  if(navSt) navSt.textContent = stickyCount;
+  const spCnt = document.getElementById('sp-count');
+  if(spCnt) spCnt.textContent = stickyCount+' stick'+(stickyCount===1?'y':'ies');
   const now=new Date();
   const todayStr=localToday();
   const pending=reminders.filter(r=>!r.sent).length;
@@ -5152,7 +5158,7 @@ function renderNotesList(){
     const dateStr = (n.updated||n.created||'').slice(0,10);
     const snippet = (n.body||'').replace(/\n/g,' ').slice(0,72);
     const isActive = n.id===_selectedNoteId ? ' active' : '';
-    return `<div class="notes-list-item${isActive}" onclick="selectNote('${n.id}')" id="nli-${n.id}">
+    return `<div class="notes-list-item${isActive}" onclick="selectNote('${n.id}',true)" id="nli-${n.id}">
       <div class="notes-list-item-accent${cl}"></div>
       <div class="notes-list-item-title">${esc(n.title||'New Note')}</div>
       <div class="notes-list-item-date">${dateStr}</div>
@@ -5201,7 +5207,8 @@ function selectNote(id, focusEditor=false){
   const li = document.getElementById('nli-'+id);
   if(li) li.classList.add('active');
   showNoteEditor(id, focusEditor);
-  notesMobileShow('editor');
+  // Only slide to editor on mobile if user explicitly tapped a note (focusEditor or direct tap)
+  if(focusEditor) notesMobileShow('editor');
 }
 
 function showNoteEditor(id, focusBody=false){
@@ -5856,7 +5863,11 @@ function initSticky(){
   }
   renderStickyBoard();
   renderArchiveGrid();
-}
+  // Update sidebar count immediately
+  const navSt = document.getElementById('nav-sticky-count');
+  if(navSt) navSt.textContent = STICKIES.length;
+  const spCnt = document.getElementById('sp-count');
+  if(spCnt) spCnt.textContent = STICKIES.length+' stick'+(STICKIES.length===1?'y':'ies');
 
 /* 1. color picker */
 function pickSPColor(id){
