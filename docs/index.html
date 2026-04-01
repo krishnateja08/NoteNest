@@ -759,9 +759,14 @@ body.theme-neon .dash-tasks-count.open{background:rgba(0,229,255,.1);color:#00e5
   overflow:hidden
 }
 .notes-page-wrap{
-  display:flex;flex-direction:row;
+  display:flex;flex-direction:column;
   flex:1;width:100%;min-height:0;
-  overflow:hidden;align-items:stretch
+  overflow:hidden
+}
+
+/* notes-columns: on desktop shows all 3 panels side-by-side */
+.notes-columns{
+  display:flex;flex:1;overflow:hidden
 }
 
 /* Column 1 — Folders */
@@ -2639,31 +2644,38 @@ body.theme-neon .fin-vtbtn.active{color:#080c14}
     flex-direction:column
   }
   .notes-page-wrap{
-    flex-direction:row;height:100%;
+    flex-direction:column;height:100%;
     overflow:hidden;position:relative;
     flex:1;min-height:0
   }
-  /* All 3 panels become full-width slides */
-  .notes-folders-panel,
-  .notes-list-panel,
-  .notes-editor-panel{
+  /* notes-columns mirrors rem-columns */
+  .notes-columns{
+    position:relative;flex:1;overflow:hidden
+  }
+  .notes-folders-panel,.notes-list-panel,.notes-editor-panel{
     position:absolute;top:0;left:0;
     width:100%;height:100%;
     transition:transform 0.25s ease;
     border-right:none !important
   }
-  /* Default: folders visible, list and editor off-screen right */
+  /* Default: folders visible */
   .notes-folders-panel{transform:translateX(0);z-index:3;background:var(--s2)}
   .notes-list-panel{transform:translateX(100%);z-index:2;background:var(--sidebar)}
   .notes-editor-panel{transform:translateX(200%);z-index:1;background:var(--bg)}
-  /* State: showing list panel */
-  .notes-page-wrap.show-list .notes-folders-panel{transform:translateX(-100%)}
-  .notes-page-wrap.show-list .notes-list-panel{transform:translateX(0)}
-  .notes-page-wrap.show-list .notes-editor-panel{transform:translateX(100%)}
-  /* State: showing editor panel */
-  .notes-page-wrap.show-editor .notes-folders-panel{transform:translateX(-100%)}
-  .notes-page-wrap.show-editor .notes-list-panel{transform:translateX(-100%)}
-  .notes-page-wrap.show-editor .notes-editor-panel{transform:translateX(0);z-index:4}
+  /* State: show-list */
+  .notes-columns.show-list .notes-folders-panel{transform:translateX(-100%)}
+  .notes-columns.show-list .notes-list-panel{transform:translateX(0)}
+  .notes-columns.show-list .notes-editor-panel{transform:translateX(100%)}
+  /* State: show-editor */
+  .notes-columns.show-editor .notes-folders-panel{transform:translateX(-100%)}
+  .notes-columns.show-editor .notes-list-panel{transform:translateX(-100%)}
+  .notes-columns.show-editor .notes-editor-panel{transform:translateX(0);z-index:4}
+  /* Scrolling and layout inside panels */
+  .notes-folders-panel{overflow-y:auto}
+  .notes-list-panel{display:flex;flex-direction:column;overflow:hidden}
+  .notes-list-items{flex:1;overflow-y:auto}
+  .notes-editor-content{padding:18px 16px}
+  .notes-editor-topbar{padding:10px 16px}
   /* Mobile back bar */
   .notes-mobile-back{
     display:flex;align-items:center;gap:8px;
@@ -2677,12 +2689,6 @@ body.theme-neon .fin-vtbtn.active{color:#080c14}
     font-family:'Inter',sans-serif;padding:4px 0
   }
   .notes-mobile-back-btn:active{opacity:0.6}
-  /* Make folders panel scrollable, fix heights */
-  .notes-folders-panel{overflow-y:auto}
-  .notes-list-panel{display:flex;flex-direction:column;overflow:hidden}
-  .notes-list-items{flex:1;overflow-y:auto}
-  .notes-editor-content{padding:18px 16px}
-  .notes-editor-topbar{padding:10px 16px}
 
   /* ── REMINDERS PAGE ── */
   .rem-page-wrap{
@@ -2988,94 +2994,100 @@ body.theme-neon .fin-vtbtn.active{color:#080c14}
     </div>
   </div>
 
-  <!-- == NOTES PAGE (3-column Apple Notes style) == -->
-  <div id="page-notes" style="display:none">
-    <div class="notes-page-wrap" style="width:100%;flex:1;min-height:0;height:100%">
+  <!-- == NOTES PAGE (3-panel, mirrors Reminders layout) == -->
+  <div id="page-notes" style="display:none;flex-direction:column;height:calc(100vh - 58px)">
+    <div class="notes-page-wrap" style="width:100%">
 
-      <!-- Column 1: Folders -->
-      <div class="notes-folders-panel">
-        <div class="notes-folders-hdr">
-          <span class="notes-folders-title">📁 Folders</span>
-          <div style="display:flex;gap:4px">
-            <button class="notes-new-folder-btn" onclick="resetNoteFolders()" title="Fix folders if corrupted" style="font-size:11px;color:var(--muted)">↺</button>
-            <button class="notes-new-folder-btn" onclick="createNewFolder()" title="New Folder">＋</button>
-          </div>
-        </div>
-        <div class="notes-folder-list" id="notes-folder-list"></div>
-      </div>
+      <!-- Slide columns wrapper — .show-list and .show-editor classes drive mobile navigation -->
+      <div class="notes-columns">
 
-      <!-- Column 2: Notes list -->
-      <div class="notes-list-panel">
-        <div class="notes-mobile-back" onclick="notesMobileBack('folders')">
-          <button class="notes-mobile-back-btn">‹ Folders</button>
-        </div>
-        <div class="notes-list-hdr">
-          <div class="notes-list-hdr-top">
-            <span class="notes-list-hdr-title" id="notes-list-folder-name">All Notes</span>
-            <button class="notes-new-btn" onclick="createNewNote()" title="New Note">＋ New</button>
-          </div>
-          <span class="notes-list-hdr-count" id="notes-panel-count">0 notes</span>
-          <input class="notes-list-search" id="notes-panel-search" placeholder="Search…" oninput="renderNotesList()">
-        </div>
-        <div class="notes-list-items" id="notes-panel-list">
-          <div class="notes-list-empty">No notes yet</div>
-        </div>
-      </div>
-
-      <!-- Column 3: Inline Editor -->
-      <div class="notes-editor-panel" id="notes-editor-panel">
-        <div class="notes-editor-empty" id="notes-editor-empty">
-          <div class="notes-editor-empty-icon">📝</div>
-          <div class="notes-editor-empty-text">Select or create a note</div>
-        </div>
-        <div id="notes-editor-inner" style="display:none;flex:1;flex-direction:column;overflow:hidden">
-          <div class="notes-mobile-back" onclick="notesMobileBack('list')">
-            <button class="notes-mobile-back-btn">‹ Notes</button>
-          </div>
-          <div class="notes-editor-topbar">
-            <span class="notes-editor-meta" id="notes-editor-meta"></span>
-            <div class="notes-editor-actions">
-              <div class="notes-preview-toggle" title="Switch between editing markdown and seeing the rendered result">
-                <button id="btn-edit-mode" class="active" onclick="setNoteViewMode('edit')">✏️ Edit</button>
-                <button id="btn-preview-mode" onclick="setNoteViewMode('preview')">👁 Preview</button>
-              </div>
-              <span class="notes-editor-save-indicator" id="notes-editor-saved">✓ Saved</span>
-              <button class="cbtn del" onclick="deleteCurrentNote()">🗑 Delete</button>
+        <!-- Panel 1: Folders -->
+        <div class="notes-folders-panel">
+          <div class="notes-folders-hdr">
+            <span class="notes-folders-title">📁 Folders</span>
+            <div style="display:flex;gap:4px">
+              <button class="notes-new-folder-btn" onclick="resetNoteFolders()" title="Fix folders if corrupted" style="font-size:11px;color:var(--muted)">↺</button>
+              <button class="notes-new-folder-btn" onclick="createNewFolder()" title="New Folder">＋</button>
             </div>
           </div>
-          <div class="notes-editor-content">
-            <!-- Template picker -->
-            <div style="display:flex;align-items:center;margin-bottom:8px;position:relative" id="tmpl-row">
-              <button class="tmpl-btn" onclick="toggleTemplateDropdown(event)">📋 Templates ▾</button>
-              <div class="tmpl-dropdown" id="tmpl-dropdown">
-                <div class="tmpl-item" onclick="applyTemplate('daily')"><span class="tmpl-item-icon">📅</span>Daily Log</div>
-                <div class="tmpl-item" onclick="applyTemplate('meeting')"><span class="tmpl-item-icon">👥</span>Meeting Notes</div>
-                <div class="tmpl-item" onclick="applyTemplate('trading')"><span class="tmpl-item-icon">📈</span>Trading Plan</div>
-                <div class="tmpl-item" onclick="applyTemplate('todo')"><span class="tmpl-item-icon">✅</span>To-Do List</div>
+          <div class="notes-folder-list" id="notes-folder-list"></div>
+        </div>
+
+        <!-- Panel 2: Notes list -->
+        <div class="notes-list-panel">
+          <!-- Back to Folders (mobile only) -->
+          <div class="notes-mobile-back" onclick="notesMobileBack('folders')">
+            <button class="notes-mobile-back-btn">‹ Folders</button>
+          </div>
+          <div class="notes-list-hdr">
+            <div class="notes-list-hdr-top">
+              <span class="notes-list-hdr-title" id="notes-list-folder-name">All Notes</span>
+              <button class="notes-new-btn" onclick="createNewNote()" title="New Note">＋ New</button>
+            </div>
+            <span class="notes-list-hdr-count" id="notes-panel-count">0 notes</span>
+            <input class="notes-list-search" id="notes-panel-search" placeholder="Search…" oninput="renderNotesList()">
+          </div>
+          <div class="notes-list-items" id="notes-panel-list">
+            <div class="notes-list-empty">No notes yet</div>
+          </div>
+        </div>
+
+        <!-- Panel 3: Editor -->
+        <div class="notes-editor-panel" id="notes-editor-panel">
+          <div class="notes-editor-empty" id="notes-editor-empty">
+            <div class="notes-editor-empty-icon">📝</div>
+            <div class="notes-editor-empty-text">Select or create a note</div>
+          </div>
+          <div id="notes-editor-inner" style="display:none;flex:1;flex-direction:column;overflow:hidden">
+            <!-- Back to Notes list (mobile only) -->
+            <div class="notes-mobile-back" onclick="notesMobileBack('list')">
+              <button class="notes-mobile-back-btn">‹ Notes</button>
+            </div>
+            <div class="notes-editor-topbar">
+              <span class="notes-editor-meta" id="notes-editor-meta"></span>
+              <div class="notes-editor-actions">
+                <div class="notes-preview-toggle" title="Switch between editing markdown and seeing the rendered result">
+                  <button id="btn-edit-mode" class="active" onclick="setNoteViewMode('edit')">✏️ Edit</button>
+                  <button id="btn-preview-mode" onclick="setNoteViewMode('preview')">👁 Preview</button>
+                </div>
+                <span class="notes-editor-save-indicator" id="notes-editor-saved">✓ Saved</span>
+                <button class="cbtn del" onclick="deleteCurrentNote()">🗑 Delete</button>
               </div>
             </div>
-            <textarea class="notes-editor-title-input" id="notes-editor-title" rows="1" placeholder="Note title…" oninput="onNoteEditorInput()" onkeydown="noteTitleKeydown(event)"></textarea>
-            <!-- Markdown toolbar -->
-            <div class="md-toolbar" id="md-toolbar">
-              <span class="md-tb-label">Format</span>
-              <button class="md-tb-btn" onclick="mdWrap('**','**')" title="Bold">B</button>
-              <button class="md-tb-btn" onclick="mdWrap('*','*')" title="Italic" style="font-style:italic">I</button>
-              <div class="md-tb-sep"></div>
-              <button class="md-tb-btn" onclick="mdLinePrefix('# ')" title="Heading 1">H1</button>
-              <button class="md-tb-btn" onclick="mdLinePrefix('## ')" title="Heading 2">H2</button>
-              <button class="md-tb-btn" onclick="mdLinePrefix('### ')" title="Heading 3">H3</button>
-              <div class="md-tb-sep"></div>
-              <button class="md-tb-btn" onclick="mdLinePrefix('- ')" title="Bullet list">• List</button>
-              <button class="md-tb-btn" onclick="mdLinePrefix('> ')" title="Quote">❝</button>
-              <button class="md-tb-btn" onclick="mdInsert('\n---\n')" title="Divider">—</button>
-              <button class="md-tb-btn" onclick="mdWrap('`','`')" title="Inline code">`code`</button>
+            <div class="notes-editor-content">
+              <!-- Template picker -->
+              <div style="display:flex;align-items:center;margin-bottom:8px;position:relative" id="tmpl-row">
+                <button class="tmpl-btn" onclick="toggleTemplateDropdown(event)">📋 Templates ▾</button>
+                <div class="tmpl-dropdown" id="tmpl-dropdown">
+                  <div class="tmpl-item" onclick="applyTemplate('daily')"><span class="tmpl-item-icon">📅</span>Daily Log</div>
+                  <div class="tmpl-item" onclick="applyTemplate('meeting')"><span class="tmpl-item-icon">👥</span>Meeting Notes</div>
+                  <div class="tmpl-item" onclick="applyTemplate('trading')"><span class="tmpl-item-icon">📈</span>Trading Plan</div>
+                  <div class="tmpl-item" onclick="applyTemplate('todo')"><span class="tmpl-item-icon">✅</span>To-Do List</div>
+                </div>
+              </div>
+              <textarea class="notes-editor-title-input" id="notes-editor-title" rows="1" placeholder="Note title…" oninput="onNoteEditorInput()" onkeydown="noteTitleKeydown(event)"></textarea>
+              <!-- Markdown toolbar -->
+              <div class="md-toolbar" id="md-toolbar">
+                <span class="md-tb-label">Format</span>
+                <button class="md-tb-btn" onclick="mdWrap('**','**')" title="Bold">B</button>
+                <button class="md-tb-btn" onclick="mdWrap('*','*')" title="Italic" style="font-style:italic">I</button>
+                <div class="md-tb-sep"></div>
+                <button class="md-tb-btn" onclick="mdLinePrefix('# ')" title="Heading 1">H1</button>
+                <button class="md-tb-btn" onclick="mdLinePrefix('## ')" title="Heading 2">H2</button>
+                <button class="md-tb-btn" onclick="mdLinePrefix('### ')" title="Heading 3">H3</button>
+                <div class="md-tb-sep"></div>
+                <button class="md-tb-btn" onclick="mdLinePrefix('- ')" title="Bullet list">• List</button>
+                <button class="md-tb-btn" onclick="mdLinePrefix('> ')" title="Quote">❝</button>
+                <button class="md-tb-btn" onclick="mdInsert('\n---\n')" title="Divider">—</button>
+                <button class="md-tb-btn" onclick="mdWrap('`','`')" title="Inline code">`code`</button>
+              </div>
+              <textarea class="notes-editor-body-input" id="notes-editor-body" placeholder="Start writing… (supports Markdown: ## Heading, **bold**, - bullet, > quote, --- divider)" oninput="onNoteEditorInput()"></textarea>
+              <div class="notes-md-preview" id="notes-md-preview"></div>
             </div>
-            <textarea class="notes-editor-body-input" id="notes-editor-body" placeholder="Start writing… (supports Markdown: ## Heading, **bold**, - bullet, > quote, --- divider)" oninput="onNoteEditorInput()"></textarea>
-            <div class="notes-md-preview" id="notes-md-preview"></div>
           </div>
         </div>
-      </div>
 
+      </div><!-- end .notes-columns -->
     </div>
   </div>
 
@@ -5663,19 +5675,19 @@ function isMobile(){ return window.innerWidth <= 640; }
 
 function notesMobileShow(panel){
   if(!isMobile()) return;
-  const wrap = document.querySelector('.notes-page-wrap');
-  if(!wrap) return;
-  wrap.classList.remove('show-list','show-editor');
-  if(panel==='list')   wrap.classList.add('show-list');
-  if(panel==='editor') wrap.classList.add('show-editor');
+  const cols = document.querySelector('.notes-columns');
+  if(!cols) return;
+  cols.classList.remove('show-list','show-editor');
+  if(panel==='list')   cols.classList.add('show-list');
+  if(panel==='editor') cols.classList.add('show-editor');
 }
 
 function notesMobileBack(to){
   if(!isMobile()) return;
-  const wrap = document.querySelector('.notes-page-wrap');
-  if(!wrap) return;
-  wrap.classList.remove('show-list','show-editor');
-  if(to==='list') wrap.classList.add('show-list');
+  const cols = document.querySelector('.notes-columns');
+  if(!cols) return;
+  cols.classList.remove('show-list','show-editor');
+  if(to==='list') cols.classList.add('show-list');
   // to==='folders' → remove both classes → shows folders
 }
 
@@ -5715,14 +5727,6 @@ function showPage(page, btn){
         el.classList.remove('page-entering');
         void el.offsetWidth; // force reflow
         el.classList.add('page-entering');
-        // On mobile, notes page needs fixed height for slide panels
-        if(p==='notes' && isMobile()){
-          el.style.height = 'calc(100vh - 58px)';
-          el.style.maxHeight = 'calc(100vh - 58px)';
-          el.style.flexDirection = 'column';
-          el.style.overflow = 'hidden';
-          el.style.flex = 'none';
-        }
       }
     }
   });
@@ -5778,8 +5782,8 @@ function showPage(page, btn){
     renderNotesPage();
     // Always reset to folders panel on mobile when navigating to Notes
     if(isMobile()){
-      const wrap = document.querySelector('.notes-page-wrap');
-      if(wrap) wrap.classList.remove('show-list','show-editor');
+      const cols = document.querySelector('.notes-columns');
+      if(cols) cols.classList.remove('show-list','show-editor');
     }
   }
   if(page==='reminders'){
