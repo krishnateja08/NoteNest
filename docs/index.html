@@ -4599,7 +4599,7 @@ function renderAll(){
   const now=new Date();
   const todayStr=localToday();
   const pending=reminders.filter(r=>!r.sent).length;
-  const overdue=reminders.filter(r=>!r.sent&&r.due&&r.due.slice(0,10)<=todayStr).length;
+  const overdue=reminders.filter(r=>!r.sent&&r.due&&new Date(r.due.replace(' ','T'))<=now).length;
   const sent=reminders.filter(r=>r.sent).length;
 
   document.getElementById('stat-notes').textContent=notes.length;
@@ -5697,8 +5697,9 @@ function _renderRemChecklist(){
 
   const renderRow = r => {
     const dueDate = (r.due||'').slice(0,10);
-    const isOver  = !r.sent && r.due && r.due.slice(0,10) <= todayStr;
-    const isToday = dueDate===todayStr;
+    const dueMs   = r.due ? new Date(r.due.replace(' ','T')) : null;
+    const isOver  = !r.sent && dueMs && dueMs <= now;
+    const isToday = dueDate===todayStr && !isOver;
     const dueCls  = isOver?'overdue':isToday?'today':'';
     const dueLabel= r.due ? (isOver?'⚠ Overdue · ':isToday?'📅 Today · ':'📅 ')+r.due.slice(0,10) : '';
     return `<div class="rem-item-row${r.sent?' is-done':''}" id="remrow-${r.id}">
@@ -8208,7 +8209,7 @@ function renderDashUpcomingList(remDates, todayStr, reminders){
   } else {
     // show next upcoming across all days
     list = reminders
-      .filter(r=>!r.sent&&r.due&&r.due.slice(0,10)>=todayStr)
+      .filter(r=>!r.sent&&r.due&&new Date(r.due.replace(' ','T'))>now)
       .sort((a,b)=>a.due.localeCompare(b.due))
       .slice(0,6);
   }
@@ -8264,9 +8265,9 @@ function updateDashboardWidgets(){
 
   // -- STAT CARDS --
   const totalItems  = notes.length + reminders.length;
-  const pending     = reminders.filter(r=>!r.sent && r.due && r.due.slice(0,10) >= todayStr).length;
+  const pending     = reminders.filter(r=>!r.sent && r.due && new Date(r.due.replace(' ','T')) > now).length;
   const completed   = reminders.filter(r=>r.sent).length;
-  const missed      = reminders.filter(r=>!r.sent && r.due && r.due.slice(0,10)<=todayStr).length;
+  const missed      = reminders.filter(r=>!r.sent && r.due && new Date(r.due.replace(' ','T')) <= now).length;
 
   const elNotes   = document.getElementById('stat-notes');
   const elPend    = document.getElementById('stat-pending');
@@ -8351,7 +8352,7 @@ function updateDashboardWidgets(){
   // -- MISSED & OVERDUE --
   const missedEl = document.getElementById('dash-missed-list');
   if(missedEl){
-    const overdueRems = reminders.filter(r=>!r.sent && r.due && r.due.slice(0,10) <= todayStr)
+    const overdueRems = reminders.filter(r=>!r.sent && r.due && new Date(r.due.replace(' ','T')) <= now)
       .sort((a,b)=>b.due.localeCompare(a.due))
       .slice(0,4);
 
