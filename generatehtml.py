@@ -8940,15 +8940,16 @@ function getBadgeCount(){
     return taskDate === today;
   }).length;
 
-  // 2. Pending reminders: not sent, due today or already overdue
+  // 2. Only strictly OVERDUE reminders (past due, not sent, not today)
   const now = new Date();
   const pendingRem = (DATA.reminders||[]).filter(r=>{
     if(r.sent) return false;
     if(!r.due) return false;
     try{
+      const dueDate = r.due.slice(0,10);
+      if(dueDate === today) return false; // today's reminders don't count as overdue
       const due = new Date(r.due.replace(' ','T'));
-      // include: already overdue OR due today
-      return due <= now || r.due.slice(0,10) === today;
+      return due < now;
     }catch{ return false; }
   }).length;
 
