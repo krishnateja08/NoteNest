@@ -2658,6 +2658,7 @@ body.theme-ember .fin-vtbtn.active{color:#0f0d0b}
   /* Reminders: compact tiles */
   .rem-summary-row{grid-template-columns:repeat(2,1fr);padding:10px 14px}
   .rem-lists-panel{width:160px}
+  .rem-right-panel{width:170px}
   /* Finance list: hide date column */
   .fin-list-thead,.fin-lrow{grid-template-columns:3px 28px 1fr 80px 100px 180px}
   .fin-lrow>div:nth-child(7),.fin-list-thead>div:nth-child(7){display:none}
@@ -2779,8 +2780,12 @@ body.theme-ember .fin-vtbtn.active{color:#0f0d0b}
   .notes-list-panel{width:220px}
   .rem-summary-row{grid-template-columns:repeat(2,1fr)}
   .rem-lists-panel{width:160px}
+  .rem-right-panel{width:170px}
   .fin-list-thead,.fin-lrow{grid-template-columns:3px 28px 1fr 80px 80px 160px}
   .fin-list-thead>div:nth-child(6),.fin-lrow>div:nth-child(6){display:none}
+}
+@media(max-width:720px){
+  .rem-right-panel{display:none}
 }
 
 /* Mobile: single-panel navigation */
