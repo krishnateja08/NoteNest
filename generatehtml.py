@@ -8625,7 +8625,7 @@ function renderDashUpcomingList(remDates, todayStr, reminders){
   } else {
     // show next upcoming across all days
     list = reminders
-      .filter(r=>!r.sent&&r.due&&new Date(r.due.replace(' ','T'))>now)
+      .filter(r=>!r.sent&&r.due&&new Date(r.due.slice(0,10)+'T00:00:00')>=new Date(todayStr+'T00:00:00'))
       .sort((a,b)=>a.due.localeCompare(b.due))
       .slice(0,6);
   }
@@ -8723,7 +8723,7 @@ function updateDashboardWidgets(){
   if(routineEl){
     const allItems = [];
     (ROUTINES||[]).forEach(group=>{
-      (group.tasks||[]).forEach(task=>{
+      (group.tasks||[]).filter(isTaskForToday).forEach(task=>{
         if(task.time) allItems.push({name:task.name||'Routine',time:task.time,id:task.id,group:group.name||''});
       });
     });
@@ -8773,7 +8773,7 @@ function updateDashboardWidgets(){
       .slice(0,4);
 
     const overdueTasks = (TASKNOTES||[])
-      .filter(t=>!t.done && t.date && t.date.slice(0,10) <= todayStr)
+      .filter(t=>!t.done && t.date && t.date.slice(0,10) < todayStr)
       .slice(0,3);
 
     const allOverdue = [
