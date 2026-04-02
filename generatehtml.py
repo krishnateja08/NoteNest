@@ -1222,6 +1222,61 @@ body.theme-ember .rem-list-item.active{background:rgba(212,114,74,.08);color:var
 .rem-checklist-panel{
   flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg)
 }
+
+/* Column 3 — Right summary panel */
+.rem-right-panel{
+  width:220px;flex-shrink:0;background:var(--s2);
+  border-left:1px solid var(--border);
+  display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;
+  scrollbar-width:thin;scrollbar-color:var(--border) transparent
+}
+.rem-right-panel::-webkit-scrollbar{width:3px}
+.rem-right-panel::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.rrp-section{padding:14px 14px 6px;border-bottom:1px solid var(--border)}
+.rrp-section:last-child{border-bottom:none}
+.rrp-title{
+  font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.8px;
+  color:var(--text2);margin-bottom:10px
+}
+.rrp-stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:2px}
+.rrp-stat{
+  background:var(--sidebar);border:1px solid var(--border);
+  border-radius:8px;padding:8px 10px;
+}
+.rrp-stat-num{font-family:'Fraunces',serif;font-size:20px;font-weight:700;color:var(--text);line-height:1}
+.rrp-stat-lbl{font-size:10px;color:var(--muted);margin-top:2px}
+.rrp-pri-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:2px}
+.rrp-pri-label{font-size:11px;color:var(--text2)}
+.rrp-pri-count{font-size:11px;font-weight:700;color:var(--text)}
+.rrp-bar{height:3px;background:var(--border);border-radius:2px;margin-bottom:8px;overflow:hidden}
+.rrp-bar-fill{height:100%;border-radius:2px}
+.rrp-mini-cal{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-top:4px}
+.rrp-cal-cell{
+  width:20px;height:20px;display:flex;align-items:center;justify-content:center;
+  font-size:10px;color:var(--text2);border-radius:4px
+}
+.rrp-cal-cell.hdr{color:var(--muted);font-size:9px;font-weight:700}
+.rrp-cal-cell.has-task{background:rgba(42,90,154,.15);color:var(--blue);font-weight:600}
+body.theme-midnight .rrp-cal-cell.has-task{background:rgba(232,168,74,.15);color:var(--accent)}
+body.theme-ember   .rrp-cal-cell.has-task{background:rgba(212,114,74,.15);color:var(--accent)}
+.rrp-cal-cell.today-cell{background:var(--accent);color:#fff;font-weight:700}
+.rrp-cal-legend{display:flex;align-items:center;gap:5px;margin-top:7px;flex-wrap:wrap}
+.rrp-cal-legend span{font-size:10px;color:var(--muted)}
+.rrp-cal-leg-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+.rrp-upcoming-item{display:flex;align-items:flex-start;gap:8px;margin-bottom:8px}
+.rrp-up-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:3px}
+.rrp-up-text{font-size:11px;color:var(--text);line-height:1.3}
+.rrp-up-date{font-size:10px;color:var(--muted);margin-top:1px}
+.rrp-await-item{
+  display:flex;align-items:flex-start;gap:8px;margin-bottom:7px;
+  padding:7px 8px;background:var(--sidebar);
+  border:1px solid var(--border);border-radius:6px
+}
+.rrp-prog-wrap{margin-top:4px}
+.rrp-prog-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
+.rrp-prog-label{font-size:11px;color:var(--text2)}
+.rrp-prog-val{font-size:11px;font-weight:700;color:var(--accent)}
+.rrp-divider{border:none;border-top:1px solid var(--border);margin:0}
 .rem-checklist-hdr{
   padding:18px 28px 12px;border-bottom:1px solid var(--border);flex-shrink:0;
   display:flex;align-items:center;justify-content:space-between
@@ -2807,6 +2862,7 @@ body.theme-ember .fin-vtbtn.active{color:#0f0d0b}
     width:100%;height:100%;
     transition:transform 0.25s ease
   }
+  .rem-right-panel{display:none}
   .rem-lists-panel{transform:translateX(0);z-index:2;background:var(--s2)}
   .rem-checklist-panel{transform:translateX(100%);z-index:1;background:var(--bg)}
   .rem-columns.show-checklist .rem-lists-panel{transform:translateX(-100%)}
@@ -3358,6 +3414,66 @@ body.theme-midnight .ncard.pinned-card, body.theme-ember .ncard.pinned-card {bor
           <div class="rem-checklist-body" id="rem-checklist-body">
             <div class="rem-empty"><div class="rem-empty-icon">⏰</div><p>No reminders here</p></div>
           </div>
+        </div>
+
+        <!-- Column 3: Right Summary Panel -->
+        <div class="rem-right-panel" id="rem-right-panel">
+
+          <!-- Overview stats -->
+          <div class="rrp-section">
+            <div class="rrp-title">Overview</div>
+            <div class="rrp-stats-grid">
+              <div class="rrp-stat"><div class="rrp-stat-num" id="rrp-total">0</div><div class="rrp-stat-lbl">Total</div></div>
+              <div class="rrp-stat"><div class="rrp-stat-num" id="rrp-done">0</div><div class="rrp-stat-lbl">Done</div></div>
+            </div>
+          </div>
+
+          <!-- Priority breakdown -->
+          <div class="rrp-section">
+            <div class="rrp-title">By priority</div>
+            <div class="rrp-pri-row"><span class="rrp-pri-label">High</span><span class="rrp-pri-count" id="rrp-high">0</span></div>
+            <div class="rrp-bar"><div class="rrp-bar-fill" id="rrp-high-bar" style="background:var(--red);width:0%"></div></div>
+            <div class="rrp-pri-row"><span class="rrp-pri-label">Medium</span><span class="rrp-pri-count" id="rrp-med">0</span></div>
+            <div class="rrp-bar"><div class="rrp-bar-fill" id="rrp-med-bar" style="background:var(--accent2);width:0%"></div></div>
+            <div class="rrp-pri-row"><span class="rrp-pri-label">Low</span><span class="rrp-pri-count" id="rrp-low">0</span></div>
+            <div class="rrp-bar"><div class="rrp-bar-fill" id="rrp-low-bar" style="background:var(--green);width:0%"></div></div>
+          </div>
+
+          <!-- Mini calendar -->
+          <div class="rrp-section">
+            <div class="rrp-title" id="rrp-cal-title">This month</div>
+            <div class="rrp-mini-cal" id="rrp-mini-cal"></div>
+            <div class="rrp-cal-legend">
+              <div class="rrp-cal-leg-dot" style="background:var(--accent)"></div><span>Today</span>
+              <div class="rrp-cal-leg-dot" style="background:rgba(42,90,154,.2);margin-left:6px"></div><span>Has task</span>
+            </div>
+          </div>
+
+          <!-- This week -->
+          <div class="rrp-section">
+            <div class="rrp-title">This week</div>
+            <div id="rrp-upcoming-list"><span style="font-size:11px;color:var(--muted)">No upcoming tasks</span></div>
+          </div>
+
+          <!-- Awaiting / No date -->
+          <div class="rrp-section">
+            <div class="rrp-title">Awaiting / No date</div>
+            <div id="rrp-nodate-list"><span style="font-size:11px;color:var(--muted)">None</span></div>
+          </div>
+
+          <!-- Progress -->
+          <div class="rrp-section">
+            <div class="rrp-title">Progress</div>
+            <div class="rrp-prog-wrap">
+              <div class="rrp-prog-header">
+                <span class="rrp-prog-label">Completed</span>
+                <span class="rrp-prog-val" id="rrp-prog-val">0 / 0</span>
+              </div>
+              <div class="rrp-bar" style="height:5px"><div class="rrp-bar-fill" id="rrp-prog-bar" style="background:var(--green);width:0%"></div></div>
+              <div style="font-size:10px;color:var(--muted);margin-top:4px" id="rrp-prog-pct">0% complete</div>
+            </div>
+          </div>
+
         </div>
 
       </div>
@@ -5617,6 +5733,7 @@ function renderRemindersPage(resetPanel){
   _updateRemTiles();
   _renderRemListPanel();
   _renderRemChecklist();
+  _renderRightPanel();
   if(_remViewMode==='cal') renderFullCal();
 }
 
@@ -5628,6 +5745,110 @@ function _updateRemTiles(){
   const doneEl   = document.getElementById('rem-count-completed');
   if(activeEl) activeEl.textContent = activeCount;
   if(doneEl) doneEl.textContent = doneCount;
+}
+
+function _renderRightPanel(){
+  const allRems   = DATA.reminders||[];
+  const filtered  = _getFilteredRems();
+  const undone    = filtered.filter(r=>!r.sent);
+  const done      = filtered.filter(r=>r.sent);
+  const total     = filtered.length;
+  const todayStr  = localToday();
+  const now       = new Date();
+
+  // Stats
+  const setTxt = (id,v) => { const el=document.getElementById(id); if(el) el.textContent=v; };
+  setTxt('rrp-total', total);
+  setTxt('rrp-done', done.length);
+
+  // Priority counts (use same logic as checklist)
+  const getPri = r => {
+    if(!r.due) return 'low';
+    const dueMs = new Date(r.due.replace(' ','T'));
+    if(dueMs <= now || (r.due||'').slice(0,10) === todayStr) return 'high';
+    return 'medium';
+  };
+  const high = undone.filter(r=>getPri(r)==='high').length;
+  const med  = undone.filter(r=>getPri(r)==='medium').length;
+  const low  = undone.filter(r=>getPri(r)==='low').length;
+  const maxPri = Math.max(high+med+low, 1);
+  setTxt('rrp-high', high);
+  setTxt('rrp-med', med);
+  setTxt('rrp-low', low);
+  const setBar = (id,val) => { const el=document.getElementById(id); if(el) el.style.width=Math.round(val/maxPri*100)+'%'; };
+  setBar('rrp-high-bar', high);
+  setBar('rrp-med-bar', med);
+  setBar('rrp-low-bar', low);
+
+  // Progress
+  const pct = total ? Math.round(done.length/total*100) : 0;
+  setTxt('rrp-prog-val', done.length+' / '+total);
+  setTxt('rrp-prog-pct', pct+'% complete');
+  const pb = document.getElementById('rrp-prog-bar');
+  if(pb) pb.style.width = pct+'%';
+
+  // Mini calendar
+  const calEl = document.getElementById('rrp-mini-cal');
+  const calTitle = document.getElementById('rrp-cal-title');
+  if(calEl){
+    const d = new Date();
+    const year = d.getFullYear(); const month = d.getMonth();
+    if(calTitle) calTitle.textContent = d.toLocaleString('default',{month:'long'})+' '+year;
+    const firstDay = new Date(year,month,1).getDay();
+    const daysInMonth = new Date(year,month+1,0).getDate();
+    // Task dates set
+    const taskDays = new Set(
+      allRems.filter(r=>!r.sent && r.due && r.due.slice(0,7)===(year+'-'+String(month+1).padStart(2,'0')))
+             .map(r=>parseInt(r.due.slice(8,10)))
+    );
+    const todayDay = d.getDate();
+    let html = ['Su','Mo','Tu','We','Th','Fr','Sa'].map(d=>`<div class="rrp-cal-cell hdr">${d}</div>`).join('');
+    for(let i=0;i<firstDay;i++) html+=`<div class="rrp-cal-cell"></div>`;
+    for(let day=1;day<=daysInMonth;day++){
+      const isToday = day===todayDay;
+      const hasTask = taskDays.has(day);
+      const cls = isToday?'today-cell':hasTask?'has-task':'';
+      html+=`<div class="rrp-cal-cell ${cls}">${day}</div>`;
+    }
+    calEl.innerHTML = html;
+  }
+
+  // This week upcoming
+  const upEl = document.getElementById('rrp-upcoming-list');
+  if(upEl){
+    const weekEnd = new Date(); weekEnd.setDate(weekEnd.getDate()+7);
+    const weekTasks = undone
+      .filter(r=>r.due && (r.due.slice(0,10)>=todayStr) && new Date(r.due.slice(0,10)+'T00:00:00')<=weekEnd)
+      .sort((a,b)=>(a.due||'').localeCompare(b.due||''))
+      .slice(0,5);
+    if(!weekTasks.length){
+      upEl.innerHTML = `<span style="font-size:11px;color:var(--muted)">No tasks this week</span>`;
+    } else {
+      upEl.innerHTML = weekTasks.map(r=>{
+        const dStr = r.due.slice(0,10);
+        const label = dStr===todayStr?'Today':new Date(dStr+'T00:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+        const dotColor = dStr===todayStr?'var(--red)':'var(--blue)';
+        return `<div class="rrp-upcoming-item">
+          <div class="rrp-up-dot" style="background:${dotColor}"></div>
+          <div><div class="rrp-up-text">${esc(r.title||'')}</div><div class="rrp-up-date">${label}</div></div>
+        </div>`;
+      }).join('');
+    }
+  }
+
+  // Awaiting / No date
+  const ndEl = document.getElementById('rrp-nodate-list');
+  if(ndEl){
+    const noDate = undone.filter(r=>!r.due).slice(0,5);
+    if(!noDate.length){
+      ndEl.innerHTML = `<span style="font-size:11px;color:var(--muted)">None</span>`;
+    } else {
+      ndEl.innerHTML = noDate.map(r=>`<div class="rrp-await-item">
+        <div class="rrp-up-dot" style="background:var(--accent2);margin-top:3px"></div>
+        <div><div class="rrp-up-text">${esc(r.title||'')}</div><div class="rrp-up-date">No date set</div></div>
+      </div>`).join('');
+    }
+  }
 }
 
 function _renderRemListPanel(){
