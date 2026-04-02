@@ -1345,79 +1345,101 @@ body.theme-ember   .rrp-overview-label{color:#d4724a}
   letter-spacing:-0.02em
 }
 .rem-checklist-actions{display:flex;gap:8px;align-items:center}
-.rem-checklist-body{flex:1;overflow-y:auto;padding:16px 28px 40px}
+.rem-checklist-body{flex:1;overflow-y:auto;padding:8px 14px 24px}
 
+/* == COMPACT REMINDERS LAYOUT == */
 /* Date group headers */
-.rem-date-group{margin-bottom:32px}
+.rem-date-group{margin-bottom:0}
 .rem-date-header{
-  margin-bottom:12px;padding:0 12px;
-  font-size:12px;font-weight:700;color:var(--muted);
-  text-transform:uppercase;letter-spacing:0.8px
-}
-.rem-date-header.overdue{
   display:flex;align-items:center;gap:8px;
-  padding:10px 14px;background:#fef2f2;border-radius:8px;
-  border-left:4px solid var(--red);color:var(--red)
+  padding:8px 8px 3px;
+  font-size:10px;font-weight:700;color:var(--muted);
+  text-transform:uppercase;letter-spacing:1.2px;
+  border-top:1px solid var(--border);margin-top:4px
+}
+.rem-date-group:first-child .rem-date-header{border-top:none;margin-top:0}
+.rem-date-header.overdue{
+  color:var(--red);border-top-color:rgba(192,64,64,.2)
 }
 
-/* Timeline item rows */
+/* Compact single-line item rows */
 .rem-item-row{
-  display:flex;align-items:flex-start;gap:12px;
-  padding:12px;border-radius:8px;margin-bottom:2px;
-  transition:all 0.15s;cursor:pointer;
-  border:1px solid transparent
+  display:flex;align-items:center;gap:8px;
+  padding:4px 8px;border-radius:6px;margin-bottom:1px;
+  transition:background 0.1s;cursor:pointer;
+  border:none
 }
-.rem-item-row:hover{background:#fff;border-color:var(--border)}
-body.theme-midnight .rem-item-row:hover{background:var(--sidebar);border-color:var(--border2)}
-body.theme-ember .rem-item-row:hover{background:var(--sidebar);border-color:var(--border2)}
-.rem-item-row.is-done{opacity:.6}
+.rem-item-row:hover{background:var(--s2)}
+body.theme-midnight .rem-item-row:hover{background:rgba(255,255,255,.04)}
+body.theme-ember .rem-item-row:hover{background:rgba(255,255,255,.03)}
+.rem-item-row.is-done{opacity:.5}
 .rem-item-row.is-done .rem-item-title{text-decoration:line-through;color:var(--muted)}
-.rem-item-row.is-done .rem-item-meta{opacity:.5}
 
-/* Checkbox */
+/* Compact checkbox */
 .rem-check{
-  width:18px;height:18px;border-radius:50%;
-  border:2px solid var(--border);flex-shrink:0;cursor:pointer;
+  width:15px;height:15px;border-radius:50%;
+  border:1.5px solid var(--border2);flex-shrink:0;cursor:pointer;
   transition:all 0.15s;display:flex;align-items:center;justify-content:center;
-  background:#fff;margin-top:2px
+  background:transparent
 }
-body.theme-midnight .rem-check{background:var(--bg);border-color:var(--border2)}
-body.theme-ember .rem-check{background:var(--bg);border-color:var(--border2)}
-.rem-check.done{background:var(--green);border-color:var(--green);color:#fff;font-size:11px;font-weight:700}
+body.theme-midnight .rem-check{border-color:var(--border2)}
+body.theme-ember .rem-check{border-color:var(--border2)}
+.rem-check.done{background:var(--green);border-color:var(--green);color:#fff;font-size:9px;font-weight:700}
 .rem-check:hover{border-color:var(--accent)}
 
-/* Item content */
-.rem-item-main{flex:1;min-width:0}
+/* Item content — single line */
+.rem-item-main{flex:1;min-width:0;display:flex;align-items:center;gap:0}
 .rem-item-title{
-  font-size:14px;font-weight:400;color:var(--text);line-height:1.6;
-  word-break:break-word;margin-bottom:4px
+  font-size:13px;font-weight:400;color:var(--text);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  flex:1;min-width:0;
+  cursor:pointer
 }
+/* Inline meta — right side */
 .rem-item-meta{
-  display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted)
+  display:flex;align-items:center;gap:5px;flex-shrink:0;margin-left:8px
 }
-.rem-item-date{display:flex;align-items:center;gap:4px}
+.rem-item-date{
+  font-size:11px;color:var(--muted);white-space:nowrap
+}
 .rem-item-priority-dot{
-  width:6px;height:6px;border-radius:50%;flex-shrink:0
+  width:5px;height:5px;border-radius:50%;flex-shrink:0
 }
 .rem-item-priority-dot.high{background:var(--red)}
-.rem-item-priority-dot.medium{background:var(--accent)}
+.rem-item-priority-dot.medium{background:var(--accent2)}
 .rem-item-priority-dot.low{background:var(--green)}
+.rem-item-prio-lbl{font-size:10px;font-weight:600}
+.rem-item-prio-lbl.high{color:var(--red)}
+.rem-item-prio-lbl.medium{color:var(--accent2)}
+.rem-item-prio-lbl.low{color:var(--green)}
 .rem-item-due.overdue{color:var(--red);font-weight:600}
 .rem-item-due.today{color:#3b82f6;font-weight:600}
-.rem-item-notes{font-size:12px;color:var(--text2);margin-top:4px;line-height:1.5}
+.rem-item-notes{display:none} /* hidden in compact mode */
 
-/* Delete button */
+/* Today / No-date badges inline */
+.rem-badge-today{
+  font-size:10px;font-weight:600;padding:1px 6px;border-radius:8px;
+  background:rgba(59,130,246,.12);color:#2563eb;flex-shrink:0
+}
+body.theme-midnight .rem-badge-today{background:rgba(232,168,74,.12);color:var(--accent)}
+body.theme-ember .rem-badge-today{background:rgba(212,114,74,.12);color:var(--accent)}
+.rem-badge-nodate{
+  font-size:10px;font-weight:500;padding:1px 6px;border-radius:8px;
+  background:var(--s2);color:var(--muted);flex-shrink:0
+}
+
+/* Delete button — compact */
 .rem-item-del{
   background:none;border:none;color:var(--muted);cursor:pointer;
-  font-size:14px;opacity:0;transition:opacity 0.15s;padding:4px;flex-shrink:0
+  font-size:12px;opacity:0;transition:opacity 0.1s;padding:2px 4px;flex-shrink:0
 }
 .rem-item-row:hover .rem-item-del{opacity:1}
 .rem-item-del:hover{color:var(--red)}
 
-/* Inline add row */
+/* Compact add row */
 .rem-add-row{
-  display:flex;align-items:center;gap:10px;
-  padding:12px;border-radius:8px;margin-top:12px;
+  display:flex;align-items:center;gap:8px;
+  padding:6px 8px;border-radius:6px;margin-top:8px;
   border:1px dashed var(--border);background:transparent;
   transition:all 0.15s
 }
@@ -4565,7 +4587,7 @@ async function loadFromGitHub(){
     // Fix rem_lists
     if(!Array.isArray(DATA.rem_lists)||!DATA.rem_lists.length||
        typeof DATA.rem_lists[0]!=='object'||!DATA.rem_lists[0]?.id){
-      DATA.rem_lists = [{id:'personal',name:'Personal',icon:'🔵'},{id:'official',name:'Official',icon:'🔴'}];
+      DATA.rem_lists = [{id:'personal',name:'Personal',icon:'👤'},{id:'official',name:'Official',icon:'💼'}];
       needsRepair = true;
     } else {
       DATA.rem_lists = DATA.rem_lists.map(l=>({
@@ -6012,23 +6034,28 @@ function _renderRemChecklist(){
     return date.toLocaleDateString('en-US', options);
   };
 
-  // Render a single reminder row
+  // Render a single compact reminder row
   const renderRow = r => {
     const dueDate = (r.due||'').slice(0,10);
     const dueMs   = r.due ? new Date(r.due.replace(' ','T')) : null;
     const isOver  = !r.sent && dueMs && dueMs <= now;
-    const isToday = dueDate===todayStr && !isOver;
-    const priority = getPriority(r);
+    const isToday = !isOver && dueDate === todayStr;
+    const priority = r.priority || getPriority(r);
+    const prioShort = {high:'High',medium:'Med',low:'Low'}[priority]||'Med';
+    // date badge
+    let dateBadge = '';
+    if(!r.due) dateBadge = `<span class="rem-badge-nodate">No date</span>`;
+    else if(isToday) dateBadge = `<span class="rem-badge-today">Today</span>`;
+    else if(dueDate) dateBadge = `<span class="rem-item-date">${dueDate.slice(5).replace('-','/')}</span>`;
     return `<div class="rem-item-row${r.sent?' is-done':''}" id="remrow-${r.id}">
       <div class="rem-check${r.sent?' done':''}" onclick="toggleRemDone('${r.id}')">${r.sent?'✓':''}</div>
       <div class="rem-item-main">
         <div class="rem-item-title" onclick="openRemInlineEdit('${r.id}')">${esc(r.title||'')}</div>
         <div class="rem-item-meta">
-          ${r.due?`<div class="rem-item-date">📅 ${dueDate}</div>`:''}
+          ${dateBadge}
           <div class="rem-item-priority-dot ${priority}"></div>
-          <span style="text-transform:capitalize;font-size:11px">${priority} priority</span>
+          <span class="rem-item-prio-lbl ${priority}">${prioShort}</span>
         </div>
-        ${r.body?`<div class="rem-item-notes">${esc(r.body)}</div>`:''}
       </div>
       <button class="rem-item-del" onclick="deleteReminder('${r.id}')" title="Delete">✕</button>
     </div>`;
