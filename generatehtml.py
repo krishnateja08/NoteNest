@@ -1220,12 +1220,12 @@ body.theme-ember .rem-list-item.active{background:rgba(212,114,74,.08);color:var
 
 /* Column 2 — Reminders checklist (minimalist timeline) */
 .rem-checklist-panel{
-  flex:1;max-width:760px;display:flex;flex-direction:column;overflow:hidden;background:var(--bg)
+  flex:0 0 60%;display:flex;flex-direction:column;overflow:hidden;background:var(--bg)
 }
 
 /* Column 3 — Right summary panel */
 .rem-right-panel{
-  width:300px;flex-shrink:0;background:var(--s2);
+  flex:0 0 40%;min-width:0;background:var(--s2);
   border-left:1px solid var(--border);
   display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;
   scrollbar-width:thin;scrollbar-color:var(--border) transparent
@@ -1240,15 +1240,19 @@ body.theme-ember .rem-list-item.active{background:rgba(212,114,74,.08);color:var
 }
 .rrp-stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:2px}
 .rrp-stat{border-radius:10px;padding:10px 14px}
-.rrp-stat.rrp-stat-total{background:rgba(42,90,154,.08);border:1px solid rgba(42,90,154,.2)}
-.rrp-stat.rrp-stat-done{background:rgba(42,122,64,.08);border:1px solid rgba(42,122,64,.2)}
-body.theme-midnight .rrp-stat.rrp-stat-total{background:rgba(122,154,191,.1);border-color:rgba(122,154,191,.25)}
-body.theme-midnight .rrp-stat.rrp-stat-done{background:rgba(90,170,112,.1);border-color:rgba(90,170,112,.25)}
-body.theme-ember .rrp-stat.rrp-stat-total{background:rgba(96,128,160,.08);border-color:rgba(96,128,160,.2)}
-body.theme-ember .rrp-stat.rrp-stat-done{background:rgba(90,128,64,.08);border-color:rgba(90,128,64,.2)}
-.rrp-stat-num{font-family:'Fraunces',serif;font-size:24px;font-weight:700;line-height:1}
-.rrp-stat.rrp-stat-total .rrp-stat-num{color:var(--blue)}
-.rrp-stat.rrp-stat-done .rrp-stat-num{color:var(--green)}
+.rrp-stat.rrp-stat-total{background:rgba(42,90,154,.04);border:1px solid rgba(42,90,154,.1)}
+.rrp-stat.rrp-stat-done{background:rgba(42,122,64,.04);border:1px solid rgba(42,122,64,.1)}
+body.theme-midnight .rrp-stat.rrp-stat-total{background:rgba(122,154,191,.05);border-color:rgba(122,154,191,.12)}
+body.theme-midnight .rrp-stat.rrp-stat-done{background:rgba(90,170,112,.05);border-color:rgba(90,170,112,.12)}
+body.theme-ember .rrp-stat.rrp-stat-total{background:rgba(96,128,160,.04);border-color:rgba(96,128,160,.1)}
+body.theme-ember .rrp-stat.rrp-stat-done{background:rgba(90,128,64,.04);border-color:rgba(90,128,64,.1)}
+.rrp-stat-num{font-family:'Fraunces',serif;font-size:26px;font-weight:700;line-height:1}
+.rrp-stat.rrp-stat-total .rrp-stat-num{color:rgba(42,90,154,.65)}
+.rrp-stat.rrp-stat-done .rrp-stat-num{color:rgba(42,122,64,.65)}
+body.theme-midnight .rrp-stat.rrp-stat-total .rrp-stat-num{color:rgba(122,154,191,.8)}
+body.theme-midnight .rrp-stat.rrp-stat-done .rrp-stat-num{color:rgba(90,170,112,.8)}
+body.theme-ember .rrp-stat.rrp-stat-total .rrp-stat-num{color:rgba(96,128,160,.75)}
+body.theme-ember .rrp-stat.rrp-stat-done .rrp-stat-num{color:rgba(90,128,64,.75)}
 .rrp-stat-lbl{font-size:10px;color:var(--muted);margin-top:3px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
 .rrp-pri-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:2px}
 .rrp-pri-label{font-size:11px;color:var(--text2)}
@@ -2663,7 +2667,6 @@ body.theme-ember .fin-vtbtn.active{color:#0f0d0b}
   /* Reminders: compact tiles */
   .rem-summary-row{grid-template-columns:repeat(2,1fr);padding:10px 14px}
   .rem-lists-panel{width:160px}
-  .rem-right-panel{width:240px}
   /* Finance list: hide date column */
   .fin-list-thead,.fin-lrow{grid-template-columns:3px 28px 1fr 80px 100px 180px}
   .fin-lrow>div:nth-child(7),.fin-list-thead>div:nth-child(7){display:none}
@@ -2785,12 +2788,12 @@ body.theme-ember .fin-vtbtn.active{color:#0f0d0b}
   .notes-list-panel{width:220px}
   .rem-summary-row{grid-template-columns:repeat(2,1fr)}
   .rem-lists-panel{width:160px}
-  .rem-right-panel{width:240px}
   .fin-list-thead,.fin-lrow{grid-template-columns:3px 28px 1fr 80px 80px 160px}
   .fin-list-thead>div:nth-child(6),.fin-lrow>div:nth-child(6){display:none}
 }
 @media(max-width:720px){
   .rem-right-panel{display:none}
+  .rem-checklist-panel{flex:1}
 }
 
 /* Mobile: single-panel navigation */
