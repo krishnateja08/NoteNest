@@ -1235,7 +1235,7 @@ body.theme-ember .rem-list-item.active{background:rgba(212,114,74,.08);color:var
 .rrp-section{padding:14px 16px 10px;border-bottom:1px solid rgba(0,0,0,.06)}
 body.theme-midnight .rrp-section{border-bottom-color:rgba(255,255,255,.05)}
 body.theme-ember .rrp-section{border-bottom-color:rgba(255,255,255,.04)}
-.rrp-section:last-child{border-bottom:none}
+.rrp-section:last-child{border-bottom:1px solid var(--border);padding-bottom:28px}
 .rrp-title{
   font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.8px;
   color:var(--muted);margin-bottom:10px
@@ -1263,15 +1263,40 @@ body.theme-ember .rrp-stat.rrp-stat-done .rrp-stat-num{color:rgba(90,128,64,.75)
 body.theme-midnight .rrp-bar{background:rgba(255,255,255,.08)}
 body.theme-ember .rrp-bar{background:rgba(255,255,255,.06)}
 .rrp-bar-fill{height:100%;border-radius:2px}
-.rrp-mini-cal{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-top:4px}
-.rrp-cal-cell{
-  width:20px;height:20px;display:flex;align-items:center;justify-content:center;
-  font-size:10px;color:var(--text2);border-radius:4px
+.rrp-mini-cal{
+  display:grid;grid-template-columns:repeat(7,1fr);
+  margin-top:6px;
+  border:1px solid var(--border);
+  border-radius:8px;
+  overflow:hidden;
 }
-.rrp-cal-cell.hdr{color:var(--muted);font-size:9px;font-weight:700}
-.rrp-cal-cell.has-task{background:rgba(42,90,154,.1);color:var(--blue);font-weight:600}
+.rrp-cal-cell{
+  height:24px;display:flex;align-items:center;justify-content:center;
+  font-size:10px;color:var(--text2);
+  border-right:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  box-sizing:border-box;
+}
+.rrp-cal-cell:nth-child(7n){border-right:none}
+/* last 7 cells = last row — remove bottom border */
+.rrp-cal-cell:nth-last-child(-n+7){border-bottom:none}
+.rrp-cal-cell.hdr{
+  color:var(--muted);font-size:9px;font-weight:800;
+  background:var(--s2);text-transform:uppercase;letter-spacing:.5px;
+  border-bottom:1px solid var(--border2);
+}
+.rrp-cal-cell.has-task{
+  background:rgba(42,90,154,.12);color:var(--blue);font-weight:700;
+  position:relative;
+}
+.rrp-cal-cell.has-task::after{
+  content:'';position:absolute;bottom:3px;left:50%;transform:translateX(-50%);
+  width:4px;height:4px;border-radius:50%;background:var(--blue);
+}
 body.theme-midnight .rrp-cal-cell.has-task{background:rgba(232,168,74,.12);color:var(--accent)}
+body.theme-midnight .rrp-cal-cell.has-task::after{background:var(--accent)}
 body.theme-ember   .rrp-cal-cell.has-task{background:rgba(212,114,74,.12);color:var(--accent)}
+body.theme-ember   .rrp-cal-cell.has-task::after{background:var(--accent)}
 .rrp-cal-cell.today-cell{background:var(--accent);color:#fff;font-weight:700}
 .rrp-cal-legend{display:flex;align-items:center;gap:5px;margin-top:7px;flex-wrap:wrap}
 .rrp-cal-legend span{font-size:10px;color:var(--muted)}
@@ -1292,6 +1317,25 @@ body.theme-ember .rrp-await-item{background:rgba(255,255,255,.02);border-color:r
 .rrp-prog-label{font-size:11px;color:var(--text2)}
 .rrp-prog-val{font-size:11px;font-weight:700;color:var(--accent)}
 .rrp-divider{border:none;border-top:1px solid var(--border);margin:0}
+
+/* == OVERVIEW colored header == */
+.rrp-overview-section{padding:0 !important}
+.rrp-overview-header{
+  padding:10px 16px 9px;
+  background:linear-gradient(135deg,var(--accent) 0%,var(--accent2) 100%);
+  display:flex;align-items:center;
+}
+body.theme-cream  .rrp-overview-header{background:linear-gradient(135deg,#8b5e2a 0%,#a8762e 100%)}
+body.theme-beige  .rrp-overview-header{background:linear-gradient(135deg,#7c5cbf 0%,#9b7de0 100%)}
+body.theme-midnight .rrp-overview-header{background:linear-gradient(135deg,#1e2838 0%,#252e40 100%);border-bottom:2px solid #e8a84a}
+body.theme-ember   .rrp-overview-header{background:linear-gradient(135deg,#1e1a16 0%,#2a2018 100%);border-bottom:2px solid #d4724a}
+.rrp-overview-label{
+  font-size:10px;font-weight:800;letter-spacing:2.2px;text-transform:uppercase;
+  color:#fff;opacity:.95;
+}
+body.theme-midnight .rrp-overview-label{color:#e8a84a}
+body.theme-ember   .rrp-overview-label{color:#d4724a}
+.rrp-overview-section .rrp-stats-grid{padding:12px 16px 14px}
 .rem-checklist-hdr{
   padding:18px 28px 12px;border-bottom:1px solid var(--border);flex-shrink:0;
   display:flex;align-items:center;justify-content:space-between
@@ -3439,8 +3483,10 @@ body.theme-midnight .ncard.pinned-card, body.theme-ember .ncard.pinned-card {bor
         <div class="rem-right-panel" id="rem-right-panel">
 
           <!-- Overview stats -->
-          <div class="rrp-section">
-            <div class="rrp-title">Overview</div>
+          <div class="rrp-section rrp-overview-section">
+            <div class="rrp-overview-header">
+              <span class="rrp-overview-label">OVERVIEW</span>
+            </div>
             <div class="rrp-stats-grid">
               <div class="rrp-stat rrp-stat-total"><div class="rrp-stat-num" id="rrp-total">0</div><div class="rrp-stat-lbl">Total</div></div>
               <div class="rrp-stat rrp-stat-done"><div class="rrp-stat-num" id="rrp-done">0</div><div class="rrp-stat-lbl">Done</div></div>
