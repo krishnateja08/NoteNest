@@ -1178,32 +1178,14 @@ body.theme-ember .notes-list-item.active{background:rgba(212,114,74,.08)}
 /* == REMINDERS PAGE == */
 .rem-page-wrap{display:flex;flex-direction:column;height:calc(100vh - 58px);overflow:hidden}
 .rem-summary-row{
-  display:grid;grid-template-columns:repeat(4,1fr);gap:12px;
-  padding:16px 20px;border-bottom:1px solid var(--border);flex-shrink:0
+  display:flex;gap:16px;
+  padding:12px 28px;border-bottom:1px solid var(--border);flex-shrink:0;
+  align-items:center;font-size:13px;color:var(--text2)
 }
-.rem-summary-tile{
-  border-radius:12px;padding:14px 16px;cursor:pointer;
-  transition:opacity 0.15s;position:relative;overflow:hidden
-}
-.rem-summary-tile:hover{opacity:.88}
-.rem-summary-tile.active{box-shadow:0 0 0 3px rgba(0,0,0,.18)}
-.rem-tile-today{background:#3b82f6;color:#fff}
-.rem-tile-scheduled{background:#ef4444;color:#fff}
-.rem-tile-all{background:#6b7280;color:#fff}
-.rem-tile-completed{background:#10b981;color:#fff}
-body.theme-midnight .rem-tile-today{background:#1a3a6a}
-body.theme-midnight .rem-tile-scheduled{background:#6a2020}
-body.theme-midnight .rem-tile-all{background:#1e2838}
-body.theme-midnight .rem-tile-completed{background:#1a3a28}
-body.theme-ember .rem-tile-today{background:#3a2010}
-body.theme-ember .rem-tile-scheduled{background:#4a1a0a}
-body.theme-ember .rem-tile-all{background:#1e1a16}
-body.theme-ember .rem-tile-completed{background:#1a2a10}
-.rem-tile-label{font-size:13px;font-weight:700;opacity:.9}
-.rem-tile-count{
-  font-size:28px;font-weight:800;line-height:1.1;
-  position:absolute;right:14px;top:50%;transform:translateY(-50%)
-}
+.rem-summary-row span{margin-right:auto;font-weight:500}
+.rem-summary-stat{display:flex;align-items:center;gap:8px}
+.rem-stat-label{font-size:12px;color:var(--muted)}
+.rem-stat-count{font-size:13px;font-weight:700;color:var(--text)}
 .rem-columns{display:flex;flex:1;overflow:hidden}
 
 /* Column 1 — Lists */
@@ -1236,87 +1218,131 @@ body.theme-ember .rem-list-item.active{background:rgba(212,114,74,.08);color:var
 .rem-list-count{font-size:11px;background:var(--border);border-radius:10px;padding:1px 7px;color:var(--text2);font-weight:700;flex-shrink:0}
 .rem-list-item.active .rem-list-count{background:rgba(139,94,42,.2);color:var(--accent)}
 
-/* Column 2 — Reminders checklist */
+/* Column 2 — Reminders checklist (minimalist timeline) */
 .rem-checklist-panel{
   flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg)
 }
 .rem-checklist-hdr{
-  padding:10px 28px 8px;border-bottom:1px solid var(--border);flex-shrink:0;
+  padding:18px 28px 12px;border-bottom:1px solid var(--border);flex-shrink:0;
   display:flex;align-items:center;justify-content:space-between
 }
 .rem-checklist-title{
-  font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:var(--text)
+  font-family:'Fraunces',serif;font-size:28px;font-weight:300;color:var(--text);
+  letter-spacing:-0.02em
 }
 .rem-checklist-actions{display:flex;gap:8px;align-items:center}
-.rem-checklist-body{flex:1;overflow-y:auto;padding:4px 28px 16px}
+.rem-checklist-body{flex:1;overflow-y:auto;padding:16px 28px 40px}
+
+/* Date group headers */
+.rem-date-group{margin-bottom:32px}
+.rem-date-header{
+  margin-bottom:12px;padding:0 12px;
+  font-size:12px;font-weight:700;color:var(--muted);
+  text-transform:uppercase;letter-spacing:0.8px
+}
+.rem-date-header.overdue{
+  display:flex;align-items:center;gap:8px;
+  padding:10px 14px;background:#fef2f2;border-radius:8px;
+  border-left:4px solid var(--red);color:var(--red)
+}
+
+/* Timeline item rows */
 .rem-item-row{
   display:flex;align-items:flex-start;gap:12px;
-  padding:6px 0;border-bottom:1px solid var(--border);
-  transition:background 0.1s;position:relative
+  padding:12px;border-radius:8px;margin-bottom:2px;
+  transition:all 0.15s;cursor:pointer;
+  border:1px solid transparent
 }
-.rem-item-row:last-child{border-bottom:none}
+.rem-item-row:hover{background:#fff;border-color:var(--border)}
+body.theme-midnight .rem-item-row:hover{background:var(--sidebar);border-color:var(--border2)}
+body.theme-ember .rem-item-row:hover{background:var(--sidebar);border-color:var(--border2)}
+.rem-item-row.is-done{opacity:.6}
 .rem-item-row.is-done .rem-item-title{text-decoration:line-through;color:var(--muted)}
-.rem-item-row.is-done .rem-item-due{opacity:.5}
+.rem-item-row.is-done .rem-item-meta{opacity:.5}
+
+/* Checkbox */
 .rem-check{
-  width:18px;height:18px;border-radius:50%;border:2px solid var(--border2);
-  flex-shrink:0;cursor:pointer;transition:all 0.15s;
-  display:flex;align-items:center;justify-content:center;background:transparent;
-  margin-top:2px
+  width:18px;height:18px;border-radius:50%;
+  border:2px solid var(--border);flex-shrink:0;cursor:pointer;
+  transition:all 0.15s;display:flex;align-items:center;justify-content:center;
+  background:#fff;margin-top:2px
 }
-.rem-check.done{background:var(--green);border-color:var(--green);color:#fff}
+body.theme-midnight .rem-check{background:var(--bg);border-color:var(--border2)}
+body.theme-ember .rem-check{background:var(--bg);border-color:var(--border2)}
+.rem-check.done{background:var(--green);border-color:var(--green);color:#fff;font-size:11px;font-weight:700}
 .rem-check:hover{border-color:var(--accent)}
+
+/* Item content */
 .rem-item-main{flex:1;min-width:0}
 .rem-item-title{
-  font-size:14px;font-weight:600;color:var(--text);line-height:1.3;
-  cursor:pointer;word-break:break-word
+  font-size:14px;font-weight:400;color:var(--text);line-height:1.6;
+  word-break:break-word;margin-bottom:4px
 }
-.rem-item-due{
-  font-size:11px;font-weight:600;color:var(--muted);margin-top:2px;
-  display:flex;align-items:center;gap:4px
+.rem-item-meta{
+  display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted)
 }
-.rem-item-due.overdue{color:var(--red)}
-.rem-item-due.today{color:#3b82f6}
-.rem-item-notes{font-size:12px;color:var(--text2);margin-top:3px;line-height:1.4}
+.rem-item-date{display:flex;align-items:center;gap:4px}
+.rem-item-priority-dot{
+  width:6px;height:6px;border-radius:50%;flex-shrink:0
+}
+.rem-item-priority-dot.high{background:var(--red)}
+.rem-item-priority-dot.medium{background:var(--accent)}
+.rem-item-priority-dot.low{background:var(--green)}
+.rem-item-due.overdue{color:var(--red);font-weight:600}
+.rem-item-due.today{color:#3b82f6;font-weight:600}
+.rem-item-notes{font-size:12px;color:var(--text2);margin-top:4px;line-height:1.5}
+
+/* Delete button */
 .rem-item-del{
   background:none;border:none;color:var(--muted);cursor:pointer;
-  font-size:14px;opacity:0;transition:opacity 0.15s;padding:0 4px;flex-shrink:0
+  font-size:14px;opacity:0;transition:opacity 0.15s;padding:4px;flex-shrink:0
 }
 .rem-item-row:hover .rem-item-del{opacity:1}
 .rem-item-del:hover{color:var(--red)}
-/* inline add row */
+
+/* Inline add row */
 .rem-add-row{
   display:flex;align-items:center;gap:10px;
-  padding:10px 0;border-top:1px solid var(--border);margin-top:8px
+  padding:12px;border-radius:8px;margin-top:12px;
+  border:1px dashed var(--border);background:transparent;
+  transition:all 0.15s
 }
+.rem-add-row:hover{background:var(--sidebar);border-color:var(--border2)}
 .rem-add-plus{
-  width:20px;height:20px;border-radius:50%;border:2px dashed var(--border2);
+  width:20px;height:20px;border-radius:50%;
   flex-shrink:0;display:flex;align-items:center;justify-content:center;
-  font-size:14px;color:var(--muted);cursor:pointer;flex-shrink:0
+  font-size:16px;color:var(--muted);cursor:pointer
 }
 .rem-add-input{
   flex:1;border:none;outline:none;background:transparent;
-  font-size:14px;font-weight:600;color:var(--text);
+  font-size:14px;font-weight:400;color:var(--text);
   font-family:'Inter',sans-serif;caret-color:var(--accent)
 }
 .rem-add-input::placeholder{color:var(--muted);font-weight:400}
 .rem-add-due-input{
-  border:1px solid var(--border);border-radius:6px;background:var(--sidebar);
-  font-size:11px;color:var(--text2);padding:3px 7px;outline:none;
-  font-family:'Inter',sans-serif;cursor:pointer
+  border:1px solid var(--border);border-radius:6px;background:transparent;
+  font-size:11px;color:var(--text2);padding:4px 8px;outline:none;
+  font-family:'Inter',sans-serif;cursor:pointer;transition:border-color 0.15s
 }
-/* completed section */
-.rem-completed-section{margin-top:16px}
+.rem-add-due-input:hover{border-color:var(--accent)}
+
+/* Completed section */
+.rem-completed-section{margin-top:32px;padding-top:20px;border-top:1px solid var(--border)}
 .rem-completed-toggle{
-  display:flex;align-items:center;gap:6px;cursor:pointer;
-  font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;
-  letter-spacing:0.6px;padding:4px 0;user-select:none
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:12px;font-weight:700;color:var(--muted);
+  text-transform:uppercase;letter-spacing:0.8px;padding:0 12px 12px;
+  user-select:none
 }
-.rem-completed-toggle:hover{color:var(--text2)}
+.rem-completed-header{
+  display:flex;align-items:center;gap:8px;cursor:pointer
+}
+.rem-completed-header:hover{color:var(--text2)}
 .rem-empty{
-  padding:60px 20px;text-align:center;color:var(--muted);font-size:13px;
-  display:flex;flex-direction:column;align-items:center;gap:8px
+  padding:80px 20px;text-align:center;color:var(--muted);font-size:14px;
+  display:flex;flex-direction:column;align-items:center;gap:10px
 }
-.rem-empty-icon{font-size:36px;opacity:.3}
+.rem-empty-icon{font-size:42px;opacity:.25}
 
 /* -- VIEW TOGGLE ----------------------------------- */
 .view-toggle{
@@ -3293,23 +3319,16 @@ body.theme-midnight .ncard.pinned-card, body.theme-ember .ncard.pinned-card {bor
         <div class="full-cal-grid" id="full-cal-grid"></div>
       </div>
 
-      <!-- Summary tiles row (only shown in list view) -->
+      <!-- Summary stats row (minimalist) -->
       <div class="rem-summary-row">
-        <div class="rem-summary-tile rem-tile-today" id="rem-tile-today" onclick="selectRemFilter('today')">
-          <div class="rem-tile-label">Today</div>
-          <div class="rem-tile-count" id="rem-count-today">0</div>
+        <span id="rem-summary-title">Reminders</span>
+        <div class="rem-summary-stat">
+          <span class="rem-stat-label">Active:</span>
+          <span class="rem-stat-count" id="rem-count-active">0</span>
         </div>
-        <div class="rem-summary-tile rem-tile-scheduled" id="rem-tile-scheduled" onclick="selectRemFilter('scheduled')">
-          <div class="rem-tile-label">Scheduled</div>
-          <div class="rem-tile-count" id="rem-count-scheduled">0</div>
-        </div>
-        <div class="rem-summary-tile rem-tile-all" id="rem-tile-all" onclick="selectRemFilter('all')">
-          <div class="rem-tile-label">All</div>
-          <div class="rem-tile-count" id="rem-count-all">0</div>
-        </div>
-        <div class="rem-summary-tile rem-tile-completed" id="rem-tile-completed" onclick="selectRemFilter('completed')">
-          <div class="rem-tile-label">Completed</div>
-          <div class="rem-tile-count" id="rem-count-completed">0</div>
+        <div class="rem-summary-stat">
+          <span class="rem-stat-label">Completed:</span>
+          <span class="rem-stat-count" id="rem-count-completed">0</span>
         </div>
       </div>
 
@@ -5603,21 +5622,12 @@ function renderRemindersPage(resetPanel){
 
 function _updateRemTiles(){
   const rems = DATA.reminders||[];
-  const now  = new Date();
-  const todayStr = localToday();
-  const todayCount     = rems.filter(r=>!r.sent && (r.due||'').slice(0,10)===todayStr).length;
-  const scheduledCount = rems.filter(r=>!r.sent && r.due).length;
-  const allCount       = rems.filter(r=>!r.sent).length;
-  const doneCount      = rems.filter(r=>r.sent).length;
-  document.getElementById('rem-count-today').textContent     = todayCount;
-  document.getElementById('rem-count-scheduled').textContent = scheduledCount;
-  document.getElementById('rem-count-all').textContent       = allCount;
-  document.getElementById('rem-count-completed').textContent = doneCount;
-  // highlight active tile
-  ['today','scheduled','all','completed'].forEach(k=>{
-    const el=document.getElementById('rem-tile-'+k);
-    if(el) el.classList.toggle('active', _remPageFilter===k && _remListId===null);
-  });
+  const activeCount = rems.filter(r=>!r.sent).length;
+  const doneCount   = rems.filter(r=>r.sent).length;
+  const activeEl = document.getElementById('rem-count-active');
+  const doneEl   = document.getElementById('rem-count-completed');
+  if(activeEl) activeEl.textContent = activeCount;
+  if(doneEl) doneEl.textContent = doneCount;
 }
 
 function _renderRemListPanel(){
@@ -5641,10 +5651,6 @@ function selectRemFilter(filter){
   _updateRemTiles();
   _renderRemListPanel();
   _renderRemChecklist();
-  // On mobile: smart-filter tiles (All / Today / Scheduled / Completed) show content
-  // inside the checklist panel but we do NOT slide away from the lists panel —
-  // the user should still be able to see and switch lists. Only tapping a specific
-  // list item (selectRemList) slides to the checklist panel.
 }
 
 function selectRemList(id){
@@ -5693,67 +5699,160 @@ function _renderRemChecklist(){
   if(!body) return;
 
   let items = _getFilteredRems();
-  // sort: undone first sorted by due, then done
   const undone = items.filter(r=>!r.sent).sort((a,b)=>(a.due||'').localeCompare(b.due||''));
   const done   = items.filter(r=>r.sent);
   const now    = new Date();
   const todayStr = localToday();
 
+  // Helper to get priority for an item
+  const getPriority = r => {
+    if(!r.due) return 'low';
+    const dueDate = (r.due||'').slice(0,10);
+    const dueMs = new Date(r.due.replace(' ','T'));
+    if(dueMs <= now) return 'high';
+    if(dueDate === todayStr) return 'high';
+    return 'medium';
+  };
+
+  // Helper to format date nicely
+  const formatDate = (dateStr) => {
+    if(!dateStr) return '';
+    const date = new Date(dateStr+'T00:00:00');
+    const tomorrow = new Date(todayStr+'T00:00:00');
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    if(dateStr === todayStr) return 'Today';
+    if(dateStr === tomorrow.toISOString().slice(0,10)) return 'Tomorrow';
+    const options = { weekday: 'short', month: 'short', day: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
+  };
+
+  // Render a single reminder row
   const renderRow = r => {
     const dueDate = (r.due||'').slice(0,10);
     const dueMs   = r.due ? new Date(r.due.replace(' ','T')) : null;
     const isOver  = !r.sent && dueMs && dueMs <= now;
     const isToday = dueDate===todayStr && !isOver;
-    const dueCls  = isOver?'overdue':isToday?'today':'';
-    const dueLabel= r.due ? (isOver?'⚠ Overdue · ':isToday?'📅 Today · ':'📅 ')+r.due.slice(0,10) : '';
+    const priority = getPriority(r);
     return `<div class="rem-item-row${r.sent?' is-done':''}" id="remrow-${r.id}">
       <div class="rem-check${r.sent?' done':''}" onclick="toggleRemDone('${r.id}')">${r.sent?'✓':''}</div>
       <div class="rem-item-main">
         <div class="rem-item-title" onclick="openRemInlineEdit('${r.id}')">${esc(r.title||'')}</div>
-        ${dueLabel?`<div class="rem-item-due ${dueCls}">${dueLabel}</div>`:''}
+        <div class="rem-item-meta">
+          ${r.due?`<div class="rem-item-date">📅 ${dueDate}</div>`:''}
+          <div class="rem-item-priority-dot ${priority}"></div>
+          <span style="text-transform:capitalize;font-size:11px">${priority} priority</span>
+        </div>
         ${r.body?`<div class="rem-item-notes">${esc(r.body)}</div>`:''}
       </div>
       <button class="rem-item-del" onclick="deleteReminder('${r.id}')" title="Delete">✕</button>
     </div>`;
   };
 
-  let html = undone.map(renderRow).join('');
+  // Group by date
+  const groupByDate = (items) => {
+    const groups = { overdue: [], today: [], upcoming: [], nodate: [] };
+    items.forEach(r => {
+      if(!r.due){
+        groups.nodate.push(r);
+        return;
+      }
+      const dueDate = (r.due||'').slice(0,10);
+      const dueMs = new Date(r.due.replace(' ','T'));
+      if(dueMs <= now && dueDate !== todayStr){
+        groups.overdue.push(r);
+      } else if(dueDate === todayStr){
+        groups.today.push(r);
+      } else {
+        groups.upcoming.push(r);
+      }
+    });
+    return groups;
+  };
 
-  // Inline add row (only when not in completed view)
+  const grouped = groupByDate(undone);
+  let html = '';
+
+  // Overdue section
+  if(grouped.overdue.length){
+    html += `<div class="rem-date-group">
+      <div class="rem-date-header overdue">⚠️ Overdue</div>
+      ${grouped.overdue.map(renderRow).join('')}
+    </div>`;
+  }
+
+  // Today section
+  if(grouped.today.length){
+    html += `<div class="rem-date-group">
+      <div class="rem-date-header">Today</div>
+      ${grouped.today.map(renderRow).join('')}
+    </div>`;
+  }
+
+  // Upcoming section - group by individual dates
+  if(grouped.upcoming.length){
+    const upcomingByDate = {};
+    grouped.upcoming.forEach(r => {
+      const date = (r.due||'').slice(0,10);
+      if(!upcomingByDate[date]) upcomingByDate[date] = [];
+      upcomingByDate[date].push(r);
+    });
+    Object.keys(upcomingByDate).sort().forEach(date => {
+      html += `<div class="rem-date-group">
+        <div class="rem-date-header">${formatDate(date)}</div>
+        ${upcomingByDate[date].map(renderRow).join('')}
+      </div>`;
+    });
+  }
+
+  // No date section
+  if(grouped.nodate.length){
+    html += `<div class="rem-date-group">
+      <div class="rem-date-header">No Date</div>
+      ${grouped.nodate.map(renderRow).join('')}
+    </div>`;
+  }
+
+  // Add new reminder row (only when not in completed view)
   if(_remPageFilter!=='completed'){
-    const listId = _remListId || (_remPageFilter==='all'||_remPageFilter==='scheduled'||_remPageFilter==='today' ? 'personal' : 'personal');
+    const listId = _remListId || 'personal';
     html += `<div class="rem-add-row">
       <div class="rem-add-plus" onclick="document.getElementById('rem-add-input').focus()">＋</div>
-      <input class="rem-add-input" id="rem-add-input" placeholder="New Reminder… (press Enter or click Add)"
+      <input class="rem-add-input" id="rem-add-input" placeholder="New reminder… (press Enter to add)"
         onkeydown="remAddKeydown(event,'${listId}')">
       <input type="date" class="rem-add-due-input" id="rem-add-due" title="Due date">
-      <button class="cbtn" style="font-size:11px;padding:3px 10px;flex-shrink:0" onclick="remAddClick('${listId}')">Add</button>
+      <button class="cbtn" style="font-size:11px;padding:4px 12px;flex-shrink:0" onclick="remAddClick('${listId}')">Add</button>
     </div>`;
   }
 
   // Completed section
   if(done.length){
     html += `<div class="rem-completed-section">
-      <div class="rem-completed-toggle" style="display:flex;align-items:center;justify-content:space-between">
-        <span onclick="toggleRemCompleted(this)" style="cursor:pointer;display:flex;align-items:center;gap:6px">
-          <span id="rem-comp-chev">▼</span> ${done.length} Completed
-        </span>
-        <button onclick="clearCompletedReminders()" style="font-size:11px;padding:3px 10px;border-radius:6px;border:1px solid var(--border2);background:transparent;color:var(--red);cursor:pointer;font-family:'Inter',sans-serif">🗑 Clear all</button>
+      <div class="rem-completed-toggle">
+        <div class="rem-completed-header" onclick="toggleRemCompleted(this)">
+          <span id="rem-comp-chev">▼</span>
+          <span>Completed (${done.length})</span>
+        </div>
+        <button onclick="clearCompletedReminders()" style="font-size:11px;padding:4px 10px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--red);cursor:pointer;font-family:'Inter',sans-serif;font-weight:600">🗑 Clear</button>
       </div>
       <div id="rem-comp-list">${done.map(renderRow).join('')}</div>
     </div>`;
   }
 
+  // Empty state
   if(!undone.length && !done.length){
-    html = `<div class="rem-empty"><div class="rem-empty-icon">⏰</div><p>No reminders here.<br>Type below to add one.</p></div>`;
+    html = `<div class="rem-empty">
+      <div class="rem-empty-icon">⏰</div>
+      <p>No reminders here.</p>
+      <p style="font-size:12px;color:var(--muted)">Add one below to get started</p>
+    </div>`;
     if(_remPageFilter!=='completed'){
       const listId = _remListId||'personal';
       html += `<div class="rem-add-row">
         <div class="rem-add-plus" onclick="document.getElementById('rem-add-input').focus()">＋</div>
-        <input class="rem-add-input" id="rem-add-input" placeholder="New Reminder… (press Enter or click Add)"
+        <input class="rem-add-input" id="rem-add-input" placeholder="New reminder… (press Enter to add)"
           onkeydown="remAddKeydown(event,'${listId}')">
         <input type="date" class="rem-add-due-input" id="rem-add-due" title="Due date">
-        <button class="cbtn" style="font-size:11px;padding:3px 10px;flex-shrink:0" onclick="remAddClick('${listId}')">Add</button>
+        <button class="cbtn" style="font-size:11px;padding:4px 12px;flex-shrink:0" onclick="remAddClick('${listId}')">Add</button>
       </div>`;
     }
   }
