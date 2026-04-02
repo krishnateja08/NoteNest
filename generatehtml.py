@@ -1255,10 +1255,10 @@ body.theme-midnight .rrp-stat.rrp-stat-total .rrp-stat-num{color:rgba(122,154,19
 body.theme-midnight .rrp-stat.rrp-stat-done .rrp-stat-num{color:rgba(90,170,112,.8)}
 body.theme-ember .rrp-stat.rrp-stat-total .rrp-stat-num{color:rgba(96,128,160,.75)}
 body.theme-ember .rrp-stat.rrp-stat-done .rrp-stat-num{color:rgba(90,128,64,.75)}
-.rrp-stat-lbl{font-size:10px;color:var(--muted);margin-top:3px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.rrp-stat-lbl{font-size:11px;color:var(--muted);margin-top:3px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
 .rrp-pri-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:2px}
-.rrp-pri-label{font-size:11px;color:var(--text2)}
-.rrp-pri-count{font-size:11px;font-weight:700;color:var(--text)}
+.rrp-pri-label{font-size:12px;color:var(--text2)}
+.rrp-pri-count{font-size:12px;font-weight:700;color:var(--text)}
 .rrp-bar{height:3px;background:rgba(0,0,0,.08);border-radius:2px;margin-bottom:8px;overflow:hidden}
 body.theme-midnight .rrp-bar{background:rgba(255,255,255,.08)}
 body.theme-ember .rrp-bar{background:rgba(255,255,255,.06)}
@@ -1303,8 +1303,8 @@ body.theme-ember   .rrp-cal-cell.has-task::after{background:var(--accent)}
 .rrp-cal-leg-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
 .rrp-upcoming-item{display:flex;align-items:flex-start;gap:8px;margin-bottom:8px}
 .rrp-up-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:3px}
-.rrp-up-text{font-size:11px;color:var(--text);line-height:1.3}
-.rrp-up-date{font-size:10px;color:var(--muted);margin-top:1px}
+.rrp-up-text{font-size:12px;color:var(--text);line-height:1.3}
+.rrp-up-date{font-size:11px;color:var(--muted);margin-top:1px}
 .rrp-await-item{
   display:flex;align-items:flex-start;gap:8px;margin-bottom:7px;
   padding:7px 8px;background:rgba(0,0,0,.03);
@@ -1353,7 +1353,7 @@ body.theme-ember   .rrp-overview-label{color:#d4724a}
 .rem-date-header{
   display:flex;align-items:center;gap:8px;
   padding:8px 8px 3px;
-  font-size:10px;font-weight:700;color:var(--muted);
+  font-size:11px;font-weight:700;color:var(--muted);
   text-transform:uppercase;letter-spacing:1.2px;
   border-top:1px solid var(--border);margin-top:4px
 }
@@ -1390,7 +1390,7 @@ body.theme-ember .rem-check{border-color:var(--border2)}
 /* Item content — single line */
 .rem-item-main{flex:1;min-width:0;display:flex;align-items:center;gap:0}
 .rem-item-title{
-  font-size:13px;font-weight:400;color:var(--text);
+  font-size:14px;font-weight:400;color:var(--text);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
   flex:1;min-width:0;
   cursor:pointer
@@ -1400,7 +1400,7 @@ body.theme-ember .rem-check{border-color:var(--border2)}
   display:flex;align-items:center;gap:5px;flex-shrink:0;margin-left:8px
 }
 .rem-item-date{
-  font-size:11px;color:var(--muted);white-space:nowrap
+  font-size:12px;color:var(--muted);white-space:nowrap
 }
 .rem-item-priority-dot{
   width:5px;height:5px;border-radius:50%;flex-shrink:0
@@ -1408,7 +1408,7 @@ body.theme-ember .rem-check{border-color:var(--border2)}
 .rem-item-priority-dot.high{background:var(--red)}
 .rem-item-priority-dot.medium{background:var(--accent2)}
 .rem-item-priority-dot.low{background:var(--green)}
-.rem-item-prio-lbl{font-size:10px;font-weight:600}
+.rem-item-prio-lbl{font-size:11px;font-weight:600}
 .rem-item-prio-lbl.high{color:var(--red)}
 .rem-item-prio-lbl.medium{color:var(--accent2)}
 .rem-item-prio-lbl.low{color:var(--green)}
@@ -1418,13 +1418,13 @@ body.theme-ember .rem-check{border-color:var(--border2)}
 
 /* Today / No-date badges inline */
 .rem-badge-today{
-  font-size:10px;font-weight:600;padding:1px 6px;border-radius:8px;
+  font-size:11px;font-weight:600;padding:1px 7px;border-radius:8px;
   background:rgba(59,130,246,.12);color:#2563eb;flex-shrink:0
 }
 body.theme-midnight .rem-badge-today{background:rgba(232,168,74,.12);color:var(--accent)}
 body.theme-ember .rem-badge-today{background:rgba(212,114,74,.12);color:var(--accent)}
 .rem-badge-nodate{
-  font-size:10px;font-weight:500;padding:1px 6px;border-radius:8px;
+  font-size:11px;font-weight:500;padding:1px 7px;border-radius:8px;
   background:var(--s2);color:var(--muted);flex-shrink:0
 }
 
