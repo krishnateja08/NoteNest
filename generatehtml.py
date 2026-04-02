@@ -1220,19 +1220,19 @@ body.theme-ember .rem-list-item.active{background:rgba(212,114,74,.08);color:var
 
 /* Column 2 — Reminders checklist (minimalist timeline) */
 .rem-checklist-panel{
-  flex:0 0 60%;display:flex;flex-direction:column;overflow:hidden;background:var(--bg)
+  flex:1 1 0;min-width:0;display:flex;flex-direction:column;overflow:hidden;background:var(--bg)
 }
 
 /* Column 3 — Right summary panel */
 .rem-right-panel{
-  flex:0 0 40%;min-width:0;background:var(--bg);
+  flex:0 0 240px;width:240px;min-width:0;background:var(--bg);
   border-left:1px solid var(--border);
   display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;
   scrollbar-width:thin;scrollbar-color:var(--border) transparent
 }
 .rem-right-panel::-webkit-scrollbar{width:3px}
 .rem-right-panel::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
-.rrp-section{padding:14px 16px 10px;border-bottom:1px solid rgba(0,0,0,.06)}
+.rrp-section{padding:14px 12px 10px;border-bottom:1px solid rgba(0,0,0,.06);box-sizing:border-box;width:100%}
 body.theme-midnight .rrp-section{border-bottom-color:rgba(255,255,255,.05)}
 body.theme-ember .rrp-section{border-bottom-color:rgba(255,255,255,.04)}
 .rrp-section:last-child{border-bottom:1px solid var(--border);padding-bottom:28px}
@@ -1240,8 +1240,8 @@ body.theme-ember .rrp-section{border-bottom-color:rgba(255,255,255,.04)}
   font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.8px;
   color:var(--muted);margin-bottom:10px
 }
-.rrp-stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:2px}
-.rrp-stat{border-radius:10px;padding:10px 14px}
+.rrp-stats-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;margin-bottom:2px}
+.rrp-stat{border-radius:10px;padding:10px 10px;box-sizing:border-box;min-width:0}
 .rrp-stat.rrp-stat-total{background:rgba(42,90,154,.04);border:1px solid rgba(42,90,154,.1)}
 .rrp-stat.rrp-stat-done{background:rgba(42,122,64,.04);border:1px solid rgba(42,122,64,.1)}
 body.theme-midnight .rrp-stat.rrp-stat-total{background:rgba(122,154,191,.05);border-color:rgba(122,154,191,.12)}
@@ -1335,7 +1335,7 @@ body.theme-ember   .rrp-overview-header{background:linear-gradient(135deg,#1e1a1
 }
 body.theme-midnight .rrp-overview-label{color:#e8a84a}
 body.theme-ember   .rrp-overview-label{color:#d4724a}
-.rrp-overview-section .rrp-stats-grid{padding:12px 16px 14px}
+.rrp-overview-section .rrp-stats-grid{padding:12px 12px 14px}
 .rem-checklist-hdr{
   padding:18px 28px 12px;border-bottom:1px solid var(--border);flex-shrink:0;
   display:flex;align-items:center;justify-content:space-between
