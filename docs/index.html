@@ -8239,7 +8239,24 @@ function renderTodayChecklist(){
   let html = '';
   ROUTINES.forEach(group=>{
     const todayTasks = (group.tasks||[]).filter(isTaskForToday);
-    if(!todayTasks.length) return;
+    if(!todayTasks.length){
+      // Still show the routine card but with an "add tasks" prompt
+      const colorClass = 'c-'+(group.color||'blue');
+      html += `<div class="rt-group ${colorClass}" id="rtg-${group.id}">
+        <div class="rt-group-header" onclick="toggleGroup('${group.id}')">
+          <span class="rt-group-icon">${group.icon||'🔁'}</span>
+          <span class="rt-group-name">${esc(group.name)}</span>
+          <span class="rt-group-progress" style="opacity:.5">No tasks</span>
+        </div>
+        <div class="rt-tasks" id="rttasks-${group.id}">
+          <div style="padding:12px 16px;font-size:12px;color:var(--muted);text-align:center">
+            No tasks scheduled for today —
+            <span style="cursor:pointer;text-decoration:underline;color:var(--accent)" onclick="showRoutineView('manage')">Add tasks</span>
+          </div>
+        </div>
+      </div>`;
+      return;
+    }
     const doneTasks = todayTasks.filter(t=>isTaskDoneToday(t.id));
     totalToday += todayTasks.length;
     doneToday  += doneTasks.length;
@@ -8452,7 +8469,7 @@ async function saveRoutineGroup(){
   };
   if(id){ ROUTINES = ROUTINES.map(r=>r.id===id?grp:r); }
   else  {
-    // Guard: prevent duplicate if id was somehow already added
+    // Guard: prevent duplicate if already added (e.g. double-click)
     if(!ROUTINES.find(r=>r.id===grp.id)) ROUTINES.push(grp);
   }
   closeRoutineGroupModal();
