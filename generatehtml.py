@@ -8455,7 +8455,10 @@ async function saveRoutineGroup(){
     tasks: id ? (ROUTINES.find(r=>r.id===id)?.tasks||[]) : []
   };
   if(id){ ROUTINES = ROUTINES.map(r=>r.id===id?grp:r); }
-  else  { ROUTINES.push(grp); }
+  else  {
+    // Guard: prevent duplicate if id was somehow already added
+    if(!ROUTINES.find(r=>r.id===grp.id)) ROUTINES.push(grp);
+  }
   closeRoutineGroupModal();
   renderManageView();
   await saveRoutines();
