@@ -1174,6 +1174,35 @@ body.theme-ember .notes-list-item.active{background:rgba(212,114,74,.08)}
 .notes-md-preview .md-tag-green{color:var(--green);font-weight:700}
 .notes-md-preview .md-tag-red{color:var(--red);font-weight:700}
 .notes-md-preview .md-tag-blue{color:var(--blue);font-weight:700}
+/* Markdown rendered tables */
+.notes-md-preview .md-table-wrap{position:relative;margin:12px 0;overflow-x:auto}
+.notes-md-preview .md-table-copy-btn{
+  position:absolute;top:6px;right:6px;
+  background:var(--accent);color:#fff;border:none;border-radius:6px;
+  padding:3px 10px;font-size:11px;font-weight:600;cursor:pointer;
+  opacity:0;transition:opacity .15s;z-index:2;font-family:'Inter',sans-serif;
+  display:flex;align-items:center;gap:4px
+}
+.notes-md-preview .md-table-wrap:hover .md-table-copy-btn{opacity:1}
+.notes-md-preview .md-table-copy-btn.copied{background:var(--green)}
+.notes-md-preview table{
+  border-collapse:collapse;width:100%;font-size:13px;
+  background:var(--s2);border-radius:8px;overflow:hidden;
+  border:1px solid var(--border)
+}
+.notes-md-preview th{
+  background:var(--sidebar);color:var(--text);font-weight:700;
+  padding:9px 14px;text-align:left;border-bottom:2px solid var(--border2);
+  border-right:1px solid var(--border);white-space:nowrap
+}
+.notes-md-preview th:last-child{border-right:none}
+.notes-md-preview td{
+  padding:8px 14px;border-bottom:1px solid var(--border);
+  border-right:1px solid var(--border);color:var(--text2);line-height:1.5
+}
+.notes-md-preview td:last-child{border-right:none}
+.notes-md-preview tr:last-child td{border-bottom:none}
+.notes-md-preview tr:hover td{background:rgba(128,100,60,.06)}
 
 /* == REMINDERS PAGE == */
 .rem-page-wrap{display:flex;flex-direction:column;height:calc(100vh - 58px);overflow:hidden}
@@ -9324,8 +9353,38 @@ document.addEventListener('click',()=>{
 /* -- MARKDOWN RENDERER ---------------------------------- */
 function renderMarkdown(text){
   if(!text) return '<p style="color:var(--muted);font-style:italic">Nothing to preview yet…</p>';
+
+  // ── PRE-PASS: extract markdown table blocks before escaping ──
+  // Replace table blocks with unique placeholders so they survive the escape pass
+  const tablePlaceholders = [];
+  text = text.replace(/^(\|.+\|\s*\n)((\|[-:| ]+\|\s*\n))((\|.+\|\s*\n?)*)/gm, (match) => {
+    const rows = match.trim().split('\n').filter(r=>r.trim());
+    if(rows.length < 2) return match;
+    // Detect separator row (row of dashes)
+    const sepIdx = rows.findIndex(r=>/^\|[\s\-:|]+\|/.test(r));
+    if(sepIdx < 0) return match;
+    const headerRows = rows.slice(0, sepIdx);
+    const bodyRows   = rows.slice(sepIdx + 1);
+    const parseRow = r => r.replace(/^\||\|$/g,'').split('|').map(c=>c.trim());
+    let tableHtml = '<div class="md-table-wrap">';
+    tableHtml += '<button class="md-table-copy-btn" onclick="mdCopyTable(this)" title="Copy as text">📋 Copy</button>';
+    tableHtml += '<table><thead>';
+    headerRows.forEach(r=>{
+      tableHtml += '<tr>'+parseRow(r).map(c=>`<th>${c}</th>`).join('')+'</tr>';
+    });
+    tableHtml += '</thead><tbody>';
+    bodyRows.forEach(r=>{
+      if(!r.trim()) return;
+      tableHtml += '<tr>'+parseRow(r).map(c=>`<td>${c}</td>`).join('')+'</tr>';
+    });
+    tableHtml += '</tbody></table></div>';
+    const key = `%%TABLE_${tablePlaceholders.length}%%`;
+    tablePlaceholders.push(tableHtml);
+    return key;
+  });
+
   let html = text
-    // Escape HTML first
+    // Escape HTML (tables are already extracted)
     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
     // Headings
     .replace(/^### (.+)$/gm,'<h3>$1</h3>')
@@ -9355,7 +9414,7 @@ function renderMarkdown(text){
 
   // Paragraphs — wrap non-block lines
   const lines = html.split('\n');
-  const blocks = ['<h1','<h2','<h3','<ul','<ol','<li','<hr','<blockquote'];
+  const blocks = ['<h1','<h2','<h3','<ul','<ol','<li','<hr','<blockquote','%%TABLE_'];
   const result = [];
   let buf = [];
   for(const line of lines){
@@ -9370,7 +9429,35 @@ function renderMarkdown(text){
     }
   }
   if(buf.length) result.push('<p>'+buf.join('<br>')+'</p>');
-  return result.join('\n');
+
+  // Restore table placeholders
+  let final = result.join('\n');
+  tablePlaceholders.forEach((tbl, i) => {
+    final = final.replace(`%%TABLE_${i}%%`, tbl);
+  });
+  return final;
+}
+
+function mdCopyTable(btn){
+  const wrap = btn.closest('.md-table-wrap');
+  const table = wrap.querySelector('table');
+  if(!table){ return; }
+  const rows = [...table.querySelectorAll('tr')];
+  const tsv = rows.map(r=>[...r.querySelectorAll('th,td')].map(c=>c.innerText.trim()).join('\t')).join('\n');
+  navigator.clipboard.writeText(tsv).then(()=>{
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(()=>{ btn.textContent = '📋 Copy'; btn.classList.remove('copied'); }, 2000);
+  }).catch(()=>{
+    // Fallback for older browsers
+    const ta = document.createElement('textarea');
+    ta.value = tsv; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    btn.textContent = '✓ Copied!'; btn.classList.add('copied');
+    setTimeout(()=>{ btn.textContent = '📋 Copy'; btn.classList.remove('copied'); }, 2000);
+  });
 }
 
 function setNoteViewMode(mode){
