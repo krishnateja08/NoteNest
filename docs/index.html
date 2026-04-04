@@ -9866,6 +9866,69 @@ async function dbDeleteEntry(id){
 }
 
 /* -- INIT ---------------------------------------- */
+/* ── SMART PASTE: convert HTML tables → markdown on paste into notes editor ── */
+function initNotesPasteHandler(){
+  // Use event delegation on document so it works even if textarea is re-created
+  document.addEventListener('paste', function(e){
+    const ta = document.getElementById('notes-editor-body');
+    if(!ta || document.activeElement !== ta) return;
+
+    const html = e.clipboardData.getData('text/html');
+    if(!html) return; // no HTML on clipboard, let default paste happen
+
+    // Parse the HTML and look for a table
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html;
+    const table = tmp.querySelector('table');
+    if(!table) return; // no table in clipboard HTML, let default paste happen
+
+    e.preventDefault();
+
+    // Convert HTML table → markdown table string
+    function cellText(cell){
+      // Collapse whitespace and trim
+      return (cell.innerText || cell.textContent || '').replace(/\s+/g,' ').trim();
+    }
+
+    const rows = [...table.querySelectorAll('tr')];
+    if(!rows.length) return;
+
+    const mdRows = rows.map(r => {
+      const cells = [...r.querySelectorAll('th,td')];
+      return '| ' + cells.map(cellText).join(' | ') + ' |';
+    });
+
+    // Detect header row: if first row has <th> cells, treat as header
+    const firstRowHasTh = rows[0].querySelector('th') !== null;
+    let mdLines = [];
+    if(firstRowHasTh){
+      mdLines.push(mdRows[0]);
+      // separator row
+      const cols = rows[0].querySelectorAll('th,td').length;
+      mdLines.push('| ' + Array(cols).fill('---').join(' | ') + ' |');
+      mdLines.push(...mdRows.slice(1));
+    } else {
+      // No explicit header — use first row as header anyway
+      mdLines.push(mdRows[0]);
+      const cols = rows[0].querySelectorAll('th,td').length;
+      mdLines.push('| ' + Array(cols).fill('---').join(' | ') + ' |');
+      mdLines.push(...mdRows.slice(1));
+    }
+
+    const mdTable = '\n' + mdLines.join('\n') + '\n';
+
+    // Insert at cursor position in textarea
+    const start = ta.selectionStart;
+    const end   = ta.selectionEnd;
+    const before = ta.value.slice(0, start);
+    const after  = ta.value.slice(end);
+    ta.value = before + mdTable + after;
+    ta.selectionStart = ta.selectionEnd = start + mdTable.length;
+    ta.dispatchEvent(new Event('input')); // trigger autosave
+    toast('Table pasted as Markdown ✓', 'success');
+  });
+}
+
 window.addEventListener('DOMContentLoaded',()=>{
   const savedTheme=localStorage.getItem('mynotes_theme')||'cream';
   applyTheme(savedTheme);
@@ -9882,6 +9945,7 @@ window.addEventListener('DOMContentLoaded',()=>{
   initJournalListeners();
   initFAB();
   startClock();
+  initNotesPasteHandler();
 
   // Auto-refresh SHA every 30 min to prevent stale conflicts
   setInterval(()=>{ if(getConfig().token) refreshSHA(); }, 30*60*1000);
