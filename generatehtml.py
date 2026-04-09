@@ -1315,18 +1315,24 @@ body.theme-ember .rrp-bar{background:rgba(255,255,255,.06)}
   border-bottom:1px solid var(--border2);
 }
 .rrp-cal-cell.has-task{
-  background:rgba(42,90,154,.12);color:var(--blue);font-weight:700;
-  position:relative;
+  background:rgba(139,94,42,.12);color:var(--accent);font-weight:700;
+  position:relative;cursor:pointer;
 }
+body.theme-beige .rrp-cal-cell.has-task{background:rgba(124,92,191,.12);color:var(--accent)}
+body.theme-midnight .rrp-cal-cell.has-task{background:rgba(232,168,74,.12);color:var(--accent)}
+body.theme-ember   .rrp-cal-cell.has-task{background:rgba(212,114,74,.12);color:var(--accent)}
 .rrp-cal-cell.has-task::after{
   content:'';position:absolute;bottom:3px;left:50%;transform:translateX(-50%);
-  width:4px;height:4px;border-radius:50%;background:var(--blue);
+  width:4px;height:4px;border-radius:50%;background:var(--accent);
 }
-body.theme-midnight .rrp-cal-cell.has-task{background:rgba(232,168,74,.12);color:var(--accent)}
-body.theme-midnight .rrp-cal-cell.has-task::after{background:var(--accent)}
-body.theme-ember   .rrp-cal-cell.has-task{background:rgba(212,114,74,.12);color:var(--accent)}
-body.theme-ember   .rrp-cal-cell.has-task::after{background:var(--accent)}
-.rrp-cal-cell.today-cell{background:var(--accent);color:#fff;font-weight:700}
+.rrp-cal-cell.has-task:hover{background:rgba(139,94,42,.22)}
+body.theme-beige .rrp-cal-cell.has-task:hover{background:rgba(124,92,191,.22)}
+body.theme-midnight .rrp-cal-cell.has-task:hover{background:rgba(232,168,74,.22)}
+body.theme-ember   .rrp-cal-cell.has-task:hover{background:rgba(212,114,74,.22)}
+.rrp-cal-cell.today-cell{background:var(--red);color:#fff;font-weight:700}
+body.theme-midnight .rrp-cal-cell.today-cell{background:#c05040}
+body.theme-ember .rrp-cal-cell.today-cell{background:#b04030}
+.rrp-cal-cell.rrp-sel-day{box-shadow:0 0 0 2px var(--accent);border-radius:4px}
 .rrp-cal-legend{display:flex;align-items:center;gap:5px;margin-top:7px;flex-wrap:wrap}
 .rrp-cal-legend span{font-size:10px;color:var(--muted)}
 .rrp-cal-leg-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
@@ -3560,8 +3566,8 @@ body.theme-midnight .ncard.pinned-card, body.theme-ember .ncard.pinned-card {bor
             <div class="rrp-title" id="rrp-cal-title">This month</div>
             <div class="rrp-mini-cal" id="rrp-mini-cal"></div>
             <div class="rrp-cal-legend">
-              <div class="rrp-cal-leg-dot" style="background:var(--accent)"></div><span>Today</span>
-              <div class="rrp-cal-leg-dot" style="background:rgba(42,90,154,.2);margin-left:6px"></div><span>Has task</span>
+              <div class="rrp-cal-leg-dot" style="background:var(--red)"></div><span>Today</span>
+              <div class="rrp-cal-leg-dot" style="background:rgba(139,94,42,.25);margin-left:6px"></div><span>Has task</span>
             </div>
           </div>
 
@@ -5845,6 +5851,7 @@ function renderRemindersPage(resetPanel){
   if(resetPanel){
     const cols = document.querySelector('.rem-columns');
     if(cols) cols.classList.remove('show-checklist');
+    _rrpSelDate = null;
   }
   _updateRemTiles();
   _renderRemListPanel();
@@ -5923,8 +5930,12 @@ function _renderRightPanel(){
     for(let day=1;day<=daysInMonth;day++){
       const isToday = day===todayDay;
       const hasTask = taskDays.has(day);
-      const cls = isToday?'today-cell':hasTask?'has-task':'';
-      html+=`<div class="rrp-cal-cell ${cls}">${day}</div>`;
+      const ds = year+'-'+String(month+1).padStart(2,'0')+'-'+String(day).padStart(2,'0');
+      const isSel = _rrpSelDate === ds;
+      let cls = isToday?'today-cell':hasTask?'has-task':'';
+      if(isSel) cls += ' rrp-sel-day';
+      const click = hasTask ? `onclick="rrpCalSelectDay('${ds}')"` : '';
+      html+=`<div class="rrp-cal-cell ${cls}" ${click}>${day}</div>`;
     }
     calEl.innerHTML = html;
   }
@@ -5967,6 +5978,20 @@ function _renderRightPanel(){
   }
 }
 
+function rrpCalSelectDay(ds){
+  // Toggle: clicking the same date again clears the filter
+  _rrpSelDate = (_rrpSelDate === ds) ? null : ds;
+  _renderRightPanel();
+  _renderRemChecklist();
+  // Update checklist title to show active date filter
+  const title = document.getElementById('rem-checklist-title');
+  if(title && _rrpSelDate){
+    const d = new Date(_rrpSelDate+'T00:00:00');
+    const label = d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+    title.textContent = _getListTitle() + '  —  ' + label;
+  }
+}
+
 function _renderRemListPanel(){
   const lists = getRemLists();
   const rems  = DATA.reminders||[];
@@ -5985,6 +6010,7 @@ function _renderRemListPanel(){
 function selectRemFilter(filter){
   _remPageFilter = filter;
   _remListId     = null;
+  _rrpSelDate    = null;
   _updateRemTiles();
   _renderRemListPanel();
   _renderRemChecklist();
@@ -5993,6 +6019,7 @@ function selectRemFilter(filter){
 function selectRemList(id){
   _remListId     = id;
   _remPageFilter = 'list';
+  _rrpSelDate    = null;
   _updateRemTiles();
   _renderRemListPanel();
   _renderRemChecklist();
@@ -6031,11 +6058,22 @@ function _renderRemChecklist(){
   const title  = document.getElementById('rem-checklist-title');
   const body   = document.getElementById('rem-checklist-body');
   const delBtn = document.getElementById('rem-delete-list-btn');
-  if(title) title.textContent = _getListTitle();
+  if(title){
+    if(_rrpSelDate){
+      const d = new Date(_rrpSelDate+'T00:00:00');
+      const label = d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+      title.innerHTML = _getListTitle() + ` <span style="font-size:11px;font-weight:500;color:var(--accent);cursor:pointer;border:1px solid var(--accent);border-radius:10px;padding:1px 8px" onclick="rrpCalSelectDay('${_rrpSelDate}')" title="Clear date filter">📅 ${label} ✕</span>`;
+    } else {
+      title.textContent = _getListTitle();
+    }
+  }
   if(delBtn) delBtn.style.display = _remListId ? '' : 'none';
   if(!body) return;
 
   let items = _getFilteredRems();
+  if(_rrpSelDate){
+    items = items.filter(r => r.due && r.due.slice(0,10) === _rrpSelDate);
+  }
   const undone = items.filter(r=>!r.sent).sort((a,b)=>(a.due||'').localeCompare(b.due||''));
   const done   = items.filter(r=>r.sent);
   const now    = new Date();
@@ -9076,6 +9114,7 @@ function startBadgeUpdater(){
 let _calYear  = new Date().getFullYear();
 let _calMonth = new Date().getMonth();
 let _calSelDate = null;
+let _rrpSelDate = null; // selected date in the right-panel mini-cal for filtering
 let _remViewMode = 'list';
 
 function setRemView(mode, btn){
