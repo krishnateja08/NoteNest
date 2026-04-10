@@ -299,6 +299,8 @@ body.theme-ember .fab-option{box-shadow:0 4px 20px rgba(0,0,0,.5)}
 }
 body.theme-midnight .fab-main{box-shadow:0 4px 20px rgba(232,168,74,.25)}
 body.theme-ember .fab-main{box-shadow:0 4px 20px rgba(212,114,74,.25)}
+body.theme-cream .fab-main{background:#1d4ed8;box-shadow:0 4px 20px rgba(29,78,216,.35)}
+body.theme-beige .fab-main{background:#1d4ed8;box-shadow:0 4px 20px rgba(29,78,216,.35)}
 .fab-main:hover{background:var(--accent2);transform:scale(1.07)}
 .fab-main.open{transform:rotate(45deg);background:var(--accent2)}
 
@@ -1050,9 +1052,13 @@ body.theme-ember .notes-list-item.active{background:rgba(212,114,74,.08)}
   border-radius:12px;padding:2px 8px;font-size:10px;font-weight:700;
   letter-spacing:.3px;flex-shrink:0;
 }
-.prio-high{background:rgba(220,38,38,.12);color:#dc2626}
-.prio-medium{background:rgba(234,179,8,.12);color:#ca8a04}
-.prio-low{background:rgba(34,197,94,.12);color:#16a34a}
+.prio-high{background:rgba(194,65,12,.1);color:#c2410c}
+.prio-medium{background:rgba(180,83,9,.1);color:#b45309}
+.prio-low{background:rgba(22,163,74,.1);color:#16a34a}
+.prio-badge::before{content:'';display:inline-block;width:0;height:0;flex-shrink:0}
+.prio-high::before{border-left:3px solid transparent;border-right:3px solid transparent;border-bottom:5px solid #c2410c}
+.prio-medium::before{width:7px;height:0;border-bottom:none;border-left:none;border-right:none;border-top:none;background:#b45309;height:2px;border-radius:1px}
+.prio-low::before{border-left:3px solid transparent;border-right:3px solid transparent;border-top:5px solid #16a34a}
 
 
 /* == DASHBOARD WIDGETS ROW == */
@@ -1279,12 +1285,12 @@ body.theme-ember .rrp-section{border-bottom-color:rgba(255,255,255,.04)}
 }
 .rrp-stats-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;margin-bottom:2px}
 .rrp-stat{border-radius:10px;padding:10px 12px;box-sizing:border-box;min-width:0}
-.rrp-stat.rrp-stat-total{background:rgba(42,90,154,.04);border:1px solid rgba(42,90,154,.1)}
-.rrp-stat.rrp-stat-done{background:rgba(42,122,64,.04);border:1px solid rgba(42,122,64,.1)}
-body.theme-midnight .rrp-stat.rrp-stat-total{background:rgba(122,154,191,.05);border-color:rgba(122,154,191,.12)}
-body.theme-midnight .rrp-stat.rrp-stat-done{background:rgba(90,170,112,.05);border-color:rgba(90,170,112,.12)}
-body.theme-ember .rrp-stat.rrp-stat-total{background:rgba(96,128,160,.04);border-color:rgba(96,128,160,.1)}
-body.theme-ember .rrp-stat.rrp-stat-done{background:rgba(90,128,64,.04);border-color:rgba(90,128,64,.1)}
+.rrp-stat.rrp-stat-total{background:rgba(42,90,154,.07);border:1px solid rgba(42,90,154,.18)}
+.rrp-stat.rrp-stat-done{background:rgba(42,122,64,.07);border:1px solid rgba(42,122,64,.18)}
+body.theme-midnight .rrp-stat.rrp-stat-total{background:rgba(122,154,191,.07);border-color:rgba(122,154,191,.2)}
+body.theme-midnight .rrp-stat.rrp-stat-done{background:rgba(90,170,112,.07);border-color:rgba(90,170,112,.2)}
+body.theme-ember .rrp-stat.rrp-stat-total{background:rgba(96,128,160,.07);border-color:rgba(96,128,160,.18)}
+body.theme-ember .rrp-stat.rrp-stat-done{background:rgba(90,128,64,.07);border-color:rgba(90,128,64,.18)}
 .rrp-stat-num{font-family:'Inter',sans-serif;font-size:26px;font-weight:700;line-height:1}
 .rrp-stat.rrp-stat-total .rrp-stat-num{color:rgba(42,90,154,.65)}
 .rrp-stat.rrp-stat-done .rrp-stat-num{color:rgba(42,122,64,.65)}
@@ -1337,9 +1343,9 @@ body.theme-ember   .rrp-cal-cell.has-task{background:rgba(212,114,74,.12);color:
 body.theme-beige .rrp-cal-cell.has-task:hover{background:rgba(124,92,191,.22)}
 body.theme-midnight .rrp-cal-cell.has-task:hover{background:rgba(232,168,74,.22)}
 body.theme-ember   .rrp-cal-cell.has-task:hover{background:rgba(212,114,74,.22)}
-.rrp-cal-cell.today-cell{background:var(--red);color:#fff;font-weight:700}
-body.theme-midnight .rrp-cal-cell.today-cell{background:#c05040}
-body.theme-ember .rrp-cal-cell.today-cell{background:#b04030}
+.rrp-cal-cell.today-cell{background:#1d4ed8;color:#fff;font-weight:700}
+body.theme-midnight .rrp-cal-cell.today-cell{background:#1d4ed8}
+body.theme-ember .rrp-cal-cell.today-cell{background:#1d4ed8}
 .rrp-cal-cell.rrp-sel-day{box-shadow:0 0 0 2px var(--accent);border-radius:4px}
 .rrp-cal-legend{display:flex;align-items:center;gap:5px;margin-top:7px;flex-wrap:wrap}
 .rrp-cal-legend span{font-size:10px;color:var(--muted)}
@@ -1456,13 +1462,13 @@ body.theme-ember .rem-check{border-color:var(--border2)}
 .rem-item-prio-lbl.medium{color:var(--accent2)}
 .rem-item-prio-lbl.low{color:var(--green)}
 .rem-item-due.overdue{color:var(--red);font-weight:600}
-.rem-item-due.today{color:#3b82f6;font-weight:600}
+.rem-item-due.today{color:#1d4ed8;font-weight:600}
 .rem-item-notes{display:none} /* hidden in compact mode */
 
 /* Today / No-date badges inline */
 .rem-badge-today{
   font-size:11px;font-weight:600;padding:1px 7px;border-radius:8px;
-  background:rgba(59,130,246,.12);color:#2563eb;flex-shrink:0
+  background:rgba(37,99,235,.12);color:#1d4ed8;flex-shrink:0
 }
 body.theme-midnight .rem-badge-today{background:rgba(232,168,74,.12);color:var(--accent)}
 body.theme-ember .rem-badge-today{background:rgba(212,114,74,.12);color:var(--accent)}
@@ -4370,15 +4376,15 @@ body.theme-midnight .ncard.pinned-card, body.theme-ember .ncard.pinned-card {bor
       <div style="display:flex;gap:8px">
         <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:13px;font-weight:600">
           <input type="radio" name="f-priority" value="high" style="accent-color:#dc2626">
-          <span class="prio-badge prio-high">🔴 High</span>
+          <span class="prio-badge prio-high">▲ High</span>
         </label>
         <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:13px;font-weight:600">
           <input type="radio" name="f-priority" value="medium" checked style="accent-color:#ca8a04">
-          <span class="prio-badge prio-medium">🟡 Medium</span>
+          <span class="prio-badge prio-medium">— Med</span>
         </label>
         <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:13px;font-weight:600">
           <input type="radio" name="f-priority" value="low" style="accent-color:#16a34a">
-          <span class="prio-badge prio-low">🟢 Low</span>
+          <span class="prio-badge prio-low">▼ Low</span>
         </label>
       </div>
     </div>
@@ -4955,7 +4961,7 @@ function renderReminderCard(r){
   const tags=(r.tags||[]).map(t=>`<span class="ctag">#${esc(t)}</span>`).join('');
   const rep=r.repeat&&r.repeat!=='none'?`<span class="ctag">🔁 ${r.repeat}</span>`:'';
   const prio=r.priority||'medium';
-  const prioMap={high:'🔴 High',medium:'🟡 Medium',low:'🟢 Low'};
+  const prioMap={high:'▲ High',medium:'— Med',low:'▼ Low'};
   const prioBadge=`<span class="prio-badge prio-${prio}">${prioMap[prio]||''}</span>`;
   const catDot=`<span class="cat-dot ${r.category==='official'?'cat-official':'cat-personal'}" title="${r.category||'personal'}"></span>`;
   const doneBtn = !r.sent
@@ -6099,16 +6105,19 @@ function _renderRemChecklist(){
     return 'medium';
   };
 
-  // Helper to format date nicely
+  // Helper to format date nicely with relative labels
   const formatDate = (dateStr) => {
     if(!dateStr) return '';
     const date = new Date(dateStr+'T00:00:00');
-    const tomorrow = new Date(todayStr+'T00:00:00');
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    if(dateStr === todayStr) return 'Today';
-    if(dateStr === tomorrow.toISOString().slice(0,10)) return 'Tomorrow';
-    const options = { weekday: 'short', month: 'short', day: 'numeric' };
-    return date.toLocaleDateString('en-US', options);
+    const todayMs = new Date(todayStr+'T00:00:00');
+    const diff = Math.round((date - todayMs) / 86400000);
+    const dayName = date.toLocaleDateString('en-US',{weekday:'short'});
+    const monthDay = date.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    if(diff === 0) return 'Today';
+    if(diff === 1) return `Tomorrow \u00b7 ${dayName}`;
+    if(diff > 1 && diff <= 7) return `${dayName} \u00b7 in ${diff} days`;
+    if(diff < 0) return `${monthDay} (${Math.abs(diff)}d ago)`;
+    return `${monthDay} \u00b7 ${dayName}`;
   };
 
   // Render a single compact reminder row
@@ -6123,7 +6132,19 @@ function _renderRemChecklist(){
     let dateBadge = '';
     if(!r.due) dateBadge = `<span class="rem-badge-nodate">No date</span>`;
     else if(isToday) dateBadge = `<span class="rem-badge-today">Today</span>`;
-    else if(dueDate) dateBadge = `<span class="rem-item-date">${dueDate.slice(5).replace('-','/')}</span>`;
+    else if(dueDate){
+      const dMs=new Date(dueDate+'T00:00:00'),tMs=new Date(todayStr+'T00:00:00');
+      const diff=Math.round((dMs-tMs)/86400000);
+      const dn=dMs.toLocaleDateString('en-US',{weekday:'short'});
+      const md=dMs.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+      let lbl;
+      if(diff===1) lbl=`Tomorrow \u00b7 ${dn}`;
+      else if(diff>1&&diff<=7) lbl=`${dn} \u00b7 in ${diff} days`;
+      else if(diff<0) lbl=`${md} (${Math.abs(diff)}d ago)`;
+      else lbl=`${md} \u00b7 ${dn}`;
+      const cls=isOver?'rem-item-date overdue':'rem-item-date';
+      dateBadge=`<span class="${cls}">${lbl}</span>`;
+    }
     return `<div class="rem-item-row${r.sent?' is-done':''}" id="remrow-${r.id}">
       <div class="rem-check${r.sent?' done':''}" onclick="toggleRemDone('${r.id}')">${r.sent?'✓':''}</div>
       <div class="rem-item-main">
@@ -6173,7 +6194,7 @@ function _renderRemChecklist(){
   // Today section
   if(grouped.today.length){
     html += `<div class="rem-date-group">
-      <div class="rem-date-header">Today</div>
+      <div class="rem-date-header" style="color:#2563eb">Today</div>
       ${grouped.today.map(renderRow).join('')}
     </div>`;
   }
@@ -6222,7 +6243,7 @@ function _renderRemChecklist(){
           <span id="rem-comp-chev">▼</span>
           <span>Completed (${done.length})</span>
         </div>
-        <button onclick="clearCompletedReminders()" style="font-size:11px;padding:4px 10px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--red);cursor:pointer;font-family:'Inter',sans-serif;font-weight:600">🗑 Clear</button>
+        <button onclick="clearCompletedReminders()" style="font-size:11px;padding:3px 10px;border-radius:20px;border:1px solid #b5d4f4;background:#e6f1fb;color:#185fa5;cursor:pointer;font-family:'Inter',sans-serif;font-weight:600">Clear all</button>
       </div>
       <div id="rem-comp-list">${done.map(renderRow).join('')}</div>
     </div>`;
