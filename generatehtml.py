@@ -15,8 +15,8 @@ html{scroll-behavior:smooth}
 
 /* -- THEME VARIABLES --------------------------------- */
 body.theme-cream {
-  --bg:       #faf6ef;
-  --sidebar:  #e8dcc8;
+  --bg:       #f2ede4;
+  --sidebar:  #d6c9b0;
   --s2:       #d4c4a8;
   --border:   #c8b48a;
   --border2:  #b8a070;
@@ -93,7 +93,11 @@ aside{
   border-right:1px solid var(--border);
   display:flex;flex-direction:column;
   position:fixed;top:0;left:0;bottom:0;z-index:50;
-  overflow-y:auto;transition:background 0.3s,border-color 0.3s
+  overflow-y:auto;transition:background 0.3s,border-color 0.3s,box-shadow 0.3s
+}
+body.theme-cream aside{
+  border-right:1.5px solid #b8a47a;
+  box-shadow:3px 0 16px rgba(0,0,0,.12)
 }
 .sidebar-logo{
   padding:22px 20px 18px;
@@ -165,9 +169,9 @@ body.theme-ember   .nav-item.active{background:rgba(212,114,74,.1);color:var(--a
   transition:background 0.3s,border-color 0.3s
 }
 body.theme-cream .topbar{
-  background:#ede3d0;
-  border-bottom:1px solid #c8b48a;
-  box-shadow:0 1px 8px rgba(139,94,42,.1)
+  background:#cdc0a8;
+  border-bottom:1px solid #b8a47a;
+  box-shadow:0 1px 8px rgba(100,70,30,.15)
 }
 body.theme-beige .topbar{
   background:#e8dfc8;
@@ -524,8 +528,10 @@ body.theme-ember .stat-card.sc-missed::before{background:#c04030}
 .dash-progress-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .dash-progress-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text2)}
 .dash-progress-val{font-size:13px;font-weight:700;color:var(--accent)}
-.dash-progress-track{height:8px;background:var(--s2);border-radius:10px;overflow:hidden}
-.dash-progress-fill{height:100%;border-radius:10px;background:var(--accent);transition:width 0.6s ease}
+.dash-progress-track{height:14px;background:var(--s2);border-radius:10px;overflow:hidden}
+.dash-progress-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,#3b82f6 0%,#06b6d4 100%);transition:width 0.6s ease}
+body.theme-midnight .dash-progress-fill{background:linear-gradient(90deg,#e8a84a 0%,#d4724a 100%)}
+body.theme-ember .dash-progress-fill{background:linear-gradient(90deg,#d4724a 0%,#e8a84a 100%)}
 .dash-bottom{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .dash-widget{
   background:var(--sidebar);border:1px solid var(--border);
@@ -645,6 +651,7 @@ body.theme-ember .dash-cal-cell.is-today{background:#b04030}
 .upc-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;background:var(--s2)}
 .upc-title{flex:1;font-size:13px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .upc-due{font-size:11px;font-weight:600;color:var(--muted);white-space:nowrap}
+.upc-due.upc-due-today{color:#c2440f;background:#fee8d8;padding:2px 7px;border-radius:5px}
 .upc-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
 .upc-dot-today{background:#dc2626}
 .upc-dot-soon{background:#d97706}
@@ -8761,10 +8768,11 @@ function renderDashUpcomingList(remDates, todayStr, reminders){
     else if(diffDays===1){dotCls='upc-dot-soon';dueLabel='Tomorrow';}
     else if(diffDays<=7){dotCls='upc-dot-soon';dueLabel='In '+diffDays+' days';}
     else{dotCls='upc-dot-future';dueLabel=new Date(dueStr+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});}
+    const dueCls = diffDays===0 ? 'upc-due upc-due-today' : 'upc-due';
     return `<div class="upc-item" onclick="editItem('${r.id}')" style="cursor:pointer">
       <div class="upc-dot ${dotCls}"></div>
       <div class="upc-title">${r.title||'Untitled'}</div>
-      <div class="upc-due">${dueLabel}</div>
+      <div class="${dueCls}">${dueLabel}</div>
     </div>`;
   }).join('');
 }
