@@ -519,12 +519,13 @@ body.theme-ember .stat-card.sc-missed::before{background:#c04030}
 .stat-sub{font-size:11px;color:var(--muted);margin-top:1px}
 .dash-progress{
   background:var(--sidebar);border:1px solid var(--border);
-  border-radius:12px;padding:16px 20px;
+  border-radius:12px;padding:14px 20px;
+  display:flex;align-items:center;gap:20px;
 }
-.dash-progress-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.dash-progress-header{display:flex;flex-direction:column;gap:4px}
 .dash-progress-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text2)}
 .dash-progress-val{font-size:13px;font-weight:700;color:var(--accent)}
-.dash-progress-track{height:14px;background:var(--s2);border-radius:10px;overflow:hidden}
+.dash-progress-track{height:14px;background:var(--s2);border-radius:10px;overflow:hidden;display:none}
 .dash-progress-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,#3b82f6 0%,#06b6d4 100%);transition:width 0.6s ease}
 body.theme-midnight .dash-progress-fill{background:linear-gradient(90deg,#e8a84a 0%,#d4724a 100%)}
 body.theme-ember .dash-progress-fill{background:linear-gradient(90deg,#d4724a 0%,#e8a84a 100%)}
@@ -1278,7 +1279,7 @@ body.theme-ember .rem-list-item.active{background:rgba(212,114,74,.08);color:var
 }
 .rem-right-panel::-webkit-scrollbar{width:3px}
 .rem-right-panel::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
-.rrp-section{padding:14px 14px 10px;border-bottom:1px solid rgba(0,0,0,.06);box-sizing:border-box;width:100%}
+.rrp-section{padding:16px 16px 12px;border-bottom:1px solid rgba(0,0,0,.06);box-sizing:border-box;width:100%}
 body.theme-midnight .rrp-section{border-bottom-color:rgba(255,255,255,.05)}
 body.theme-ember .rrp-section{border-bottom-color:rgba(255,255,255,.04)}
 .rrp-section:last-child{border-bottom:1px solid var(--border);padding-bottom:28px}
@@ -1353,13 +1354,13 @@ body.theme-ember .rrp-cal-cell.today-cell{background:#1d4ed8}
 .rrp-cal-legend{display:flex;align-items:center;gap:5px;margin-top:7px;flex-wrap:wrap}
 .rrp-cal-legend span{font-size:10px;color:var(--muted)}
 .rrp-cal-leg-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
-.rrp-upcoming-item{display:flex;align-items:flex-start;gap:8px;margin-bottom:8px}
+.rrp-upcoming-item{display:flex;align-items:flex-start;gap:8px;margin-bottom:10px}
 .rrp-up-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:3px}
 .rrp-up-text{font-size:12px;color:var(--text);line-height:1.3}
 .rrp-up-date{font-size:11px;color:var(--muted);margin-top:1px}
 .rrp-await-item{
-  display:flex;align-items:flex-start;gap:8px;margin-bottom:7px;
-  padding:7px 8px;background:rgba(0,0,0,.03);
+  display:flex;align-items:flex-start;gap:8px;margin-bottom:8px;
+  padding:9px 10px;background:rgba(0,0,0,.03);
   border:1px solid rgba(0,0,0,.07);border-radius:6px
 }
 body.theme-midnight .rrp-await-item{background:rgba(255,255,255,.03);border-color:rgba(255,255,255,.07)}
@@ -2281,6 +2282,7 @@ body.theme-beige .nav-item.active{color:#7c5cbf}
 .tan-search:focus{border-color:var(--accent);width:220px}
 .tan-search::placeholder{color:var(--muted)}
 .tan-list{flex:1;padding:10px 28px;overflow-y:auto}
+.tan-list>div{max-width:920px}
 .tan-empty{
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   padding:60px 20px;color:var(--muted);gap:8px;text-align:center
@@ -2309,6 +2311,16 @@ body.theme-beige .nav-item.active{color:#7c5cbf}
   overflow:hidden;
   animation:tan-fadein 0.2s ease
 }
+/* Priority row tints for instant visual scanning */
+.tan-item.is-high{background:rgba(220,38,38,.045);border-color:rgba(220,38,38,.18)}
+.tan-item.is-medium{background:rgba(217,119,6,.035);border-color:rgba(217,119,6,.15)}
+.tan-item.is-low{background:rgba(5,150,105,.03);border-color:rgba(5,150,105,.13)}
+body.theme-midnight .tan-item.is-high{background:rgba(220,38,38,.07);border-color:rgba(220,38,38,.22)}
+body.theme-midnight .tan-item.is-medium{background:rgba(217,119,6,.06);border-color:rgba(217,119,6,.2)}
+body.theme-midnight .tan-item.is-low{background:rgba(5,150,105,.05);border-color:rgba(5,150,105,.18)}
+body.theme-ember .tan-item.is-high{background:rgba(220,38,38,.08);border-color:rgba(220,38,38,.25)}
+body.theme-ember .tan-item.is-medium{background:rgba(217,119,6,.07);border-color:rgba(217,119,6,.22)}
+body.theme-ember .tan-item.is-low{background:rgba(5,150,105,.06);border-color:rgba(5,150,105,.2)}
 .tan-item:hover{border-color:var(--border2)}
 .tan-item.editing{border-color:var(--accent);box-shadow:0 0 0 2px rgba(139,94,42,.12)}
 .tan-item.fading-out{animation:tan-fadeout 0.25s ease forwards}
@@ -2342,7 +2354,7 @@ body.theme-beige .nav-item.active{color:#7c5cbf}
 .tan-item-text{
   font-family:'Inter',sans-serif;font-size:13px;
   color:var(--text);line-height:1.4;word-break:break-word;
-  flex:1;min-width:0
+  flex:1;min-width:0;font-weight:600
 }
 .tan-item-text.done{text-decoration:line-through;color:var(--muted)}
 .tan-item-meta{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
@@ -3330,8 +3342,25 @@ body.theme-midnight .ncard.pinned-card, body.theme-ember .ncard.pinned-card {bor
           <div class="stat-sub">Need attention</div>
         </div>
       </div>
-      <!-- Progress bar -->
+      <!-- Progress Ring -->
       <div class="dash-progress">
+        <div class="dash-progress-ring-wrap">
+          <svg width="72" height="72" viewBox="0 0 72 72">
+            <defs>
+              <linearGradient id="prog-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%"   stop-color="#3b82f6"/>
+                <stop offset="100%" stop-color="#06b6d4"/>
+              </linearGradient>
+            </defs>
+            <circle cx="36" cy="36" r="28" fill="none" stroke="var(--s2)" stroke-width="8"/>
+            <circle id="dash-prog-ring" cx="36" cy="36" r="28" fill="none"
+              stroke="url(#prog-grad)" stroke-width="8" stroke-linecap="round"
+              stroke-dasharray="175.9" stroke-dashoffset="175.9"
+              transform="rotate(-90 36 36)" style="transition:stroke-dashoffset 0.7s ease"/>
+            <text x="36" y="40" text-anchor="middle" font-size="13" font-weight="800"
+              fill="var(--accent)" font-family="Inter,sans-serif" id="dash-prog-pct-ring">0%</text>
+          </svg>
+        </div>
         <div class="dash-progress-header">
           <span class="dash-progress-title">Today's Progress</span>
           <span class="dash-progress-val" id="dash-prog-label">0 of 0 done</span>
@@ -7451,13 +7480,20 @@ function renderTaskNotes(){
   updateTaskNotesCount();
 
   if(!items.length){
+    const isFiltered = _tanFilter!=='all' || _tanCatFilter!=='all' || (document.getElementById('tan-search')?.value||'').trim();
     list.innerHTML = `<div class="tan-empty">
-      <div class="tan-empty-icon">✍️</div>
-      <div style="font-size:14px;font-weight:600;color:var(--text2)">No notes here</div>
-      <div style="font-size:13px">Try a different filter or add a new note above.</div>
+      <div class="tan-empty-icon">${isFiltered?'🔍':'🎉'}</div>
+      <div style="font-size:15px;font-weight:700;color:var(--text)">${isFiltered?'No matching notes':'All caught up!'}</div>
+      <div style="font-size:13px">${isFiltered?'Try a different filter or search term.':'No open tasks right now — great work.'}</div>
     </div>`;
     return;
   }
+
+  // also show nice empty state when open section is empty
+  const _openEmptyHtml = `<div class="tan-empty" style="padding:30px 20px">
+    <div class="tan-empty-icon" style="font-size:28px">✅</div>
+    <div style="font-size:13px;font-weight:600;color:var(--text2)">All tasks done — well done!</div>
+  </div>`;
 
   // 3. split into open and done sections
   const open = items.filter(n=>!n.done);
@@ -7479,7 +7515,7 @@ function renderTaskNotes(){
     const tagArr   = Array.isArray(n.tags) ? n.tags : (n.tags ? [n.tags] : []);
     const tagHtml  = tagArr.map(t=>`<span class="tan-tag-chip">#${esc(t)}</span>`).join('');
 
-    return `<div class="tan-item${n.done?' is-done':''}" id="tan-item-${n.id}" style="display:flex;flex-direction:row">
+    return `<div class="tan-item${n.done?' is-done':''} is-${prio}" id="tan-item-${n.id}" style="display:flex;flex-direction:row">
       <div class="tan-item-strip ${prio}"></div>
       <div class="tan-item-inner">
         <div class="tan-item-top">
@@ -7539,7 +7575,7 @@ function renderTaskNotes(){
     </div>`;
   }
 
-  list.innerHTML = sectionHtml('Open Tasks', open, 'open') + sectionHtml('Completed', done, 'done');
+  list.innerHTML = sectionHtml('Open Tasks', open, 'open') + (open.length===0?_openEmptyHtml:'') + sectionHtml('Completed', done, 'done');
 }
 
 function tanToggleSection(key){
@@ -8840,6 +8876,12 @@ function updateDashboardWidgets(){
   const progLabel = document.getElementById('dash-prog-label');
   if(progFill)  progFill.style.width  = pct+'%';
   if(progLabel) progLabel.textContent = done+' of '+total+' done — '+pct+'%';
+  // Update SVG progress ring
+  const ring    = document.getElementById('dash-prog-ring');
+  const ringPct = document.getElementById('dash-prog-pct-ring');
+  const circ    = 175.9;
+  if(ring)    ring.style.strokeDashoffset    = circ*(1-pct/100);
+  if(ringPct) ringPct.textContent             = pct+'%';
 
   // -- NEXT ROUTINE --
   const routineEl = document.getElementById('dash-routine-list');
