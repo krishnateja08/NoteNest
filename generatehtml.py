@@ -3184,15 +3184,15 @@ body.theme-midnight .ncard.pinned-card, body.theme-ember .ncard.pinned-card {bor
   </button>
 
   <div class="sidebar-section">Status</div>
-  <button class="nav-item nav-status-pending" onclick="showPage('dashboard',this);filterCards('pending',this)">
+  <button class="nav-item nav-status-pending" onclick="showPage('reminders',this);selectRemFilter('all')">
     <span class="nav-icon">🔔</span> Pending
     <span class="nav-count" id="nav-pending">0</span>
   </button>
-  <button class="nav-item nav-status-overdue" onclick="showPage('dashboard',this);filterCards('overdue',this)">
+  <button class="nav-item nav-status-overdue" onclick="showPage('reminders',this);selectRemFilter('overdue-only')">
     <span class="nav-icon">🔴</span> Overdue
     <span class="nav-count" id="nav-overdue">0</span>
   </button>
-  <button class="nav-item nav-status-completed" onclick="showPage('dashboard',this);filterCards('sent',this)">
+  <button class="nav-item nav-status-completed" onclick="showPage('reminders',this);selectRemFilter('completed')">
     <span class="nav-icon">✅</span> Completed
     <span class="nav-count" id="nav-sent">0</span>
   </button>
@@ -6047,8 +6047,10 @@ function _getFilteredRems(){
     filtered = rems.filter(r=>!r.sent && r.due);
   } else if(_remPageFilter==='completed'){
     filtered = rems.filter(r=>r.sent);
+  } else if(_remPageFilter==='overdue-only'){
+    filtered = rems.filter(r=>!r.sent && r.due && r.due.slice(0,10) < todayStr);
   } else {
-    filtered = rems;
+    filtered = rems.filter(r=>!r.sent);
   }
   return filtered;
 }
@@ -6058,7 +6060,7 @@ function _getListTitle(){
     const l = getRemLists().find(l=>l.id===_remListId);
     return l ? l.icon+' '+l.name : 'List';
   }
-  const map={all:'⏰ All',today:'📅 Today',scheduled:'🗓 Scheduled',completed:'✅ Completed'};
+  const map={all:'⏰ Pending',today:'📅 Today',scheduled:'🗓 Scheduled',completed:'✅ Completed','overdue-only':'🔴 Overdue'};
   return map[_remPageFilter]||'Reminders';
 }
 
@@ -6467,6 +6469,7 @@ function showPage(page, btn){
     // Always reset to 'all' view when navigating to reminders, so mobile users aren't locked to one list
     _remListId = null;
     _remPageFilter = 'all';
+    _rrpSelDate = null;
     renderRemindersPage(true); // true = reset mobile panel to lists view
   }
   if(page==='journal')    renderJournal();
