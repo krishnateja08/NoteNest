@@ -114,6 +114,14 @@ aside{
 body.theme-beige .nav-item.active{background:rgba(124,92,191,.12);color:var(--accent)}
 body.theme-midnight .nav-item.active{background:rgba(232,168,74,.1);color:var(--accent)}
 body.theme-ember   .nav-item.active{background:rgba(212,114,74,.1);color:var(--accent)}
+
+/* Status-specific active states */
+.nav-item.nav-status-pending.active{background:rgba(59,130,246,.12);color:var(--blue);font-weight:600}
+.nav-item.nav-status-pending.active .nav-count{background:rgba(59,130,246,.15);color:var(--blue)}
+.nav-item.nav-status-overdue.active{background:rgba(192,64,64,.12);color:var(--red);font-weight:600}
+.nav-item.nav-status-overdue.active .nav-count{background:rgba(192,64,64,.15);color:var(--red)}
+.nav-item.nav-status-completed.active{background:rgba(42,122,64,.12);color:var(--green);font-weight:600}
+.nav-item.nav-status-completed.active .nav-count{background:rgba(42,122,64,.15);color:var(--green)}
 .nav-icon{font-size:14px;width:18px;text-align:center}
 .nav-count{
   margin-left:auto;background:var(--s2);border-radius:20px;
@@ -3172,15 +3180,15 @@ body.theme-midnight .ncard.pinned-card, body.theme-ember .ncard.pinned-card {bor
   </button>
 
   <div class="sidebar-section">Status</div>
-  <button class="nav-item" onclick="showPage('dashboard',this);filterCards('pending',this)">
+  <button class="nav-item nav-status-pending" onclick="showPage('dashboard',this);filterCards('pending',this)">
     <span class="nav-icon">🔔</span> Pending
     <span class="nav-count" id="nav-pending">0</span>
   </button>
-  <button class="nav-item" onclick="showPage('dashboard',this);filterCards('overdue',this)">
+  <button class="nav-item nav-status-overdue" onclick="showPage('dashboard',this);filterCards('overdue',this)">
     <span class="nav-icon">🔴</span> Overdue
     <span class="nav-count" id="nav-overdue">0</span>
   </button>
-  <button class="nav-item" onclick="showPage('dashboard',this);filterCards('sent',this)">
+  <button class="nav-item nav-status-completed" onclick="showPage('dashboard',this);filterCards('sent',this)">
     <span class="nav-icon">✅</span> Completed
     <span class="nav-count" id="nav-sent">0</span>
   </button>
@@ -4856,7 +4864,7 @@ function renderAll(){
   const now=new Date();
   const todayStr=localToday();
   const pending=reminders.filter(r=>!r.sent).length;
-  const overdue=reminders.filter(r=>!r.sent&&r.due&&new Date(r.due.replace(' ','T'))<=now).length;
+  const overdue=reminders.filter(r=>!r.sent&&r.due&&r.due.slice(0,10)<todayStr).length;
   const sent=reminders.filter(r=>r.sent).length;
 
   document.getElementById('stat-notes').textContent=notes.length;
@@ -4939,7 +4947,7 @@ function renderNoteCard(n){
 function renderReminderCard(r){
   const now=new Date();
   let sc='pending',sl='🔔 Pending';
-  try{const todayStr=localToday();const dueDate=(r.due||'').slice(0,10);if(r.sent){sc='sent';sl='✅ Done';}else if(dueDate&&dueDate<=todayStr){sc='overdue';sl='🔴 Overdue';}}catch{}
+  try{const todayStr=localToday();const dueDate=(r.due||'').slice(0,10);if(r.sent){sc='sent';sl='✅ Done';}else if(dueDate&&dueDate<todayStr){sc='overdue';sl='🔴 Overdue';}}catch{}
   const tags=(r.tags||[]).map(t=>`<span class="ctag">#${esc(t)}</span>`).join('');
   const rep=r.repeat&&r.repeat!=='none'?`<span class="ctag">🔁 ${r.repeat}</span>`:'';
   const prio=r.priority||'medium';
@@ -4989,7 +4997,7 @@ function renderNoteRow(n){
 function renderReminderRow(r){
   const now=new Date();
   let sc='pending';
-  try{const todayStr=localToday();const dueDate=(r.due||'').slice(0,10);if(r.sent){sc='sent';}else if(dueDate&&dueDate<=todayStr){sc='overdue';}}catch{}
+  try{const todayStr=localToday();const dueDate=(r.due||'').slice(0,10);if(r.sent){sc='sent';}else if(dueDate&&dueDate<todayStr){sc='overdue';}}catch{}
   const tags=(r.tags||[]).slice(0,2).map(t=>`<span class="ctag">#${esc(t)}</span>`).join('');
   const rep=r.repeat&&r.repeat!=='none'?`<span class="ctag">🔁 ${r.repeat}</span>`:'';
   const doneBtn = !r.sent
@@ -8764,9 +8772,9 @@ function updateDashboardWidgets(){
 
   // -- STAT CARDS --
   const totalItems  = notes.length + reminders.length;
-  const pending     = reminders.filter(r=>!r.sent && r.due && new Date(r.due.replace(' ','T')) > now).length;
+  const pending     = reminders.filter(r=>!r.sent).length;
   const completed   = reminders.filter(r=>r.sent).length;
-  const missed      = reminders.filter(r=>!r.sent && r.due && new Date(r.due.replace(' ','T')) <= now).length;
+  const missed      = reminders.filter(r=>!r.sent && r.due && r.due.slice(0,10) < todayStr).length;
 
   const elNotes   = document.getElementById('stat-notes');
   const elPend    = document.getElementById('stat-pending');
@@ -8851,7 +8859,7 @@ function updateDashboardWidgets(){
   // -- MISSED & OVERDUE --
   const missedEl = document.getElementById('dash-missed-list');
   if(missedEl){
-    const overdueRems = reminders.filter(r=>!r.sent && r.due && new Date(r.due.replace(' ','T')) <= now)
+    const overdueRems = reminders.filter(r=>!r.sent && r.due && r.due.slice(0,10) < todayStr)
       .sort((a,b)=>b.due.localeCompare(a.due))
       .slice(0,4);
 
